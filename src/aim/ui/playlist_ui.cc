@@ -188,16 +188,16 @@ class PlaylistComponentImpl : public PlaylistComponent {
       ImGui::OpenPopup(menu_id);
     }
 
-    auto highest_complete_level = app_.playlist_manager().GetHighestCompleteLevel(
-        run->playlist, app_.scenario_manager(), app_.stats_manager());
-
-    if (highest_complete_level) {
-      std::string text = std::format("L{}", MaybeIntToString(*highest_complete_level, 2));
-      ImGui::SameLine();
-      // ImGui::SetButtonCursorAtRight(text);
-      ImGui::Button(std::format("L{}", MaybeIntToString(*highest_complete_level, 2)));
-      ImGui::HelpTooltip("Highest completed level");
-    }
+    // auto highest_complete_level = app_.playlist_manager().GetHighestCompleteLevel(
+    //     run->playlist, app_.scenario_manager(), app_.stats_manager());
+    //
+    // if (highest_complete_level) {
+    //   std::string text = std::format("L{}", MaybeIntToString(*highest_complete_level, 2));
+    //   ImGui::SameLine();
+    //   // ImGui::SetButtonCursorAtRight(text);
+    //   ImGui::Button(std::format("L{}", MaybeIntToString(*highest_complete_level, 2)));
+    //   ImGui::HelpTooltip("Highest completed level");
+    // }
 
     const PlaylistDef& def = run->playlist.def();
 
