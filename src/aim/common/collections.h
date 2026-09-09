@@ -108,4 +108,84 @@ void MoveRepeatedItem(google::protobuf::RepeatedPtrField<T>* values, int src_i, 
   values->Assign(result.begin(), result.end());
 }
 
+// Insert an element into a repeated field like proto.mutable_foo() at a given index.
+template <typename T, typename R>
+void InsertAtIndex(R* repeated_field, const T& value, int index) {
+  if (index < 0) {
+    index = 0;
+  }
+  bool is_last = index >= repeated_field->size();
+  // Add at the end and then rotate down to correct index if necessary.
+  *repeated_field->Add() = value;
+  if (!is_last) {
+    std::rotate(repeated_field->begin() + index, repeated_field->end() - 1, repeated_field->end());
+  }
+}
+
+// Insert an element into a vector at a given index.
+template <typename T>
+void InsertAtIndex(std::vector<T>* repeated_field, const T& value, int index) {
+  if (index < 0) {
+    index = 0;
+  }
+  bool is_last = index >= repeated_field->size();
+  // Add at the end and then rotate down to correct index if necessary.
+  repeated_field->push_back(value);
+  if (!is_last) {
+    std::rotate(repeated_field->begin() + index, repeated_field->end() - 1, repeated_field->end());
+  }
+}
+
+// Simplfies draw an basic editable list with menu items to delete/copy and move items.
+struct ListUpdater {
+  int remove = -1;
+  int copy = -1;
+  int move_up = -1;
+  int move_down = -1;
+
+  template <typename T>
+  void Update(T* list) {
+    if (remove >= 0) {
+      list->erase(list->begin() + remove);
+    } else if (move_up > 0) {
+      int i1 = move_up;
+      int i2 = move_up - 1;
+      std::swap((*list)[i1], (*list)[i2]);
+    } else if (move_down >= 0) {
+      int i1 = move_down;
+      int i2 = move_down + 1;
+      if (i2 < list->size()) {
+        std::swap((*list)[i1], (*list)[i2]);
+      }
+    } else if (copy >= 0) {
+      InsertAtIndex(list, (*list)[copy], copy);
+    }
+  }
+
+  template <typename T>
+  void UpdateVector(std::vector<T>* list) {
+    if (remove >= 0) {
+      list->erase(list->begin() + remove);
+    } else if (move_up > 0) {
+      int i1 = move_up;
+      int i2 = move_up - 1;
+      std::swap((*list)[i1], (*list)[i2]);
+    } else if (move_down >= 0) {
+      int i1 = move_down;
+      int i2 = move_down + 1;
+      if (i2 < list->size()) {
+        std::swap((*list)[i1], (*list)[i2]);
+      }
+    } else if (copy >= 0) {
+      InsertAtIndex(list, (*list)[copy], copy);
+    }
+  }
+
+  void DrawMenuItems(int i);
+
+  void DrawCopyMenuItem(int i);
+  void DrawMoveMenuItems(int i);
+  void DrawDeleteMenuItem(int i);
+};
+
 }  // namespace aim

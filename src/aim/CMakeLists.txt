@@ -30,6 +30,8 @@ set(SRCS
     "common/times.h"
     "common/util.cc"
     "common/util.h"
+    "common/collections.h"
+    "common/collections.cc"
     "common/wall.cc"
     "common/wall.h"
     "core/application.cc"

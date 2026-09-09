@@ -6,6 +6,7 @@
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/name_util.h"
+#include "aim/common/proto_util.h"
 #include "aim/common/resource_name.h"
 #include "aim/core/application.h"
 #include "aim/core/bundle_manager.h"
@@ -221,8 +222,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, count_width);
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, menu_width);
 
-    int remove_i = -1;
-    std::vector<PlaylistItem> items_to_add;
+    ListUpdater list_updater;
     for (int i = 0; i < scenario_items_.size(); ++i) {
       ImGui::IdGuard lid("PlaylistItem", i);
       ImGui::TableNextRow();
@@ -238,17 +238,14 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
 
       const char* item_menu = "PlaylistItemMenu";
       if (ImGui::BeginPopupContextItem(item_menu)) {
-        if (ImGui::Selectable("Copy")) {
-          items_to_add.push_back(item);
-        }
-        if (ImGui::Selectable("Select variation")) {
+        list_updater.DrawCopyMenuItem(i);
+        if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
           editing_variation_i_ = i;
           select_variation_dialog_.NotifyOpen(item.scenario());
         }
+        list_updater.DrawMoveMenuItems(i);
         ImGui::SpacedSeparator();
-        if (ImGui::Selectable("Delete")) {
-          remove_i = i;
-        }
+        list_updater.DrawDeleteMenuItem(i);
         ImGui::EndPopup();
       }
       ImGui::OpenPopupOnItemClick(item_menu, ImGuiPopupFlags_MouseButtonRight);
@@ -269,13 +266,8 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
     }
 
     ImGui::EndTable();
-    PushBackAll(&scenario_items_, items_to_add);
 
-    if (IsValidIndex(scenario_items_, remove_i)) {
-      auto it = scenario_items_.begin() + remove_i;
-      scenario_items_.erase(it);
-    }
-
+    list_updater.UpdateVector(&scenario_items_);
     drag_and_drop_.UpdateVector(&scenario_items_);
 
     ImGui::Spacing();
