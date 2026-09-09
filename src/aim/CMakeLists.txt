@@ -198,6 +198,8 @@ set(SRCS
     "ui/select_object_dialog.h"
     "ui/settings_screen.cc"
     "ui/settings_screen.h"
+    "ui/drag_and_drop.cc"
+    "ui/drag_and_drop.h"
     "ui/stats/history_plot.cc"
     "ui/stats/history_plot.h"
     "ui/stats/perf_ui.cc"

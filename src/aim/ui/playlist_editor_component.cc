@@ -12,6 +12,7 @@
 #include "aim/core/history_manager.h"
 #include "aim/core/playlist_manager.h"
 #include "aim/core/scenario_manager.h"
+#include "aim/ui/drag_and_drop.h"
 #include "aim/ui/search_selector.h"
 #include "aim/ui/select_variation_dialog.h"
 #include "aim/ui/ui_app.h"
@@ -221,7 +222,6 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, menu_width);
 
     int remove_i = -1;
-    bool still_dragging = false;
     std::vector<PlaylistItem> items_to_add;
     for (int i = 0; i < scenario_items_.size(); ++i) {
       ImGui::IdGuard lid("PlaylistItem", i);
@@ -230,58 +230,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       const std::string& scenario_name = item.scenario();
 
       ImGui::TableNextColumn();
-      if (i == dragging_i_) {
-        ImGui::BeginDisabled();
-        ImGui::Button(icons::kDragIndicator);
-        ImGui::EndDisabled();
-      } else {
-        ImGui::Button(icons::kDragIndicator);
-      }
-      if (ImGui::BeginDragDropSource()) {
-        ImGui::SetDragDropPayload("PLAYLIST_ITEM_TYPE", &i, sizeof(int));
-        ImGui::Text("Move \"%s\"", scenario_name.c_str());
-        dragging_i_ = i;
-        ImGui::EndDragDropSource();
-      }
-      if (ImGui::BeginDragDropTarget()) {
-        ImGuiDragDropFlags drop_target_flags =
-            ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect;
-        if (const ImGuiPayload* payload =
-                ImGui::AcceptDragDropPayload("PLAYLIST_ITEM_TYPE", drop_target_flags)) {
-          ImVec2 rect_min = ImGui::GetItemRectMin();
-          ImVec2 rect_max = ImGui::GetItemRectMax();
-
-          float max_y = rect_max.y;
-          float min_y = rect_min.y;
-          float mouse_y = ImGui::GetMousePos().y;
-
-          ImGuiIO& io = ImGui::GetIO();
-          ImDrawList* draw_list = ImGui::GetWindowDrawList();
-          float mid_y = min_y + (max_y - min_y) / 2.0;
-          float draw_y = min_y;
-          int dest_before_i = i;
-          if (mouse_y > mid_y) {
-            draw_y = max_y;
-            dest_before_i++;
-          }
-
-          draw_list->AddLine(ImVec2(rect_min.x, draw_y),
-                             ImVec2(rect_min.x + drag_width, draw_y),
-                             ImGui::GetColorU32(ImGuiCol_DragDropTarget),
-                             2.0f);
-
-          if (payload->IsDelivery()) {
-            move_to_i_ = dest_before_i;
-          }
-        }
-
-        ImGui::EndDragDropTarget();
-      }
-      bool still_dragging_item = dragging_i_ == i && ImGui::IsItemActive() &&
-                                 ImGui::IsMouseDragging(ImGuiMouseButton_Left);
-      if (still_dragging_item) {
-        still_dragging = true;
-      }
+      drag_and_drop_.DrawDragHandle(i, scenario_name);
 
       ImGui::TableNextColumn();
       ImGui::SetNextItemWidth(-FLT_MIN);
@@ -327,15 +276,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       scenario_items_.erase(it);
     }
 
-    if (move_to_i_ >= 0) {
-      scenario_items_ = MoveVectorItem(scenario_items_, dragging_i_, move_to_i_);
-      dragging_i_ = -1;
-      move_to_i_ = -1;
-    }
-
-    if (!still_dragging) {
-      dragging_i_ = -1;
-    }
+    drag_and_drop_.UpdateVector(&scenario_items_);
 
     ImGui::Spacing();
     ImGui::Spacing();
@@ -420,8 +361,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
 
   Application& app_;
   std::vector<PlaylistItem> scenario_items_;
-  int dragging_i_ = -1;
-  int move_to_i_ = -1;
+  DragAndDrop drag_and_drop_;
   int editing_variation_i_ = -1;
   bool focus_editor_ = false;
   std::string original_playlist_name_;
