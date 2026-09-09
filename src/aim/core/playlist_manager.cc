@@ -8,6 +8,7 @@
 
 #include "absl/container/flat_hash_map.h"
 #include "absl/strings/strip.h"
+#include "aim/common/collections.h"
 #include "aim/common/name_util.h"
 #include "aim/common/proto_util.h"
 #include "aim/common/resource_name.h"

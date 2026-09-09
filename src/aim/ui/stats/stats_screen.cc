@@ -6,6 +6,7 @@
 
 #include "absl/cleanup/cleanup.h"
 #include "absl/time/time.h"
+#include "aim/common/collections.h"
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/name_util.h"

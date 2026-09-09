@@ -11,6 +11,7 @@
 #include "aim/common/imgui_ext.h"
 #include "aim/common/name_util.h"
 #include "aim/common/times.h"
+#include "aim/common/util.h"
 #include "aim/core/application.h"
 #include "aim/core/camera.h"
 #include "aim/core/play_time_manager.h"

@@ -5,9 +5,9 @@
 
 #include "absl/algorithm/container.h"
 #include "absl/strings/strip.h"
+#include "aim/common/collections.h"
 #include "aim/common/files.h"
 #include "aim/common/proto_util.h"
-#include "aim/common/util.h"
 #include "aim/core/file_system.h"
 #include "aim/core/guide_manager.h"
 #include "aim/core/playlist_manager.h"

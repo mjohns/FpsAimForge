@@ -2,8 +2,8 @@
 
 #include <optional>
 
+#include "aim/common/collections.h"
 #include "aim/common/random.h"
-#include "aim/common/util.h"
 #include "aim/proto/scenario.pb.h"
 #include "google/protobuf/message_lite.h"
 

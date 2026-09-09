@@ -2,11 +2,11 @@
 
 #include <algorithm>
 
+#include "aim/common/collections.h"
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/name_util.h"
 #include "aim/common/resource_name.h"
-#include "aim/common/util.h"
 #include "aim/core/application.h"
 #include "aim/core/bundle_manager.h"
 #include "aim/core/history_manager.h"

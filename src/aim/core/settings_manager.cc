@@ -5,6 +5,7 @@
 #include "absl/status/status.h"
 #include "absl/strings/ascii.h"
 #include "absl/strings/strip.h"
+#include "aim/common/collections.h"
 #include "aim/common/files.h"
 #include "aim/common/log.h"
 #include "aim/common/name_util.h"

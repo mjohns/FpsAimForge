@@ -4,6 +4,7 @@
 #include <cassert>
 
 #include "absl/cleanup/cleanup.h"
+#include "aim/common/collections.h"
 #include "aim/common/imgui_ext.h"
 #include "aim/common/implot_ext.h"
 #include "aim/common/times.h"

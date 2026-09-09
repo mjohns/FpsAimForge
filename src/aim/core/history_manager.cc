@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "aim/common/util.h"
+#include "aim/common/collections.h"
 
 namespace aim {
 namespace {
