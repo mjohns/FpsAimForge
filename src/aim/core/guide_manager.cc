@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <unordered_map>
 #include <unordered_set>
 
 #include "absl/container/flat_hash_map.h"

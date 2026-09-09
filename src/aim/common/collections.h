@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdlib.h>
-
 #include <algorithm>
 #include <functional>
 #include <optional>
@@ -100,6 +98,14 @@ std::vector<T> MoveVectorItem(const std::vector<T>& original_values, int src_i, 
     }
   }
   return result;
+}
+
+template <typename T>
+void MoveRepeatedItem(google::protobuf::RepeatedPtrField<T>* values, int src_i, int dest_before_i) {
+  std::vector<T> vec_values(values->begin(), values->end());
+  auto result = MoveVectorItem(vec_values, src_i, dest_before_i);
+  values->Clear();
+  values->Assign(result.begin(), result.end());
 }
 
 }  // namespace aim

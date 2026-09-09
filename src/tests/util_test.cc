@@ -1,14 +1,11 @@
 #include "aim/common/util.h"
 
-#include <optional>
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 using namespace aim;
 
-using ::testing::Eq;
-using ::testing::Optional;
 using ::testing::StrEq;
 
 TEST(UtilTest, MaybeIntToString) {

@@ -11,6 +11,7 @@ file(GLOB_RECURSE TEST_SOURCES
   "textures_test.cc"
   "times_test.cc"
   "util_test.cc"
+  "collections_test.cc"
   "proto_util_test.cc"
 )
 
