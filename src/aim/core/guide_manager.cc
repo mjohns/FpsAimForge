@@ -101,10 +101,13 @@ class GuideManagerImpl : public GuideManager {
     }
     auto it = guide_map_.find(old_name);
     if (it != guide_map_.end()) {
+      GuideDef def = it->second.def;
+      guide_map_.erase(it);
+
       auto& new_guide = guide_map_[new_name];
       new_guide.name = new_name;
-      new_guide.def = it->second.def;
-      guide_map_.erase(old_name);
+      new_guide.def = def;
+
       UpdateGuideListFromMap();
     }
     RenameGuideInAllGuides(old_name, new_name);
