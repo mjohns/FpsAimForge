@@ -370,6 +370,7 @@ bool SelectableButton(const std::string& label);
 
 float GetMenuButtonWidth();
 bool MenuButton();
+float GetWidthWithPadding(const std::string& text);
 
 bool IconButton(const char* icon, float scale = 0.7);
 bool CircleIconButton(const char* icon, float scale = 0.7);

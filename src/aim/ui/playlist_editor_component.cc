@@ -84,9 +84,6 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       return;
     }
 
-    ImGui::SameLine();
-    ImGui::HelpMarker("Right click on items for additional options. Drag items to reorder");
-
     ImGui::SpacedSeparator();
 
     ImGui::AlignTextToFramePadding();
@@ -209,37 +206,36 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       }
     }
 
+    ImGuiTableFlags flags =
+        ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersV | ImGuiTableFlags_Borders;
+    if (!ImGui::BeginTable("Playlists", 4, flags)) {
+      return;
+    }
+
+    float drag_width = ImGui::GetWidthWithPadding(icons::kDragIndicator);
+    float count_width = char_x_ * 8;
+    float menu_width = ImGui::GetIconButtonWidth(icons::kMoreVert);
+    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, drag_width);
+    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
+    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, count_width);
+    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, menu_width);
+
     int remove_i = -1;
     bool still_dragging = false;
     std::vector<PlaylistItem> items_to_add;
     for (int i = 0; i < scenario_items_.size(); ++i) {
       ImGui::IdGuard lid("PlaylistItem", i);
+      ImGui::TableNextRow();
       PlaylistItem& item = scenario_items_[i];
       const std::string& scenario_name = item.scenario();
 
+      ImGui::TableNextColumn();
       if (i == dragging_i_) {
         ImGui::BeginDisabled();
-        ImGui::Button(scenario_name);
+        ImGui::Button(icons::kDragIndicator);
         ImGui::EndDisabled();
-      } else if (i == editing_i_) {
-        if (focus_editor_) {
-          // Fix issue where the first time it selects all the text when focusing
-          // ImGui::SetKeyboardFocusHere();
-          focus_editor_ = false;
-        }
-        bool enter_pressed = ImGui::InputText(
-            "##ScenarioItemEditor", item.mutable_scenario(), ImGuiInputTextFlags_EnterReturnsTrue);
-        if (enter_pressed) {
-          editing_i_ = -1;
-        }
-        ImGui::SameLine();
-        if (ImGui::Button(icons::kSave)) {
-          editing_i_ = -1;
-        }
       } else {
-        if (ImGui::Button(scenario_name)) {
-          editing_i_ = -1;
-        }
+        ImGui::Button(icons::kDragIndicator);
       }
       if (ImGui::BeginDragDropSource()) {
         ImGui::SetDragDropPayload("PLAYLIST_ITEM_TYPE", &i, sizeof(int));
@@ -270,13 +266,12 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
           }
 
           draw_list->AddLine(ImVec2(rect_min.x, draw_y),
-                             ImVec2(rect_min.x + 200, draw_y),
+                             ImVec2(rect_min.x + drag_width, draw_y),
                              ImGui::GetColorU32(ImGuiCol_DragDropTarget),
                              2.0f);
 
           if (payload->IsDelivery()) {
-            scenario_items_ = MoveVectorItem(scenario_items_, dragging_i_, dest_before_i);
-            dragging_i_ = -1;
+            move_to_i_ = dest_before_i;
           }
         }
 
@@ -288,18 +283,18 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
         still_dragging = true;
       }
 
+      ImGui::TableNextColumn();
+      ImGui::SetNextItemWidth(-FLT_MIN);
+      ImGui::InputText("##ScenarioItemEditor", item.mutable_scenario());
+
       const char* item_menu = "PlaylistItemMenu";
       if (ImGui::BeginPopupContextItem(item_menu)) {
         if (ImGui::Selectable("Copy")) {
           items_to_add.push_back(item);
         }
-        if (ImGui::Selectable("Edit variation")) {
+        if (ImGui::Selectable("Select variation")) {
           editing_variation_i_ = i;
           select_variation_dialog_.NotifyOpen(item.scenario());
-        }
-        if (ImGui::Selectable("Edit name")) {
-          editing_i_ = i;
-          focus_editor_ = true;
         }
         ImGui::SpacedSeparator();
         if (ImGui::Selectable("Delete")) {
@@ -309,27 +304,33 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       }
       ImGui::OpenPopupOnItemClick(item_menu, ImGuiPopupFlags_MouseButtonRight);
 
-      ImGui::SameLine();
+      ImGui::TableNextColumn();
+      // ImGui::SameLine();
       u32 num_plays = item.num_plays();
       u32 step = 1;
-      ImGui::SetNextItemWidth(char_x_ * 8);
+      ImGui::SetNextItemWidth(count_width);
       ImGui::InputScalar("###NumPlays", ImGuiDataType_U32, &num_plays, &step, nullptr, "%u");
 
-      ImGui::SameLine();
-      ImGui::Text("   ");
-      ImGui::SameLine();
-      if (ImGui::SelectableButton(icons::kClear)) {
-        remove_i = i;
+      ImGui::TableNextColumn();
+      if (ImGui::IconButton(icons::kMoreVert)) {
+        ImGui::OpenPopup(item_menu);
       }
 
       item.set_num_plays(num_plays);
     }
 
+    ImGui::EndTable();
     PushBackAll(&scenario_items_, items_to_add);
 
     if (IsValidIndex(scenario_items_, remove_i)) {
       auto it = scenario_items_.begin() + remove_i;
       scenario_items_.erase(it);
+    }
+
+    if (move_to_i_ >= 0) {
+      scenario_items_ = MoveVectorItem(scenario_items_, dragging_i_, move_to_i_);
+      dragging_i_ = -1;
+      move_to_i_ = -1;
     }
 
     if (!still_dragging) {
@@ -420,7 +421,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
   Application& app_;
   std::vector<PlaylistItem> scenario_items_;
   int dragging_i_ = -1;
-  int editing_i_ = -1;
+  int move_to_i_ = -1;
   int editing_variation_i_ = -1;
   bool focus_editor_ = false;
   std::string original_playlist_name_;

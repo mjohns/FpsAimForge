@@ -256,6 +256,11 @@ void SetButtonCursorAtRight(const std::string& text) {
   SetCursorAtRight(size + 2.0f * ImGui::GetStyle().FramePadding.x);
 }
 
+float GetWidthWithPadding(const std::string& text) {
+  float size = ImGui::CalcTextSize(text.c_str()).x;
+  return size + 2.0f * ImGui::GetStyle().FramePadding.x;
+}
+
 void InputFloat(const InputFloatParams& params, aim::Field<float> field) {
   IdGuard cid(params.id);
   if (params.label.size() > 0) {
