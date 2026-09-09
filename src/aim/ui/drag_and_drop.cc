@@ -23,7 +23,7 @@ void DragAndDrop::DrawDragHandle(int i, const std::string& move_text) {
 
   if (ImGui::BeginDragDropSource()) {
     ImGui::SetDragDropPayload(type, &i, sizeof(int));
-    ImGui::TextFmt("Move \"{}\" {}", move_text, i);
+    ImGui::TextFmt("Move \"{}\"", move_text);
     dragging_i = i;
     ImGui::EndDragDropSource();
   }

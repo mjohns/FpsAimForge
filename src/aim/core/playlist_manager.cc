@@ -519,37 +519,45 @@ class PlaylistManagerImpl : public PlaylistManager {
   }
 
   void UpdatePlaylistRun(const std::string& playlist_name, const PlaylistDef& new_def) {
-    std::shared_ptr<PlaylistRun> run = GetOptionalExistingRun(playlist_name);
-    if (!run) {
-      return;
-    }
-    if (IsEquivalentProto(new_def, run->playlist.def())) {
-      return;
-    }
-    run->playlist.name = playlist_name;
-    std::unordered_map<std::string, std::vector<PlaylistItemProgress>> scenario_progress_map;
-    for (auto& progress : run->progress_list) {
-      scenario_progress_map[progress.item.scenario()].push_back(progress);
-    }
-
-    *run->playlist.mutable_def() = new_def;
-    run->progress_list.clear();
-
-    auto items = run->playlist.items();
-    for (int i = 0; i < items.size(); ++i) {
-      auto& item = items[i];
-      PlaylistItemProgress progress;
-      progress.item = item;
-
-      auto existing_progress_list = scenario_progress_map.find(item.scenario());
-      if (existing_progress_list != scenario_progress_map.end()) {
-        std::vector<PlaylistItemProgress>& progress_list = existing_progress_list->second;
-        if (progress_list.size() > 0) {
-          progress.runs_done = progress_list.front().runs_done;
-          progress_list.erase(progress_list.begin());
-        }
+    for (auto& entry : playlist_run_map_) {
+      const std::string& run_name = entry.first;
+      if (!run_name.starts_with(playlist_name)) {
+        continue;
       }
-      run->progress_list.push_back(progress);
+      std::string base_run_name = GetPlaylistNameInfo(run_name).base_name;
+      if (base_run_name != playlist_name) {
+        continue;
+      }
+      std::shared_ptr<PlaylistRun> run = entry.second;
+      if (IsEquivalentProto(new_def, run->playlist.def())) {
+        continue;
+      }
+
+      // run->playlist.name = playlist_name;
+      std::unordered_map<std::string, std::vector<PlaylistItemProgress>> scenario_progress_map;
+      for (auto& progress : run->progress_list) {
+        scenario_progress_map[progress.item.scenario()].push_back(progress);
+      }
+
+      *run->playlist.mutable_def() = new_def;
+      run->progress_list.clear();
+
+      auto items = run->playlist.items();
+      for (int i = 0; i < items.size(); ++i) {
+        auto& item = items[i];
+        PlaylistItemProgress progress;
+        progress.item = item;
+
+        auto existing_progress_list = scenario_progress_map.find(item.scenario());
+        if (existing_progress_list != scenario_progress_map.end()) {
+          std::vector<PlaylistItemProgress>& progress_list = existing_progress_list->second;
+          if (progress_list.size() > 0) {
+            progress.runs_done = progress_list.front().runs_done;
+            progress_list.erase(progress_list.begin());
+          }
+        }
+        run->progress_list.push_back(progress);
+      }
     }
   }
 

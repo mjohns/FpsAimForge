@@ -110,7 +110,8 @@ class PlaylistComponentImpl : public PlaylistComponent {
 
     if (showing_editor_) {
       if (!editor_component_) {
-        editor_component_ = CreatePlaylistEditorComponent(playlist_name);
+        std::string base_playlist_name = GetPlaylistNameInfo(playlist_name).base_name;
+        editor_component_ = CreatePlaylistEditorComponent(base_playlist_name);
       }
       EditorResult editor_result;
       editor_component_->Draw(&editor_result);
@@ -138,9 +139,7 @@ class PlaylistComponentImpl : public PlaylistComponent {
 
     const char* menu_id = "CurrentPlaylistMenu";
     if (ImGui::BeginPopupContextItem(menu_id)) {
-      bool has_dynamic_suffix = run->playlist.playlist_name_info.HasDynamicSuffix();
-      bool is_readonly = has_dynamic_suffix ||
-                         app_.bundle_manager().IsBundleReadonly(GetBundleName(run->playlist.name));
+      bool is_readonly = app_.bundle_manager().IsBundleReadonly(GetBundleName(run->playlist.name));
       if (!is_readonly) {
         if (ImGui::Selectable(std::format("{} Edit", icons::kEdit))) {
           showing_editor_ = true;
@@ -167,13 +166,8 @@ class PlaylistComponentImpl : public PlaylistComponent {
         ImGui::BeginDisabled();
         ImGui::Text("%s Readonly", icons::kEditOff);
         ImGui::EndDisabled();
-        if (has_dynamic_suffix) {
-          // TODO: Support editing and switching to edit the base version by default.
-          ImGui::HelpTooltip("Cannot edit playlist with dynamic suffix like 25cm or 5%Faster.");
-        } else {
-          ImGui::HelpTooltip(
-              std::format("Bundle \"{}\" is readonly.", GetBundleName(run->playlist.name)));
-        }
+        ImGui::HelpTooltip(
+            std::format("Bundle \"{}\" is readonly.", GetBundleName(run->playlist.name)));
       } else {
         if (ImGui::Selectable(std::format("{} Delete", icons::kDelete))) {
           delete_confirmation_dialog_.NotifyOpen(std::format("Delete \"{}\"?", playlist_name),
