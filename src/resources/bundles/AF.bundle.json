@@ -3,7 +3,7 @@
   {
    "name": "1w3ts",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
      "ghostClosestOnMiss": 0.3,
@@ -29,7 +29,7 @@
      }
     },
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.96
+     "targetRadiusMultiplier": 0.95
     },
     "staticDef": {
      "targetPlacementStrategy": {
@@ -56,6 +56,9 @@
    "name": "1w3ts Ladder",
    "def": {
     "overrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.96
+    },
     "scoreTargets": {
      "targetScore": 140
     },
@@ -96,7 +99,7 @@
     },
     "overrides": {},
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.95
+     "targetRadiusMultiplier": 0.96
     },
     "staticDef": {
      "targetPlacementStrategy": {
@@ -265,16 +268,16 @@
   {
    "name": "AlternateClick MoveCenter",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
-     "removeClosestOnMiss": true
+     "removeClosestOnMiss": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 2,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 1.8,
        "speed": 25
       }
@@ -302,9 +305,14 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
+        "info": {
+         "description": "Right"
+        },
         "xOffset": {
          "xPercentValue": 0.4
+        },
+        "yOffset": {
+         "yPercentValue": 0
         },
         "rectangle": {
          "xLength": {
@@ -316,9 +324,14 @@
         }
        },
        {
-        "info": {},
+        "info": {
+         "description": "Left"
+        },
         "xOffset": {
          "xPercentValue": -0.4
+        },
+        "yOffset": {
+         "yPercentValue": 0
         },
         "rectangle": {
          "xLength": {
@@ -349,7 +362,7 @@
    "name": "AlternateClick Vertical",
    "def": {
     "description": "Alternate clicks focusing on vertical movement.",
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
      "removeClosestOnMiss": true,
@@ -375,87 +388,8 @@
       "width": 170
      }
     },
-    "levelOverrides": {},
-    "staticDef": {
-     "targetPlacementStrategy": {
-      "regions": [
-       {
-        "xOffset": {
-         "xPercentValue": 0
-        },
-        "yOffset": {
-         "yPercentValue": 0.25
-        },
-        "rectangle": {
-         "xLength": {
-          "xPercentValue": 0.3
-         },
-         "yLength": {
-          "yPercentValue": 0.1
-         }
-        }
-       },
-       {
-        "xOffset": {
-         "xPercentValue": 0
-        },
-        "yOffset": {
-         "yPercentValue": -0.25
-        },
-        "rectangle": {
-         "xLength": {
-          "xPercentValue": 0.3
-         },
-         "yLength": {
-          "yPercentValue": 0.1
-         }
-        }
-       }
-      ],
-      "regionsInfo": {
-       "explicitOrder": [
-        0,
-        1
-       ]
-      }
-     }
-    }
-   }
-  },
-  {
-   "name": "AlternateClick Vertical Ladder",
-   "def": {
-    "description": "Alternate clicks focusing on vertical movement.",
-    "durationSeconds": 60,
-    "shotType": {
-     "clickSingle": true,
-     "removeClosestOnMiss": true
-    },
-    "targetDef": {
-     "numTargets": 2,
-     "profiles": [
-      {
-       "targetRadius": 4
-      }
-     ],
-     "newestTargetIsGhost": true
-    },
-    "room": {
-     "cameraPosition": {
-      "x": 0,
-      "y": -200,
-      "z": 0
-     },
-     "simpleRoom": {
-      "height": 150,
-      "width": 170
-     }
-    },
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.96
-    },
-    "scoreTargets": {
-     "targetScore": 120
+     "targetRadiusMultiplier": 0.95
     },
     "staticDef": {
      "targetPlacementStrategy": {
@@ -507,10 +441,11 @@
    "name": "AlternateClick VerticalTall",
    "def": {
     "description": "Alternate clicks focusing on vertical movement with longer flicks.",
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
-     "removeClosestOnMiss": true
+     "removeClosestOnMiss": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 2,
@@ -528,12 +463,12 @@
       "z": 0
      },
      "simpleRoom": {
-      "height": 225,
+      "height": 145,
       "width": 170
      }
     },
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.96
+     "targetRadiusMultiplier": 0.95
     },
     "staticDef": {
      "targetPlacementStrategy": {
@@ -543,14 +478,14 @@
          "xPercentValue": 0
         },
         "yOffset": {
-         "yPercentValue": 0.25
+         "yPercentValue": 0.45
         },
         "rectangle": {
          "xLength": {
           "xPercentValue": 0.3
          },
          "yLength": {
-          "yPercentValue": 0.1
+          "yPercentValue": 0.06
          }
         }
        },
@@ -559,88 +494,7 @@
          "xPercentValue": 0
         },
         "yOffset": {
-         "yPercentValue": -0.25
-        },
-        "rectangle": {
-         "xLength": {
-          "xPercentValue": 0.3
-         },
-         "yLength": {
-          "yPercentValue": 0.1
-         }
-        }
-       }
-      ],
-      "regionsInfo": {
-       "explicitOrder": [
-        0,
-        1
-       ]
-      }
-     }
-    }
-   }
-  },
-  {
-   "name": "AlternateClick VerticalTall Ladder",
-   "def": {
-    "description": "Alternate clicks focusing on vertical movement.",
-    "durationSeconds": 60,
-    "shotType": {
-     "clickSingle": true,
-     "removeClosestOnMiss": true
-    },
-    "targetDef": {
-     "numTargets": 2,
-     "profiles": [
-      {
-       "targetRadius": 5
-      }
-     ],
-     "newestTargetIsGhost": true
-    },
-    "room": {
-     "cameraPosition": {
-      "x": 0,
-      "y": -200,
-      "z": 0
-     },
-     "simpleRoom": {
-      "height": 225,
-      "width": 170
-     }
-    },
-    "levelOverrides": {
-     "targetRadiusMultiplier": 0.96
-    },
-    "scoreTargets": {
-     "targetScore": 100
-    },
-    "staticDef": {
-     "targetPlacementStrategy": {
-      "regions": [
-       {
-        "xOffset": {
-         "xPercentValue": 0
-        },
-        "yOffset": {
-         "yPercentValue": 0.25
-        },
-        "rectangle": {
-         "xLength": {
-          "xPercentValue": 0.3
-         },
-         "yLength": {
-          "yPercentValue": 0.1
-         }
-        }
-       },
-       {
-        "xOffset": {
-         "xPercentValue": 0
-        },
-        "yOffset": {
-         "yPercentValue": -0.25
+         "yPercentValue": -0.45
         },
         "rectangle": {
          "xLength": {
@@ -770,18 +624,17 @@
   {
    "name": "AlternateClick Wide",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
-     "removeClosestOnMiss": true
+     "removeClosestOnMiss": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 2,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 1.8,
-       "targetRadiusJitter": 0,
        "speedJitter": 0
       }
      ],
@@ -873,10 +726,11 @@
    "name": "AlternateClick WideTall",
    "def": {
     "description": "Wide alternate click where the vertical spread is larger",
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
-     "removeClosestOnMiss": true
+     "removeClosestOnMiss": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 2,
@@ -971,7 +825,7 @@
    }
   },
   {
-   "name": "Angle Strafe",
+   "name": "AngleStrafe",
    "def": {
     "durationSeconds": 30,
     "shotType": {
@@ -1048,7 +902,7 @@
    }
   },
   {
-   "name": "Angle Strafe Ladder",
+   "name": "AngleStrafe Ladder",
    "def": {
     "durationSeconds": 30,
     "shotType": {
@@ -1129,8 +983,7 @@
    "def": {
     "durationSeconds": 30,
     "shotType": {
-     "poke": true,
-     "pokeKillTimeSeconds": 0.01
+     "pokeInstant": true
     },
     "targetDef": {
      "numTargets": 1,
@@ -1151,7 +1004,9 @@
       "width": 120
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "staticDef": {
      "targetPlacementStrategy": {
       "regions": [
@@ -1252,22 +1107,21 @@
   {
    "name": "BarrelPulse",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
-     "removeClosestOnMiss": true
+     "removeClosestOnMiss": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 4,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.40000057,
-       "targetRadiusJitter": 0,
-       "speed": 59,
+       "targetRadius": 1.4,
+       "speed": 50,
        "speedJitter": 10,
-       "targetRadiusGrowthTimeSeconds": 1.79999983,
-       "targetRadiusGrowthSize": 5.60000086
+       "targetRadiusGrowthTimeSeconds": 1.8,
+       "targetRadiusGrowthSize": 5.6
       }
      ],
      "staggerInitialTargetsSeconds": 0.1
@@ -1317,7 +1171,7 @@
   {
    "name": "BarrelSwitch",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingKill": true,
      "healthSeconds": 0.5,
@@ -1331,16 +1185,13 @@
         "description": "Large Fast"
        },
        "targetRadius": 2.8,
-       "targetRadiusJitter": 0,
-       "speed": 60,
-       "speedJitter": 0
+       "speed": 60
       },
       {
        "info": {
         "description": "Small Slow"
        },
        "targetRadius": 2.2,
-       "targetRadiusJitter": 0,
        "speed": 50,
        "speedJitter": 3
       }
@@ -1364,12 +1215,13 @@
      }
     },
     "overrides": {},
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "barrelDef": {
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "depthPercentValue": 0
         },
@@ -1402,11 +1254,8 @@
      "numTargets": 1,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 2.00000024,
-       "targetRadiusJitter": 0,
-       "speed": 62,
-       "speedJitter": 0
+       "targetRadius": 2,
+       "speed": 62
       }
      ]
     },
@@ -1428,7 +1277,6 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "xOffset": {
          "value": -20
         },
@@ -1459,7 +1307,7 @@
   {
    "name": "Centering",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingInvincible": true
     },
@@ -1467,11 +1315,8 @@
      "numTargets": 1,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.30000007,
-       "targetRadiusJitter": 0,
+       "targetRadius": 1.8,
        "speed": 53,
-       "speedJitter": 0,
        "pill": {
         "height": 10
        }
@@ -1488,6 +1333,9 @@
       "height": 150,
       "width": 200
      }
+    },
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
     },
     "centeringDef": {
      "wallPoints": [
@@ -1514,7 +1362,7 @@
   {
    "name": "Centering 180",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingInvincible": true
     },
@@ -1522,13 +1370,10 @@
      "numTargets": 1,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.40000033,
-       "targetRadiusJitter": 0,
+       "targetRadius": 1.8,
        "speed": 76,
-       "speedJitter": 0,
        "pill": {
-        "height": 16.7000065
+        "height": 16.7000103
        }
       }
      ]
@@ -1537,7 +1382,7 @@
      "cameraPosition": {
       "x": 0,
       "y": 0,
-      "z": -30
+      "z": -25
      },
      "cylinderRoom": {
       "height": 100,
@@ -1545,6 +1390,9 @@
       "sideAngleDegrees": 65,
       "widthDegrees": 216.000015
      }
+    },
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
     },
     "centeringDef": {
      "wallPoints": [
@@ -1579,8 +1427,7 @@
      "numTargets": 1,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.9999994,
+       "targetRadius": 2,
        "speed": 40
       }
      ]
@@ -1598,8 +1445,7 @@
     },
     "overrides": {},
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.960000038,
-     "speedMultiplier": 1.03
+     "targetRadiusMultiplier": 0.95
     },
     "centeringDef": {
      "wallPoints": [
@@ -1626,16 +1472,16 @@
   {
    "name": "ClusterClick",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 17,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.89999986,
+       "targetRadius": 1.9,
        "targetRadiusJitter": 0.2,
        "speedJitter": 0
       }
@@ -1708,21 +1554,20 @@
   {
    "name": "FireworkClick",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 4,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.5999999,
-       "targetRadiusJitter": 0,
+       "targetRadius": 1.6,
        "speed": 24,
        "speedJitter": 2,
-       "targetRadiusGrowthTimeSeconds": 2.50000143,
-       "targetRadiusGrowthSize": 4.39999866
+       "targetRadiusGrowthTimeSeconds": 2.5,
+       "targetRadiusGrowthSize": 4.4
       }
      ],
      "staggerInitialTargetsSeconds": 0.25
@@ -1748,7 +1593,6 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 0
         },
@@ -1774,19 +1618,17 @@
   {
    "name": "LinearClick",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 4,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 2,
-       "targetRadiusJitter": 1.49011612e-08,
-       "speed": 48,
-       "speedJitter": 0
+       "speed": 48
       }
      ]
     },
@@ -1808,11 +1650,10 @@
     },
     "linearDef": {
      "angle": 0,
-     "angleJitter": 11,
+     "angleJitter": 6,
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 0
         },
@@ -1841,19 +1682,17 @@
   {
    "name": "LinearClick Barrel",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 5,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 3,
-       "targetRadiusJitter": 1.49011612e-08,
-       "speed": 48,
-       "speedJitter": 0
+       "speed": 48
       }
      ]
     },
@@ -1878,7 +1717,6 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 0
         },
@@ -1934,7 +1772,7 @@
      }
     },
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.96
+     "targetRadiusMultiplier": 0.95
     },
     "linearDef": {
      "angle": 0,
@@ -1977,7 +1815,7 @@
      "numTargets": 3,
      "profiles": [
       {
-       "targetRadius": 1.6
+       "targetRadius": 1.35
       }
      ]
     },
@@ -2026,16 +1864,16 @@
   {
    "name": "MicroClick Wander",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 3,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.50000012,
+       "targetRadius": 1.5,
        "speed": 1
       }
      ]
@@ -2051,12 +1889,13 @@
       "width": 170
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "wallWanderDef": {
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 0
         },
@@ -2076,7 +1915,6 @@
      },
      "profiles": [
       {
-       "info": {},
        "turnTime": 2.2,
        "turnTimeJitter": 0.5,
        "turnRate": 300,
@@ -2096,6 +1934,180 @@
       "poke": true,
       "pokeKillTimeSeconds": 0.08
      }
+    }
+   }
+  },
+  {
+   "name": "MixedStrafe",
+   "def": {
+    "description": "Strafes with fixed distances that move faster as the levels get higher.",
+    "durationSeconds": 30,
+    "shotType": {
+     "trackingInvincible": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 4,
+       "speed": 95,
+       "pill": {
+        "height": 15.99998
+       }
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "cylinderRoom": {
+      "height": 53,
+      "radius": 200,
+      "sideAngleDegrees": 61,
+      "widthDegrees": 144.000046
+     }
+    },
+    "overrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.98,
+     "speedMultiplier": 1.025
+    },
+    "scoreTargets": {
+     "targetScore": 55
+    },
+    "strafeDef": {
+     "bounds": {
+      "width": {
+       "xPercentValue": 0.97
+      }
+     },
+     "leftRightProfiles": [
+      {
+       "info": {
+        "description": "Standard Strafe",
+        "weight": 3
+       },
+       "centerBias": 0.2,
+       "distance": {
+        "xPercentValue": 0.200000092
+       },
+       "distanceJitter": {
+        "xPercentValue": 0.07
+       },
+       "speedMultiplier": 1,
+       "speedMultiplierJitter": 0.03,
+       "accelerationMultiplier": 1,
+       "accelerationMultiplierJitter": 0.03
+      },
+      {
+       "info": {
+        "description": "Shorter Strafe",
+        "weight": 2
+       },
+       "distance": {
+        "xPercentValue": 0.1300001
+       },
+       "distanceJitter": {
+        "xPercentValue": 0.04
+       },
+       "speedMultiplier": 1,
+       "speedMultiplierJitter": 0.02
+      }
+     ],
+     "leftRightInitialDirection": "DIRECTION_POSITIVE",
+     "upDownInitialDirection": "DIRECTION_RANDOM",
+     "forwardBackInitialDirection": "DIRECTION_RANDOM"
+    }
+   }
+  },
+  {
+   "name": "MixedStrafe Ladder",
+   "def": {
+    "description": "Strafes with fixed distances that move faster as the levels get higher.",
+    "durationSeconds": 30,
+    "shotType": {
+     "trackingInvincible": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 6,
+       "speed": 60,
+       "pill": {
+        "height": 15.99998
+       }
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "cylinderRoom": {
+      "height": 53,
+      "radius": 200,
+      "sideAngleDegrees": 61,
+      "widthDegrees": 144.000046
+     }
+    },
+    "overrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.98,
+     "speedMultiplier": 1.025
+    },
+    "scoreTargets": {
+     "targetScore": 55
+    },
+    "strafeDef": {
+     "bounds": {
+      "width": {
+       "xPercentValue": 0.97
+      }
+     },
+     "leftRightProfiles": [
+      {
+       "info": {
+        "description": "Standard Strafe",
+        "weight": 3
+       },
+       "centerBias": 0.2,
+       "distance": {
+        "xPercentValue": 0.200000092
+       },
+       "distanceJitter": {
+        "xPercentValue": 0.07
+       },
+       "speedMultiplier": 1,
+       "speedMultiplierJitter": 0.02,
+       "accelerationMultiplier": 1,
+       "accelerationMultiplierJitter": 0.02
+      },
+      {
+       "info": {
+        "description": "Shorter Strafe",
+        "weight": 2
+       },
+       "distance": {
+        "xPercentValue": 0.1300001
+       },
+       "distanceJitter": {
+        "xPercentValue": 0.04
+       },
+       "speedMultiplier": 1,
+       "speedMultiplierJitter": 0.02,
+       "accelerationMultiplier": 1,
+       "accelerationMultiplierJitter": 0.02
+      }
+     ],
+     "leftRightInitialDirection": "DIRECTION_POSITIVE",
+     "upDownInitialDirection": "DIRECTION_RANDOM",
+     "forwardBackInitialDirection": "DIRECTION_RANDOM"
     }
    }
   },
@@ -2128,7 +2140,7 @@
      }
     },
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.96
+     "targetRadiusMultiplier": 0.95
     },
     "staticDef": {
      "targetPlacementStrategy": {
@@ -2179,8 +2191,8 @@
    "name": "OmniFlick Far2",
    "def": {
     "overrides": {
-     "wallWidthMultiplier": 1.3,
-     "wallHeightMultiplier": 1.3
+     "wallWidthMultiplier": 1.15,
+     "wallHeightMultiplier": 1.15
     },
     "referenceDef": {
      "scenarioName": "AF OmniFlick Far"
@@ -2214,10 +2226,10 @@
   {
    "name": "Popcorn",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
-     "removeClosestOnMiss": true,
+     "ghostClosestOnMiss": 0.5,
      "reload": {
       "maxShots": 3,
       "numToReloadOnHit": 3,
@@ -2247,7 +2259,9 @@
       "width": 230
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "bounceDef": {
      "bounds": {
       "width": {
@@ -2314,16 +2328,16 @@
   {
    "name": "Reflex Flick",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 30,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 1,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 2.99999905
+       "targetRadius": 3
       }
      ],
      "newTargetDelaySeconds": 0.3,
@@ -2340,7 +2354,10 @@
       "width": 200
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.97,
+     "removeTargetAfterSecondsMultiplier": 0.98
+    },
     "staticDef": {
      "targetPlacementStrategy": {
       "regions": [
@@ -2382,10 +2399,10 @@
           "yPercentValue": 0.85
          },
          "innerXLength": {
-          "xPercentValue": 0.549999952
+          "xPercentValue": 0.55
          },
          "innerYLength": {
-          "yPercentValue": 0.549999952
+          "yPercentValue": 0.55
          }
         }
        },
@@ -2420,7 +2437,7 @@
   {
    "name": "ShrinkSwitch",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingKill": true,
      "healthSeconds": 0.6,
@@ -2430,9 +2447,8 @@
      "numTargets": 4,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 2,
-       "targetRadiusAtKill": 1.19999981
+       "targetRadiusAtKill": 1.2
       }
      ]
     },
@@ -2447,7 +2463,9 @@
       "width": 170
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "staticDef": {
      "targetPlacementStrategy": {
       "regions": [
@@ -2500,7 +2518,7 @@
   {
    "name": "ShrinkSwitch Regen",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingKill": true,
      "healthSeconds": 0.6,
@@ -2511,9 +2529,8 @@
      "numTargets": 4,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 2,
-       "targetRadiusAtKill": 1.19999981
+       "targetRadiusAtKill": 1.2
       }
      ]
     },
@@ -2528,7 +2545,9 @@
       "width": 170
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "staticDef": {
      "targetPlacementStrategy": {
       "regions": [
@@ -2581,7 +2600,7 @@
   {
    "name": "SkyTs Wide",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingKill": true,
      "healthSeconds": 0.5,
@@ -2591,9 +2610,7 @@
      "numTargets": 6,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 1.8,
-       "targetRadiusJitter": 1.49011612e-08,
        "speed": 40
       }
      ]
@@ -2609,13 +2626,14 @@
       "width": 270
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "linearDef": {
      "angle": 0,
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 40
         },
@@ -2624,7 +2642,7 @@
         },
         "rectangle": {
          "xLength": {
-          "xPercentValue": 0.829999864
+          "xPercentValue": 0.829999745
          },
          "yLength": {
           "yPercentValue": 0.48
@@ -2644,7 +2662,7 @@
   {
    "name": "SkyTs Wide Curve",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingKill": true,
      "healthSeconds": 0.5,
@@ -2654,9 +2672,7 @@
      "numTargets": 6,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 1.8,
-       "targetRadiusJitter": 1.49011612e-08,
        "speed": 40
       }
      ]
@@ -2674,13 +2690,14 @@
       "widthDegrees": 162
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "linearDef": {
      "angle": 0,
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 40
         },
@@ -2689,7 +2706,7 @@
         },
         "rectangle": {
          "xLength": {
-          "xPercentValue": 0.829999864
+          "xPercentValue": 0.829999745
          },
          "yLength": {
           "yPercentValue": 0.48
@@ -2709,7 +2726,7 @@
   {
    "name": "SkyTs Wide Shrink",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingKill": true,
      "healthSeconds": 0.5,
@@ -2719,11 +2736,9 @@
      "numTargets": 6,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 2.19999981,
-       "targetRadiusJitter": 1.49011612e-08,
+       "targetRadius": 2.2,
        "speed": 40,
-       "targetRadiusAtKill": 1.39999986
+       "targetRadiusAtKill": 1.4
       }
      ]
     },
@@ -2738,13 +2753,14 @@
       "width": 270
      }
     },
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "linearDef": {
      "angle": 0,
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 40
         },
@@ -2753,7 +2769,7 @@
         },
         "rectangle": {
          "xLength": {
-          "xPercentValue": 0.829999864
+          "xPercentValue": 0.829999745
          },
          "yLength": {
           "yPercentValue": 0.48
@@ -3498,7 +3514,11 @@
        },
        "distanceJitter": {
         "xPercentValue": 0.2
-       }
+       },
+       "speedMultiplier": 1,
+       "speedMultiplierJitter": 0.05,
+       "accelerationMultiplier": 1,
+       "accelerationMultiplierJitter": 0.05
       }
      ],
      "upDownProfiles": [
@@ -3517,6 +3537,25 @@
      "leftRightInitialDirection": "DIRECTION_POSITIVE",
      "upDownInitialDirection": "DIRECTION_RANDOM",
      "forwardBackInitialDirection": "DIRECTION_RANDOM"
+    }
+   }
+  },
+  {
+   "name": "SmoothSwerve Ladder",
+   "def": {
+    "overrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.97,
+     "speedMultiplier": 1.015,
+     "accelerationMultiplier": 1.015
+    },
+    "scoreTargets": {
+     "targetScore": 75
+    },
+    "referenceDef": {
+     "scenarioName": "AF SmoothSwerve",
+     "description": "Ladder for \"AF SmoothSwerve\" where the target gets smaller.",
+     "explicitTargetRadius": 6
     }
    }
   },
@@ -3540,7 +3579,7 @@
   {
    "name": "SmoothSwerve Wide",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingInvincible": true
     },
@@ -3615,7 +3654,7 @@
   {
    "name": "SnakeClick",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
      "removeClosestOnMiss": true,
@@ -3694,20 +3733,6 @@
    }
   },
   {
-   "name": "SnakeClick Distance",
-   "def": {
-    "overrides": {},
-    "levelOverrides": {
-     "fixedDistanceFromLastTargetMultiplier": 1.05,
-     "minDistanceMultiplier": 1.05
-    },
-    "referenceDef": {
-     "scenarioName": "AF SnakeClick",
-     "description": "Leveled version of SnakeClick where at each level the distance between targets gets 5% larger."
-    }
-   }
-  },
-  {
    "name": "SnakePoke",
    "def": {
     "overrides": {},
@@ -3715,69 +3740,7 @@
      "scenarioName": "AF SnakeClick",
      "shotType": {
       "poke": true,
-      "pokeKillTimeSeconds": 0.08
-     }
-    }
-   }
-  },
-  {
-   "name": "Static Precision Ladder",
-   "def": {
-    "durationSeconds": 40,
-    "shotType": {
-     "clickSingle": true,
-     "removeClosestOnMiss": true,
-     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
-    },
-    "targetDef": {
-     "numTargets": 2,
-     "profiles": [
-      {
-       "targetRadius": 2.5
-      }
-     ]
-    },
-    "room": {
-     "cameraPosition": {
-      "x": 0,
-      "y": -200,
-      "z": 0
-     },
-     "simpleRoom": {
-      "height": 173,
-      "width": 202
-     }
-    },
-    "overrides": {},
-    "levelOverrides": {
-     "targetRadiusMultiplier": 0.96
-    },
-    "scoreTargets": {
-     "targetScore": 80
-    },
-    "staticDef": {
-     "targetPlacementStrategy": {
-      "regions": [
-       {
-        "depth": {
-         "value": 0
-        },
-        "depthJitter": {
-         "value": 0
-        },
-        "rectangle": {
-         "xLength": {
-          "xPercentValue": 0.85
-         },
-         "yLength": {
-          "yPercentValue": 0.85
-         }
-        }
-       }
-      ],
-      "minDistance": {
-       "xPercentValue": 0.3
-      }
+      "pokeKillTimeSeconds": 0.06
      }
     }
    }
@@ -3786,7 +3749,7 @@
    "name": "Static Speed Ladder",
    "def": {
     "description": "Ladder for improving static clicking speed. The targets get progressively smaller while requiring a high number of kills.",
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "clickSingle": true,
      "removeClosestOnMiss": true,
@@ -3875,15 +3838,17 @@
   {
    "name": "Static3",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "removeClosestOnMiss": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 3,
      "profiles": [
       {
-       "targetRadius": 1.4,
+       "targetRadius": 2,
        "speedJitter": 0
       }
      ]
@@ -3953,20 +3918,6 @@
    }
   },
   {
-   "name": "Static3 Ghost Ladder",
-   "def": {
-    "overrides": {},
-    "referenceDef": {
-     "scenarioName": "AF Static3 Ladder",
-     "shotType": {
-      "clickSingle": true,
-      "ghostClosestOnMiss": 0.3,
-      "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
-     }
-    }
-   }
-  },
-  {
    "name": "Static3 Ladder",
    "def": {
     "overrides": {
@@ -3982,33 +3933,18 @@
    }
   },
   {
-   "name": "Static3 SlowPoke",
-   "def": {
-    "overrides": {},
-    "referenceDef": {
-     "scenarioName": "AF Static3",
-     "shotType": {
-      "poke": true,
-      "pokeKillTimeSeconds": 0.4
-     },
-     "description": "Static3 Poke but you need to stop fully on the target and work on stabilizing"
-    }
-   }
-  },
-  {
    "name": "Static5",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 5,
      "profiles": [
       {
-       "info": {},
        "targetRadius": 3,
-       "targetRadiusJitter": 0,
        "speedJitter": 0
       }
      ]
@@ -4027,7 +3963,9 @@
      }
     },
     "overrides": {},
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "staticDef": {
      "targetPlacementStrategy": {
       "regions": [
@@ -4052,7 +3990,7 @@
        },
        {
         "info": {
-         "weight": 0
+         "weight": 1
         },
         "depth": {
          "value": 0
@@ -4080,20 +4018,19 @@
   {
    "name": "StaticPulse",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 4,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.0999999,
-       "targetRadiusJitter": 0,
+       "targetRadius": 1.1,
        "speedJitter": 0,
-       "targetRadiusGrowthTimeSeconds": 1.89999986,
-       "targetRadiusGrowthSize": 4.00000048,
+       "targetRadiusGrowthTimeSeconds": 1.9,
+       "targetRadiusGrowthSize": 4,
        "targetRadiusGrowthFinalSizeTimeSeconds": 0.2
       }
      ]
@@ -4165,7 +4102,7 @@
   {
    "name": "StaticSwitch",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
      "trackingKill": true,
      "healthSeconds": 0.4,
@@ -4192,7 +4129,9 @@
      }
     },
     "overrides": {},
-    "levelOverrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.95
+    },
     "staticDef": {
      "targetPlacementStrategy": {
       "regions": [
@@ -4243,158 +4182,21 @@
    }
   },
   {
-   "name": "Strafe Fast",
-   "def": {
-    "durationSeconds": 60,
-    "shotType": {
-     "trackingInvincible": true
-    },
-    "targetDef": {
-     "numTargets": 1,
-     "profiles": [
-      {
-       "info": {},
-       "targetRadius": 4.09999943,
-       "targetRadiusJitter": 0,
-       "speed": 190,
-       "speedJitter": 0,
-       "pill": {
-        "height": 15
-       }
-      }
-     ]
-    },
-    "room": {
-     "cylinderRoom": {
-      "height": 150,
-      "radius": 200,
-      "width": 330,
-      "sideAngleDegrees": 45
-     }
-    },
-    "angleStrafeDef": {
-     "bounds": {
-      "width": {
-       "xPercentValue": 0.85
-      },
-      "height": {
-       "yPercentValue": 0.85
-      }
-     },
-     "profiles": [
-      {
-       "info": {},
-       "distance": {
-        "xPercentValue": 0.7
-       },
-       "distanceJitter": {
-        "xPercentValue": 0.1
-       },
-       "angle": 0,
-       "angleJitter": 0
-      }
-     ]
-    }
-   }
-  },
-  {
-   "name": "Strafe Mixed Ladder",
-   "def": {
-    "description": "Strafes with fixed distances that move faster as the levels get higher.",
-    "durationSeconds": 30,
-    "shotType": {
-     "trackingInvincible": true
-    },
-    "targetDef": {
-     "numTargets": 1,
-     "profiles": [
-      {
-       "targetRadius": 6,
-       "speed": 60,
-       "pill": {
-        "height": 15.99998
-       }
-      }
-     ]
-    },
-    "room": {
-     "cameraPosition": {
-      "x": 0,
-      "y": 0,
-      "z": 0
-     },
-     "cylinderRoom": {
-      "height": 53,
-      "radius": 200,
-      "sideAngleDegrees": 61,
-      "widthDegrees": 144.000046
-     }
-    },
-    "overrides": {},
-    "levelOverrides": {
-     "targetRadiusMultiplier": 0.98,
-     "speedMultiplier": 1.025
-    },
-    "scoreTargets": {
-     "targetScore": 55
-    },
-    "strafeDef": {
-     "bounds": {
-      "width": {
-       "xPercentValue": 0.97
-      }
-     },
-     "leftRightProfiles": [
-      {
-       "info": {
-        "description": "Standard Strafe",
-        "weight": 3
-       },
-       "centerBias": 0.2,
-       "distance": {
-        "xPercentValue": 0.200000092
-       },
-       "distanceJitter": {
-        "xPercentValue": 0.07
-       }
-      },
-      {
-       "info": {
-        "description": "Shorter Strafe",
-        "weight": 2
-       },
-       "distance": {
-        "xPercentValue": 0.1300001
-       },
-       "distanceJitter": {
-        "xPercentValue": 0.04
-       }
-      }
-     ],
-     "leftRightInitialDirection": "DIRECTION_POSITIVE",
-     "upDownInitialDirection": "DIRECTION_RANDOM",
-     "forwardBackInitialDirection": "DIRECTION_RANDOM"
-    }
-   }
-  },
-  {
    "name": "SwirlPulse",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 5,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.40000033,
-       "targetRadiusJitter": 0,
+       "targetRadius": 1.4,
        "speed": 39,
-       "speedJitter": 0,
-       "targetRadiusGrowthTimeSeconds": 2.69999933,
-       "targetRadiusGrowthSize": 5.00000143
+       "targetRadiusGrowthTimeSeconds": 2.7,
+       "targetRadiusGrowthSize": 5
       }
      ],
      "staggerInitialTargetsSeconds": 0.2
@@ -4418,7 +4220,6 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 0
         },
@@ -4427,7 +4228,7 @@
         },
         "circle": {
          "diameter": {
-          "xPercentValue": 0.639999866
+          "xPercentValue": 0.639999807
          }
         }
        }
@@ -4438,7 +4239,6 @@
      },
      "profiles": [
       {
-       "info": {},
        "turnTime": 2.5,
        "turnTimeJitter": 0.8,
        "turnRate": 160,
@@ -4451,19 +4251,18 @@
   {
    "name": "WanderClick",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "removeClosestOnMiss": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 5,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 2.30000019,
-       "targetRadiusJitter": 0,
-       "speed": 12,
-       "speedJitter": 0
+       "targetRadius": 2.3,
+       "speed": 12
       }
      ]
     },
@@ -4486,7 +4285,6 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "depth": {
          "value": 0
         },
@@ -4509,8 +4307,7 @@
      },
      "profiles": [
       {
-       "info": {},
-       "turnTime": 2.19999981,
+       "turnTime": 2.2,
        "turnTimeJitter": 0.6,
        "turnRate": 300,
        "turnRateJitter": 80
@@ -4647,17 +4444,17 @@
   {
    "name": "WaterfallClick",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "ghostClosestOnMiss": 0.5,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 5,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 2.49999952,
-       "targetRadiusJitter": 0,
+       "targetRadius": 2.5,
        "speed": 50,
        "speedJitter": 8
       }
@@ -4686,7 +4483,6 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "xOffset": {
          "value": 0
         },
@@ -4721,21 +4517,20 @@
   {
    "name": "WaterfallPulse",
    "def": {
-    "durationSeconds": 60,
+    "durationSeconds": 40,
     "shotType": {
-     "clickSingle": true
+     "clickSingle": true,
+     "accuracyPenalty": "ACCURACY_PENALTY_SQRT"
     },
     "targetDef": {
      "numTargets": 5,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 1.39999986,
-       "targetRadiusJitter": 0,
+       "targetRadius": 1.4,
        "speed": 60,
        "speedJitter": 8,
-       "targetRadiusGrowthTimeSeconds": 2.39999962,
-       "targetRadiusGrowthSize": 5.00000095
+       "targetRadiusGrowthTimeSeconds": 2.4,
+       "targetRadiusGrowthSize": 5
       }
      ],
      "removeTargetAfterSeconds": 2.5,
@@ -4763,7 +4558,6 @@
      "targetPlacementStrategy": {
       "regions": [
        {
-        "info": {},
         "xOffset": {
          "value": 0
         },
@@ -4806,11 +4600,8 @@
      "numTargets": 1,
      "profiles": [
       {
-       "info": {},
-       "targetRadius": 2.00000024,
-       "targetRadiusJitter": 0,
-       "speed": 79,
-       "speedJitter": 0
+       "targetRadius": 2,
+       "speed": 79
       }
      ]
     },
@@ -4827,8 +4618,7 @@
     },
     "overrides": {},
     "levelOverrides": {
-     "targetRadiusMultiplier": 0.97,
-     "speedMultiplier": 1.03
+     "targetRadiusMultiplier": 0.97
     },
     "waypointDef": {
      "targetPlacementStrategy": {
@@ -4987,11 +4777,11 @@
    }
   },
   {
-   "name": "Angle Strafe Ladder",
+   "name": "AngleStrafe Ladder",
    "def": {
     "description": "",
     "levels": {
-     "baseScenario": "AF Angle Strafe Ladder",
+     "baseScenario": "AF AngleStrafe Ladder",
      "maxLevel": 40,
      "numPlaysPerLevel": 1
     }
@@ -5202,6 +4992,17 @@
    }
   },
   {
+   "name": "MixedStrafe Ladder",
+   "def": {
+    "description": "",
+    "levels": {
+     "baseScenario": "AF MixedStrafe Ladder",
+     "maxLevel": 40,
+     "numPlaysPerLevel": 1
+    }
+   }
+  },
+  {
    "name": "OmniFlick",
    "def": {
     "description": "Practice flicks at increasingly far distances. Targets are placed around the outside edges of the wall.",
@@ -5231,6 +5032,17 @@
       "numPlays": 1
      }
     ]
+   }
+  },
+  {
+   "name": "SmoothSwerve Ladder",
+   "def": {
+    "description": "",
+    "levels": {
+     "baseScenario": "AF SmoothSwerve Ladder",
+     "maxLevel": 45,
+     "numPlaysPerLevel": 1
+    }
    }
   },
   {
@@ -5298,18 +5110,6 @@
    }
   },
   {
-   "name": "Static3 Ladder Small Step",
-   "def": {
-    "description": "",
-    "levels": {
-     "baseScenario": "AF Static3 Ladder",
-     "maxLevel": 40,
-     "levelStep": 0.5,
-     "numPlaysPerLevel": 1
-    }
-   }
-  },
-  {
    "name": "Static3 Poke Ladder",
    "def": {
     "description": "",
@@ -5326,17 +5126,6 @@
     "description": "",
     "levels": {
      "baseScenario": "AF Static3 Ladder 30s",
-     "maxLevel": 40,
-     "numPlaysPerLevel": 1
-    }
-   }
-  },
-  {
-   "name": "Strafe Mixed Ladder",
-   "def": {
-    "description": "",
-    "levels": {
-     "baseScenario": "AF Strafe Mixed Ladder",
      "maxLevel": 40,
      "numPlaysPerLevel": 1
     }
@@ -5382,6 +5171,51 @@
      {
       "scenario": "AF SkyTs Wide Shrink",
       "numPlays": 1
+     }
+    ]
+   }
+  }
+ ],
+ "guides": [
+  {
+   "name": "SmoothSwerve",
+   "def": {
+    "sections": [
+     {
+      "text": "Standard (size decreases, speed increases)",
+      "playlists": [
+       "AF SmoothSwerve Ladder",
+       "AF SmoothSwerve Ladder 15cm",
+       "AF SmoothSwerve Ladder 20cm",
+       "AF SmoothSwerve Ladder 25cm",
+       "AF SmoothSwerve Ladder 30cm",
+       "AF SmoothSwerve Ladder 35cm",
+       "AF SmoothSwerve Ladder 40cm",
+       "AF SmoothSwerve Ladder 45cm",
+       "AF SmoothSwerve Ladder 50cm",
+       "AF SmoothSwerve Ladder 55cm",
+       "AF SmoothSwerve Ladder 60cm",
+       "AF SmoothSwerve Ladder 65cm",
+       "AF SmoothSwerve Ladder 70cm"
+      ]
+     },
+     {
+      "text": "Precision (size decreases)",
+      "playlists": [
+       "AF SmoothSwerve Precision Ladder",
+       "AF SmoothSwerve Precision Ladder 15cm",
+       "AF SmoothSwerve Precision Ladder 20cm",
+       "AF SmoothSwerve Precision Ladder 25cm",
+       "AF SmoothSwerve Precision Ladder 30cm",
+       "AF SmoothSwerve Precision Ladder 35cm",
+       "AF SmoothSwerve Precision Ladder 40cm",
+       "AF SmoothSwerve Precision Ladder 45cm",
+       "AF SmoothSwerve Precision Ladder 50cm",
+       "AF SmoothSwerve Precision Ladder 55cm",
+       "AF SmoothSwerve Precision Ladder 60cm",
+       "AF SmoothSwerve Precision Ladder 65cm",
+       "AF SmoothSwerve Precision Ladder 70cm"
+      ]
      }
     ]
    }
