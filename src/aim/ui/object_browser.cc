@@ -162,7 +162,6 @@ class ObjectBrowserImpl : public ObjectBrowser {
 
  private:
   void DrawItem(const std::string& name, Result* result) {
-    // ImGui::IdGuard cid(name);
     if (!ItemExists(name)) {
       DrawMissingItem(name);
       return;
