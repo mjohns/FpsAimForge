@@ -159,6 +159,10 @@ void DrawTargetRegion(float char_x, bool support_depth, TargetRegion* region) {
       region->clear_x_offset();
       region->clear_y_offset();
     }
+  } else {
+    // No offset allowed. Ensure it is cleared.
+    region->clear_x_offset();
+    region->clear_y_offset();
   }
 }
 

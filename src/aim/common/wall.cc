@@ -1,14 +1,10 @@
 #include "wall.h"
 
 #include <optional>
-#include <random>
 
 #include "aim/common/geometry.h"
-#include "aim/common/util.h"
-#include "aim/core/profile_selection.h"
 #include "glm/gtc/constants.hpp"
-#include "glm/trigonometric.hpp"
-#include "glm/vec2.hpp"
+#include "glm/vec2.hpp"  // IWYU pragma: keep
 
 namespace aim {
 

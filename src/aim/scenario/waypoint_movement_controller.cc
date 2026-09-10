@@ -68,7 +68,8 @@ class WallWaypointMovementController : public WallDepthMovementController {
     current_distance_to_travel_ = glm::length(next_pos - pos);
 
     // Direction should also contain depth direction.
-    direction_ = glm::normalize(next_pos - pos);
+    direction_ =
+        current_distance_to_travel_ > 0 ? glm::normalize(next_pos - pos) : glm::vec3(0, 1, 0);
     current_start_ = pos;
     is_stopping_ = false;
 

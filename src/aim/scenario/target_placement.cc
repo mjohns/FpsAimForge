@@ -2,15 +2,12 @@
 
 #include <cassert>
 #include <optional>
-#include <random>
 
 #include "aim/common/geometry.h"
 #include "aim/common/util.h"
 #include "aim/core/profile_selection.h"
 #include "aim/core/scenario_manager.h"
-#include "glm/gtc/constants.hpp"
-#include "glm/trigonometric.hpp"
-#include "glm/vec2.hpp"
+#include "glm/vec2.hpp"  // IWYU pragma: keep
 
 namespace aim {
 namespace {
@@ -136,8 +133,8 @@ class WallTargetPlacerImpl : public WallTargetPlacer {
 
     if (region.has_point()) {
       glm::vec2 pos;
-      pos.x = wall_.GetRegionLength(region.point().x()) + x_offset;
-      pos.y = wall_.GetRegionLength(region.point().y()) + y_offset;
+      pos.x = wall_.GetRegionLength(region.point().x());
+      pos.y = wall_.GetRegionLength(region.point().y());
       return glm::vec3(pos, z);
     }
 

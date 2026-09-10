@@ -1,6 +1,5 @@
 #include <memory>
 
-#include "aim/core/application.h"
 #include "aim/core/target.h"
 #include "aim/scenario/base_scenario.h"
 #include "aim/scenario/scenario.h"

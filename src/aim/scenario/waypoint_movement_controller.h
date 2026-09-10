@@ -3,9 +3,8 @@
 #include <memory>
 
 #include "aim/core/target.h"
-#include "aim/proto/scenario.pb.h"
 #include "aim/scenario/target_placement.h"
-#include "glm/vec3.hpp"
+#include "glm/vec3.hpp"  // IWYU pragma: keep
 
 namespace aim {
 
