@@ -30,7 +30,7 @@ struct DragAndDrop {
   }
 
   template <typename T>
-  void UpdateRepeated(google::protobuf::RepeatedPtrField<T>* values) {
+  void Update(google::protobuf::RepeatedPtrField<T>* values) {
     if (move_to_i >= 0) {
       MoveRepeatedItem(values, dragging_i, move_to_i);
       dragging_i = -1;

@@ -60,23 +60,24 @@ class SelectObjectDialogImpl : public SelectObjectDialog {
       ImGui::SetKeyboardFocusHere();
     }
     ImGui::InputText("###SearchInput", &search_text_);
-    ImGui::SameLine();
-    if (search_text_.size() > 0 && ImGui::ClearButton()) {
-      search_text_ = "";
-    }
     if (search_text_.size() > 0) {
-      ImGui::Indent();
-      auto names = GetNames();
-
-      SearchSelectorOptions options;
-      options.max_results = 50;
-      std::optional<std::string> selected_playlist = SearchSelector(search_text_, *names, options);
-      if (selected_playlist) {
-        result->selected_objects.push_back(*selected_playlist);
-        popup_.Close();
-        return true;
+      ImGui::SameLine();
+      if (ImGui::ClearButton()) {
+        search_text_ = "";
       }
-      ImGui::Unindent();
+    }
+    auto names = GetNames();
+
+    ImGui::BeginChild("ResultsContainer", ImVec2(0, 0));
+    SearchSelectorOptions options;
+    options.max_results = 50;
+    options.empty_search_text_matches_all = true;
+    std::optional<std::string> selected_playlist = SearchSelector(search_text_, *names, options);
+    ImGui::EndChild();
+    if (selected_playlist) {
+      result->selected_objects.push_back(*selected_playlist);
+      popup_.Close();
+      return true;
     }
 
     return false;

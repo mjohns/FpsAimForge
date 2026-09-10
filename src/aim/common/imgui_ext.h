@@ -12,6 +12,9 @@
 
 namespace ImGui {
 
+inline constexpr ImGuiTableFlags kDefaultTableFlags =
+    ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersV | ImGuiTableFlags_Borders;
+
 // Create a new ImGui frame backed by SDL3/GPU.
 void NewSdlFrame();
 

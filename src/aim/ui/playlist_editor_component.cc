@@ -208,13 +208,11 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       }
     }
 
-    ImGuiTableFlags flags =
-        ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersV | ImGuiTableFlags_Borders;
-    if (!ImGui::BeginTable("Playlists", 4, flags)) {
+    if (!ImGui::BeginTable("Playlists", 4, ImGui::kDefaultTableFlags)) {
       return;
     }
 
-    float drag_width = ImGui::GetWidthWithPadding(icons::kDragIndicator);
+    float drag_width = drag_and_drop_.GetDragWidth();
     float count_width = char_x_ * 8;
     float menu_width = ImGui::GetIconButtonWidth(icons::kMoreVert);
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, drag_width);
@@ -251,7 +249,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       ImGui::OpenPopupOnItemClick(item_menu, ImGuiPopupFlags_MouseButtonRight);
 
       ImGui::TableNextColumn();
-      // ImGui::SameLine();
+
       u32 num_plays = item.num_plays();
       u32 step = 1;
       ImGui::SetNextItemWidth(count_width);
@@ -355,7 +353,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
   std::vector<PlaylistItem> scenario_items_;
   DragAndDrop drag_and_drop_;
   int editing_variation_i_ = -1;
-  bool focus_editor_ = false;
+
   std::string original_playlist_name_;
   std::string bundle_name_;
   std::string source_base_scenario_;

@@ -1,7 +1,5 @@
 #include "search_selector.h"
 
-#include <format>
-
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/search.h"

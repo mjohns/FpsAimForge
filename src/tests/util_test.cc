@@ -1,6 +1,5 @@
 #include "aim/common/util.h"
 
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
