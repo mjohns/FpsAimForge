@@ -88,7 +88,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
         if (i >= 10) {
           break;
         }
-        auto id_guard = loop_id.Get();
+        auto id_guard = loop_id.Get(name);
         DrawItem(name, result);
       }
 
@@ -137,23 +137,24 @@ class ObjectBrowserImpl : public ObjectBrowser {
       UpdateFilteredNames();
     }
 
-    ImGui::LoopId loop_id;
     ImGuiListClipper clipper;
     if (filtered_names_indices_) {
       clipper.Begin(filtered_names_indices_->size());
       while (clipper.Step()) {
         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i) {
-          auto id_guard = loop_id.Get();
           int names_i = (*filtered_names_indices_)[i];
-          DrawItem((*all_names_)[names_i], result);
+          const std::string& name = (*all_names_)[names_i];
+          ImGui::IdGuard cid(name, names_i);
+          DrawItem(name, result);
         }
       }
     } else {
       clipper.Begin(all_names_->size());
       while (clipper.Step()) {
         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i) {
-          auto id_guard = loop_id.Get();
-          DrawItem((*all_names_)[i], result);
+          const std::string& name = (*all_names_)[i];
+          ImGui::IdGuard cid(name, i);
+          DrawItem(name, result);
         }
       }
     }
@@ -161,6 +162,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
 
  private:
   void DrawItem(const std::string& name, Result* result) {
+    // ImGui::IdGuard cid(name);
     if (!ItemExists(name)) {
       DrawMissingItem(name);
       return;
