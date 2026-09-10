@@ -558,7 +558,10 @@ void BaseScenario::AddNewTarget(u16 old_target_id, bool is_init) {
   if (old_target_id > 0) {
     AddRemoveTargetEvent(old_target_id);
     bool removed = target_manager_.RemoveTarget(old_target_id);
-    assert(removed && "Trying to remove invalid target");
+    if (!removed) {
+      assert(false && "Trying to remove invalid target");
+      return;
+    }
   }
 
   Target target = GetNewTarget();
