@@ -120,6 +120,7 @@ Scenario::Scenario(const CreateScenarioParams& params)
       force_start_immediately_(params.force_start_immediately),
       from_scenario_editor_(params.from_scenario_editor),
       create_params_(params) {
+  delayed_tasks_.reserve(50);
   theme_ = app_.settings_manager().GetCurrentTheme();
   settings_ = app_.settings_manager().GetCurrentSettingsForScenario(scenario_name_);
 
@@ -734,14 +735,14 @@ Target Scenario::GetTargetTemplate(const TargetProfile& profile) {
 }
 
 void Scenario::RunAfterSeconds(float delay_seconds, std::function<void()>&& fn) {
-  for (auto& task : delayed_tasks_) {
-    if (!task.fn.has_value()) {
-      task.fn = std::move(fn);
-      task.run_time_seconds = timer_.GetElapsedSeconds() + delay_seconds;
-      return;
-    }
-  }
-
+  // for (auto& task : delayed_tasks_) {
+  //   if (!task.fn.has_value()) {
+  //     task.fn = std::move(fn);
+  //     task.run_time_seconds = timer_.GetElapsedSeconds() + delay_seconds;
+  //     return;
+  //   }
+  // }
+  //
   delayed_tasks_.push_back({});
   DelayedTask& task = delayed_tasks_.back();
   task.fn = std::move(fn);

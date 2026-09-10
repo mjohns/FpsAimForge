@@ -111,7 +111,7 @@ class TargetManager {
   explicit TargetManager(const Room& room) : room_(room) {}
 
   Target AddTarget(Target t);
-  void RemoveTarget(u16 target_id);
+  bool RemoveTarget(u16 target_id);
 
   void UpdateRoom(const Room& room) {
     room_ = room;

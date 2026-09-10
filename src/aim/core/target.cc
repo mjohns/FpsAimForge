@@ -1,7 +1,6 @@
 #include "target.h"
 
 #include "aim/common/geometry.h"
-#include "aim/common/log.h"
 #include "aim/common/util.h"
 #include "aim/core/profile_selection.h"
 
@@ -65,13 +64,17 @@ std::vector<Target*> TargetManager::GetMutableVisibleTargets() {
   return result;
 }
 
-void TargetManager::RemoveTarget(uint16_t target_id) {
+bool TargetManager::RemoveTarget(uint16_t target_id) {
+  bool removed = false;
   for (Target& t : targets_) {
     if (t.id == target_id) {
       last_removed_target_ = t;
       t.hidden = true;
+      t.id = 0;
+      removed = true;
     }
   }
+  return removed;
 }
 
 void TargetManager::MarkAllAsNonGhost() {

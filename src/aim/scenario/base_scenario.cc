@@ -447,10 +447,14 @@ void BaseScenario::HandleClickHits(UpdateStateData* data) {
         if (time_to_wait > 0) {
           target_manager_.GetMutableTarget(*target_id_to_ghost)->is_ghost = true;
           RunAfterSeconds(time_to_wait, [=, this]() {
-            if (unghost) {
-              target_manager_.GetMutableTarget(*target_id_to_ghost)->is_ghost = false;
-            } else {
-              AddNewTarget(*target_id_to_ghost);
+            Target* target_to_ghost = target_manager_.GetMutableTarget(*target_id_to_ghost);
+            // Make sure the target wasn't remove while we waited.
+            if (target_to_ghost != nullptr) {
+              if (unghost) {
+                target_to_ghost->is_ghost = false;
+              } else {
+                AddNewTarget(*target_id_to_ghost);
+              }
             }
           });
         } else {
@@ -553,7 +557,8 @@ Target BaseScenario::GetNewTarget() {
 void BaseScenario::AddNewTarget(u16 old_target_id, bool is_init) {
   if (old_target_id > 0) {
     AddRemoveTargetEvent(old_target_id);
-    target_manager_.RemoveTarget(old_target_id);
+    bool removed = target_manager_.RemoveTarget(old_target_id);
+    assert(removed && "Trying to remove invalid target");
   }
 
   Target target = GetNewTarget();
