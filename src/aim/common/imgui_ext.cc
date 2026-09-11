@@ -499,7 +499,7 @@ bool BeginDefaultPopupModal(const char* id, bool* draw) {
                                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 }
 
-std::optional<std::string> MultilineTextEntryDialog::Draw() {
+std::optional<std::string> MultilineTextEntryDialog::Draw(bool can_set) {
   std::optional<std::string> result;
   auto* viewport = ImGui::GetMainViewport();
   ImVec2 work_size = viewport->WorkSize;
@@ -509,11 +509,13 @@ std::optional<std::string> MultilineTextEntryDialog::Draw() {
                               ImVec2(work_size.x * 0.4, work_size.y * 0.5),
                               ImGuiInputTextFlags_AllowTabInput);
     ImGui::Spacing();
-    if (ImGui::Button("Set")) {
-      result = text_;
-      popup_.Close();
+    if (can_set) {
+      if (ImGui::Button("Set")) {
+        result = text_;
+        popup_.Close();
+      }
+      ImGui::SameLine();
     }
-    ImGui::SameLine();
     if (ImGui::Button("Cancel")) {
       popup_.Close();
     }

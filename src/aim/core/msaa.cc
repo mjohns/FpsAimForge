@@ -33,20 +33,6 @@ static SDL_GPUSampleCount GetMaxSupportedMsaaSampleCount(SDL_Window* sdl_window,
   return SDL_GPU_SAMPLECOUNT_1;
 }
 
-int SampleCountToInt(SDL_GPUSampleCount count) {
-  switch (count) {
-    case SDL_GPU_SAMPLECOUNT_1:
-      return 1;
-    case SDL_GPU_SAMPLECOUNT_2:
-      return 2;
-    case SDL_GPU_SAMPLECOUNT_4:
-      return 4;
-    case SDL_GPU_SAMPLECOUNT_8:
-      return 8;
-  }
-  return 1;
-}
-
 SDL_GPUSampleCount IntToSampleCount(int count) {
   if (count >= 8) {
     return SDL_GPU_SAMPLECOUNT_8;
@@ -102,6 +88,20 @@ SDL_GPUSampleCount GetMsaaSampleCount(SDL_Window* sdl_window,
 
 MsaaLevel SampleCountToMsaaLevel(SDL_GPUSampleCount sample_count) {
   return IntToMsaaLevel(SampleCountToInt(sample_count));
+}
+
+int SampleCountToInt(SDL_GPUSampleCount count) {
+  switch (count) {
+    case SDL_GPU_SAMPLECOUNT_1:
+      return 1;
+    case SDL_GPU_SAMPLECOUNT_2:
+      return 2;
+    case SDL_GPU_SAMPLECOUNT_4:
+      return 4;
+    case SDL_GPU_SAMPLECOUNT_8:
+      return 8;
+  }
+  return 1;
 }
 
 }  // namespace aim

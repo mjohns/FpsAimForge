@@ -426,7 +426,7 @@ class MultilineTextEntryDialog {
     popup_.Open();
   }
 
-  std::optional<std::string> Draw();
+  std::optional<std::string> Draw(bool can_set = true);
 
  private:
   std::string text_;

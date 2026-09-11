@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include <functional>
-#include <iostream>
 #include <memory>
 
 #include "SDL3/SDL.h"  // IWYU pragma: keep
@@ -29,6 +28,7 @@
 #include "aim/core/scenario_manager.h"
 #include "aim/core/settings_manager.h"
 #include "aim/core/stats_manager.h"
+#include "aim/core/version.h"
 #include "aim/database/aim_db.h"
 #include "aim/graphics/image.h"
 #include "aim/graphics/renderer.h"
@@ -721,6 +721,60 @@ class ApplicationImpl : public Application {
     // bundle_manager_->SaveDirtyBundles();
   }
 
+  std::string GetDebugInfoString() override {
+    std::string result;
+
+    auto add = [&](const std::string& line) { result += (line + "\n"); };
+
+    add(std::format("Version: {}", kAimForgeVersion));
+    add("");
+
+    {
+      add(std::format("Display info ({})", display_.name));
+
+      add(std::format("Refresh rate: {}", display_.refresh_rate));
+      add(std::format("Display size: w={}, h={}", display_.width, display_.height));
+
+      SDL_Rect safe_area;
+      SDL_GetDisplayUsableBounds(display_.display_id, &safe_area);
+      add(std::format("Display usable bounds: w={}, h={}, x={}, y={}",
+                      safe_area.w,
+                      safe_area.h,
+                      safe_area.x,
+                      safe_area.y));
+    }
+
+    add("");
+
+    {
+      int width = 0;
+      int height = 0;
+      SDL_GetWindowSize(sdl_window_, &width, &height);
+      add(std::format("Window size: w={}, h={}", width, height));
+
+      width = 0;
+      height = 0;
+      SDL_GetWindowSizeInPixels(sdl_window_, &width, &height);
+      add(std::format("Window size in pixels: w={}, h={}", width, height));
+
+      add(std::format("Pixel density: {}", SDL_GetWindowPixelDensity(sdl_window_)));
+
+      SDL_Rect safe_area;
+      SDL_GetWindowSafeArea(sdl_window_, &safe_area);
+      add(std::format("Window safe area: w={}, h={}, x={}, y={}",
+                      safe_area.w,
+                      safe_area.h,
+                      safe_area.x,
+                      safe_area.y));
+    }
+
+    add("");
+
+    add(std::format("MSAA sample count: {}", SampleCountToInt(msaa_sample_count_)));
+
+    return result;
+  }
+
  private:
   SDL_Window* sdl_window_ = nullptr;
   SDL_Surface* icon_ = nullptr;
@@ -731,8 +785,6 @@ class ApplicationImpl : public Application {
 
   int window_width_ = -1;
   int window_height_ = -1;
-  int window_pixel_width_ = -1;
-  int window_pixel_height_ = -1;
 
   Random rand_;
 

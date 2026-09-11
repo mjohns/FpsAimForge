@@ -11,4 +11,6 @@ SDL_GPUSampleCount GetMsaaSampleCount(SDL_Window* sdl_window,
 
 MsaaLevel SampleCountToMsaaLevel(SDL_GPUSampleCount);
 
+int SampleCountToInt(SDL_GPUSampleCount count);
+
 }  // namespace aim

@@ -88,6 +88,8 @@ class Application {
   virtual spdlog::logger* logger() = 0;
   virtual ApplicationState& state() = 0;
   virtual Texture& logo_texture() = 0;
+
+  virtual std::string GetDebugInfoString() = 0;
 };
 
 std::unique_ptr<Application> CreateNewApplication();

@@ -144,6 +144,7 @@ class SettingsScreen : public UiScreen {
 
  protected:
   void DrawSettings() {
+    debug_info_dialog_.Draw(/* can_set= */ false);
     if (!ImGui::BeginTabBar("SettingsTabBar")) {
       return;
     }
@@ -362,7 +363,10 @@ class SettingsScreen : public UiScreen {
         OpenFolderInExplorer(app_.file_system().GetUserDataPath());
       }
       ImGui::HelpTooltip(std::format("Open \"{}\"", app_.file_system().GetUserDataPath().string()));
-      ImGui::Text(kAimForgeVersion);
+
+      if (ImGui::Button(std::format("{} Debug info", icons::kSmartToy))) {
+        debug_info_dialog_.NotifyOpen(app_.GetDebugInfoString());
+      }
 
       ImGui::EndTabItem();
     }
@@ -782,6 +786,8 @@ class SettingsScreen : public UiScreen {
 
   bool read_display_names_ = false;
   std::vector<std::string> display_names_;
+
+  ImGui::MultilineTextEntryDialog debug_info_dialog_{"DebugInfoDialog"};
 };
 
 }  // namespace
