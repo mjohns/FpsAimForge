@@ -3,10 +3,12 @@
 #include <deque>
 #include <string>
 
+#include "absl/algorithm/container.h"
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/object_type.h"
 #include "aim/common/resource_name.h"
+#include "aim/common/times.h"
 #include "aim/common/util.h"
 #include "aim/core/application.h"
 #include "aim/core/bundle_manager.h"
@@ -25,6 +27,16 @@ namespace aim {
 namespace {
 
 constexpr int kMaxHistorySize = 100;
+
+struct HighestLevelCacheItem {
+  std::string playlist_name;
+  std::optional<float> highest_level{};
+  i64 update_time_micros = -1;
+};
+
+static bool SortCacheItems(const HighestLevelCacheItem* lhs, const HighestLevelCacheItem* rhs) {
+  return lhs->update_time_micros < rhs->update_time_micros;
+}
 
 class AddGuideDialog {
  public:
@@ -91,6 +103,10 @@ class GuideViewer {
   };
 
   void Draw(const GuideItem& guide_item, Result* result) {
+    if (guide_item.name != guide_name_) {
+      guide_name_ = guide_item.name;
+      highest_level_cache_.clear();
+    }
     const GuideDef& guide = guide_item.def;
     ImGui::LoopId loop_id;
     for (const auto& section : guide.sections()) {
@@ -123,6 +139,7 @@ class GuideViewer {
     float level_width = ImGui::CalcTextSize("L22.5_").x;
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, level_width);
 
+    LoadSomeHighestLevelPlaylistItems(1);
     ImGui::LoopId loop_id;
     for (const std::string& playlist : section.playlists()) {
       ImGui::TableNextRow();
@@ -132,14 +149,15 @@ class GuideViewer {
       if (ImGui::Selectable(std::format("{} {}", icons::kList, playlist), is_selected)) {
         app_.playlist_manager().SetCurrentPlaylist(playlist);
       }
-      auto maybe_playlist = app_.playlist_manager().GetPlaylist(playlist);
-      if (maybe_playlist) {
-        auto highest_complete_level = app_.playlist_manager().GetHighestCompleteLevel(
-            *maybe_playlist, app_.scenario_manager(), app_.stats_manager());
-        if (highest_complete_level) {
-          ImGui::TableNextColumn();
-          ImGui::TextFmt("L{}{}", MaybeIntToString(*highest_complete_level, 1), icons::kVerified);
-        }
+
+      HighestLevelCacheItem& highest_level_item = highest_level_cache_[playlist];
+      if (highest_level_item.playlist_name.size() == 0) {
+        highest_level_item.playlist_name = playlist;
+      }
+      if (highest_level_item.highest_level) {
+        ImGui::TableNextColumn();
+        ImGui::TextFmt(
+            "L{}{}", MaybeIntToString(*highest_level_item.highest_level, 1), icons::kVerified);
       }
     }
 
@@ -167,8 +185,35 @@ class GuideViewer {
     ImGui::EndTable();
   }
 
+  void LoadSomeHighestLevelPlaylistItems(int num_to_load) {
+    std::vector<HighestLevelCacheItem*> items;
+    items.reserve(highest_level_cache_.size());
+    for (auto& entry : highest_level_cache_) {
+      items.push_back(&entry.second);
+    }
+    absl::c_sort(items, &SortCacheItems);
+
+    i64 now_micros = GetNowEpochMicros();
+    for (int i = 0; i < num_to_load && i < items.size(); ++i) {
+      HighestLevelCacheItem* item = items[i];
+      if (now_micros - item->update_time_micros > cache_refresh_time_micros_) {
+        item->update_time_micros = now_micros;
+        item->highest_level = {};
+        auto maybe_playlist = app_.playlist_manager().GetPlaylist(item->playlist_name);
+        if (maybe_playlist) {
+          item->highest_level = app_.playlist_manager().GetHighestCompleteLevel(
+              *maybe_playlist, app_.scenario_manager(), app_.stats_manager());
+        }
+      }
+    }
+  }
+
  private:
   Application& app_ = GetUiApp();
+
+  std::unordered_map<std::string, HighestLevelCacheItem> highest_level_cache_;
+  i64 cache_refresh_time_micros_ = SecondsToMicros(0.6);
+  std::string guide_name_;
 };
 
 class GuidesComponentImpl : public GuidesComponent {
