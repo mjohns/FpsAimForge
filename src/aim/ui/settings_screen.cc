@@ -232,11 +232,6 @@ class SettingsScreen : public UiScreen {
         ImGui::SameLine();
         ImGui::HelpMarker("By default the monitor with the highest refresh rate is used");
       }
-      const char* driver_name = SDL_GetGPUDeviceDriver(app_.gpu_device());
-      if (driver_name != nullptr) {
-        ImGui::AlignTextToFramePadding();
-        ImGui::TextFmt("GPU device driver: {}", driver_name);
-      }
 
       ImGui::SpacedSeparator();
 
@@ -364,7 +359,7 @@ class SettingsScreen : public UiScreen {
       }
       ImGui::HelpTooltip(std::format("Open \"{}\"", app_.file_system().GetUserDataPath().string()));
 
-      if (ImGui::Button(std::format("{} Debug info", icons::kSmartToy))) {
+      if (ImGui::Button(std::format("{} Info", icons::kSmartToy))) {
         debug_info_dialog_.NotifyOpen(app_.GetDebugInfoString());
       }
 

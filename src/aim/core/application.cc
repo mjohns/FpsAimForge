@@ -771,6 +771,13 @@ class ApplicationImpl : public Application {
     add("");
 
     add(std::format("MSAA sample count: {}", SampleCountToInt(msaa_sample_count_)));
+    const char* driver_name_ptr = SDL_GetGPUDeviceDriver(gpu_device_);
+    std::string driver_name = driver_name_ptr != nullptr ? driver_name_ptr : "invalid";
+    add(std::format("GPU device driver: {}", driver_name));
+
+    add("");
+    add("Settings");
+    add(MessageToJson(settings_manager_->GetCurrentSettings()));
 
     return result;
   }
