@@ -152,6 +152,7 @@ class BundleUiComponentImpl : public BundleUiComponent {
     ImGui::Text("Bundle name: %s", selected_bundle_name_.c_str());
 
     bool need_update = false;
+    bool reload_bundles_from_disk = false;
 
     if (selected_bundle_name_ == kUserBundleName) {
       // Force user bundle being writable if necessary.
@@ -168,6 +169,18 @@ class BundleUiComponentImpl : public BundleUiComponent {
         info.set_readonly(readonly);
         need_update = true;
       }
+
+      bool archived = info.archived();
+      ImGui::AlignTextToFramePadding();
+      ImGui::Text("Archived");
+      ImGui::SameLine();
+      if (ImGui::Checkbox("##ArchivedInput", &archived)) {
+        info.set_archived(archived);
+        need_update = true;
+        reload_bundles_from_disk = true;
+      }
+      ImGui::SameLine();
+      ImGui::HelpMarker("Bundle will not be loaded");
     }
 
     ImGui::Spacing();
@@ -196,6 +209,9 @@ class BundleUiComponentImpl : public BundleUiComponent {
     if (need_update) {
       app_.bundle_manager().UpdateBundleInfo(info);
     }
+    if (reload_bundles_from_disk) {
+      app_.bundle_manager().LoadBundlesFromDisk();
+    }
   }
 
   void DrawBundlesList() {
@@ -203,9 +219,20 @@ class BundleUiComponentImpl : public BundleUiComponent {
     auto bundle_infos = app_.bundle_manager().GetBundleInfos();
     for (const BundleInfo& bundle : bundle_infos) {
       auto id_guard = loop_id.Get();
-      if (ImGui::Selectable(bundle.bundle_name().c_str(),
-                            bundle.bundle_name() == selected_bundle_name_)) {
+      std::string display_text = bundle.bundle_name();
+      std::string help_text;
+      if (bundle.archived()) {
+        display_text = std::format("{} {}", display_text, icons::kArchive);
+        help_text = "Archived";
+      } else if (bundle.readonly()) {
+        display_text = std::format("{} {}", display_text, icons::kEditOff);
+        help_text = "Readonly";
+      }
+      if (ImGui::Selectable(display_text.c_str(), bundle.bundle_name() == selected_bundle_name_)) {
         selected_bundle_name_ = bundle.bundle_name();
+      }
+      if (help_text.size() > 0) {
+        ImGui::HelpTooltip(help_text);
       }
     }
   }

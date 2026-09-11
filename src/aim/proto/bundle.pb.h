@@ -237,6 +237,7 @@ class BundleInfo final : public ::google::protobuf::Message
   enum : int {
     kBundleNameFieldNumber = 1,
     kReadonlyFieldNumber = 2,
+    kArchivedFieldNumber = 3,
   };
   // string bundle_name = 1;
   bool has_bundle_name() const;
@@ -265,11 +266,22 @@ class BundleInfo final : public ::google::protobuf::Message
   void _internal_set_readonly(bool value);
 
   public:
+  // bool archived = 3;
+  bool has_archived() const;
+  void clear_archived() ;
+  bool archived() const;
+  void set_archived(bool value);
+
+  private:
+  bool _internal_archived() const;
+  void _internal_set_archived(bool value);
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.BundleInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<1, 2,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
                                    0, 34,
                                    2>
       _table_;
@@ -293,6 +305,7 @@ class BundleInfo final : public ::google::protobuf::Message
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr bundle_name_;
     bool readonly_;
+    bool archived_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -2154,6 +2167,35 @@ inline bool BundleInfo::_internal_readonly() const {
 inline void BundleInfo::_internal_set_readonly(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.readonly_ = value;
+}
+
+// bool archived = 3;
+inline bool BundleInfo::has_archived() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  return value;
+}
+inline void BundleInfo::clear_archived() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.archived_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline bool BundleInfo::archived() const {
+  // @@protoc_insertion_point(field_get:aim.BundleInfo.archived)
+  return _internal_archived();
+}
+inline void BundleInfo::set_archived(bool value) {
+  _internal_set_archived(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_set:aim.BundleInfo.archived)
+}
+inline bool BundleInfo::_internal_archived() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.archived_;
+}
+inline void BundleInfo::_internal_set_archived(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.archived_ = value;
 }
 
 // -------------------------------------------------------------------

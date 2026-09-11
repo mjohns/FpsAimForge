@@ -30,6 +30,7 @@ message BundleFile {
 message BundleInfo {
   string bundle_name = 1;
   bool readonly = 2;
+  bool archived = 3;
 }
 
 // Structure for bundles.json file.

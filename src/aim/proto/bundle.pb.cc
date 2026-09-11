@@ -32,7 +32,8 @@ inline constexpr BundleInfo::Impl_::Impl_(
         bundle_name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        readonly_{false} {}
+        readonly_{false},
+        archived_{false} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR BundleInfo::BundleInfo(::_pbi::ConstantInitialized)
@@ -229,11 +230,13 @@ const ::uint32_t
         2,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::BundleInfo, _impl_._has_bits_),
-        5, // hasbit index offset
+        6, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::aim::BundleInfo, _impl_.bundle_name_),
         PROTOBUF_FIELD_OFFSET(::aim::BundleInfo, _impl_.readonly_),
+        PROTOBUF_FIELD_OFFSET(::aim::BundleInfo, _impl_.archived_),
         0,
         1,
+        2,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::BundleInfoFile, _impl_._has_bits_),
         4, // hasbit index offset
@@ -248,7 +251,7 @@ static const ::_pbi::MigrationSchema
         {14, sizeof(::aim::BundleGuide)},
         {21, sizeof(::aim::BundleFile)},
         {30, sizeof(::aim::BundleInfo)},
-        {37, sizeof(::aim::BundleInfoFile)},
+        {39, sizeof(::aim::BundleInfoFile)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::aim::_BundleScenario_default_instance_._instance,
@@ -269,10 +272,10 @@ const char descriptor_table_protodef_bundle_2eproto[] ABSL_ATTRIBUTE_SECTION_VAR
     "uideDef\"~\n\nBundleFile\022&\n\tscenarios\030\001 \003(\013"
     "2\023.aim.BundleScenario\022&\n\tplaylists\030\002 \003(\013"
     "2\023.aim.BundlePlaylist\022 \n\006guides\030\003 \003(\0132\020."
-    "aim.BundleGuide\"3\n\nBundleInfo\022\023\n\013bundle_"
-    "name\030\001 \001(\t\022\020\n\010readonly\030\002 \001(\010\"2\n\016BundleIn"
-    "foFile\022 \n\007bundles\030\001 \003(\0132\017.aim.BundleInfo"
-    "b\010editionsp\350\007"
+    "aim.BundleGuide\"E\n\nBundleInfo\022\023\n\013bundle_"
+    "name\030\001 \001(\t\022\020\n\010readonly\030\002 \001(\010\022\020\n\010archived"
+    "\030\003 \001(\010\"2\n\016BundleInfoFile\022 \n\007bundles\030\001 \003("
+    "\0132\017.aim.BundleInfob\010editionsp\350\007"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_bundle_2eproto_deps[3] = {
@@ -284,7 +287,7 @@ static ::absl::once_flag descriptor_table_bundle_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_bundle_2eproto = {
     false,
     false,
-    493,
+    511,
     descriptor_table_protodef_bundle_2eproto,
     "bundle.proto",
     &descriptor_table_bundle_2eproto_once,
@@ -1659,7 +1662,13 @@ BundleInfo::BundleInfo(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.readonly_ = from._impl_.readonly_;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, readonly_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, readonly_),
+           offsetof(Impl_, archived_) -
+               offsetof(Impl_, readonly_) +
+               sizeof(Impl_::archived_));
 
   // @@protoc_insertion_point(copy_constructor:aim.BundleInfo)
 }
@@ -1671,7 +1680,12 @@ PROTOBUF_NDEBUG_INLINE BundleInfo::Impl_::Impl_(
 
 inline void BundleInfo::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.readonly_ = {};
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, readonly_),
+           0,
+           offsetof(Impl_, archived_) -
+               offsetof(Impl_, readonly_) +
+               sizeof(Impl_::archived_));
 }
 BundleInfo::~BundleInfo() {
   // @@protoc_insertion_point(destructor:aim.BundleInfo)
@@ -1731,16 +1745,16 @@ BundleInfo::GetClassData() const {
   return BundleInfo_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 34, 2>
+const ::_pbi::TcParseTable<2, 3, 0, 34, 2>
 BundleInfo::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_._has_bits_),
     0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
+    3, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
+    3,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     BundleInfo_class_data_.base(),
@@ -1750,14 +1764,19 @@ BundleInfo::_table_ = {
     ::_pbi::TcParser::GetTable<::aim::BundleInfo>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bool readonly = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(BundleInfo, _impl_.readonly_), 1>(),
-     {16, 1, 0,
-      PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.readonly_)}},
+    {::_pbi::TcParser::MiniParse, {}},
     // string bundle_name = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.bundle_name_)}},
+    // bool readonly = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(BundleInfo, _impl_.readonly_), 1>(),
+     {16, 1, 0,
+      PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.readonly_)}},
+    // bool archived = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(BundleInfo, _impl_.archived_), 2>(),
+     {24, 2, 0,
+      PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.archived_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -1765,6 +1784,8 @@ BundleInfo::_table_ = {
     {PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.bundle_name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // bool readonly = 2;
     {PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.readonly_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // bool archived = 3;
+    {PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.archived_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
   }},
   // no aux_entries
   {{
@@ -1784,7 +1805,9 @@ PROTOBUF_NOINLINE void BundleInfo::Clear() {
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     _impl_.bundle_name_.ClearNonDefaultToEmpty();
   }
-  _impl_.readonly_ = false;
+  ::memset(&_impl_.readonly_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.archived_) -
+      reinterpret_cast<char*>(&_impl_.readonly_)) + sizeof(_impl_.archived_));
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1823,6 +1846,13 @@ PROTOBUF_NOINLINE void BundleInfo::Clear() {
         2, this_._internal_readonly(), target);
   }
 
+  // bool archived = 3;
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(
+        3, this_._internal_archived(), target);
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -1848,7 +1878,7 @@ PROTOBUF_NOINLINE void BundleInfo::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  total_size += static_cast<bool>(0x00000002U & cached_has_bits) * 2;
+  total_size += ::absl::popcount(0x00000006U & cached_has_bits) * 2;
    {
     // string bundle_name = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
@@ -1874,12 +1904,15 @@ void BundleInfo::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       _this->_internal_set_bundle_name(from._internal_bundle_name());
     }
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       _this->_impl_.readonly_ = from._impl_.readonly_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _this->_impl_.archived_ = from._impl_.archived_;
     }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
@@ -1902,7 +1935,12 @@ void BundleInfo::InternalSwap(BundleInfo* PROTOBUF_RESTRICT PROTOBUF_NONNULL oth
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.bundle_name_, &other->_impl_.bundle_name_, arena);
-  swap(_impl_.readonly_, other->_impl_.readonly_);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.archived_)
+      + sizeof(BundleInfo::_impl_.archived_)
+      - PROTOBUF_FIELD_OFFSET(BundleInfo, _impl_.readonly_)>(
+          reinterpret_cast<char*>(&_impl_.readonly_),
+          reinterpret_cast<char*>(&other->_impl_.readonly_));
 }
 
 ::google::protobuf::Metadata BundleInfo::GetMetadata() const {
