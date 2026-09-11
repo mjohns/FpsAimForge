@@ -714,9 +714,8 @@ class ApplicationImpl : public Application {
       // Initialize first startup to have a playlist selected and in recents.
       history_manager_->UpdateRecentView(ObjectType::PLAYLIST, "VDIM Intermediate S5 - Clicking I");
       history_manager_->UpdateRecentView(ObjectType::PLAYLIST, "AF Static Speed Ladder");
-      history_manager_->UpdateRecentView(ObjectType::PLAYLIST,
-                                         "AF Horizontal Smoothness Fixed Sens");
       history_manager_->UpdateRecentView(ObjectType::PLAYLIST, "AF Clicking");
+      history_manager_->UpdateRecentView(ObjectType::SCENARIO, "AF Static3");
     }
 
     // bundle_manager_->SaveDirtyBundles();
