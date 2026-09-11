@@ -22,6 +22,7 @@
 #include "aim/ui/search_selector.h"
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 
 namespace aim {
 namespace {
@@ -156,8 +157,9 @@ class GuideViewer {
       }
       if (highest_level_item.highest_level) {
         ImGui::TableNextColumn();
-        ImGui::TextFmt(
+        std::string text = std::format(
             "L{}{}", MaybeIntToString(*highest_level_item.highest_level, 1), icons::kVerified);
+        ImGui::TextAligned(1.0f, -FLT_MIN, "%s", text.c_str());
       }
     }
 
