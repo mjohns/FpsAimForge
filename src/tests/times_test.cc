@@ -1,5 +1,6 @@
 #include "aim/common/times.h"
 
+#include "absl/time/time.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -39,4 +40,20 @@ TEST(TimesTest, GetHowLongAgoString) {
   EXPECT_THAT(GetHowLongAgoStringFromEpochSeconds(0, 366 * day), StrEq("1 year ago"));
   EXPECT_THAT(GetHowLongAgoStringFromEpochSeconds(0, 368 * day), StrEq("1 year ago"));
   EXPECT_THAT(GetHowLongAgoStringFromEpochSeconds(0, 72 * week), StrEq("1.3 years ago"));
+}
+
+TEST(TimesTest, EpochSecondsToIsoDateString) {
+  auto tz = absl::UTCTimeZone();
+
+  i64 sept12 = 1789171200;
+
+  EXPECT_THAT(EpochSecondsToIsoDateString(sept12, tz), StrEq("20260912"));
+  EXPECT_THAT(EpochSecondsToIsoDateString(sept12 + 60, tz), StrEq("20260912"));
+  EXPECT_THAT(EpochSecondsToIsoDateString(sept12 - 1, tz), StrEq("20260911"));
+}
+
+TEST(TimesTest, YyyymmddToEpochDays) {
+  EXPECT_THAT(YyyymmddToEpochDays("20260912"), Eq(20708));
+  EXPECT_THAT(YyyymmddToEpochDays("20260913"), Eq(20709));
+  EXPECT_THAT(YyyymmddToEpochDays("20260910"), Eq(20706));
 }

@@ -1,7 +1,8 @@
 set(NAME FpsAimForgeTests)
 
-file(GLOB_RECURSE TEST_SOURCES
+set(TEST_SOURCES
   "aim_db_test.cc"
+  "backup_test.cc"
   "bundle_functional_test.cc"
   "geometry_test.cc"
   "name_util_test.cc"
@@ -12,7 +13,6 @@ file(GLOB_RECURSE TEST_SOURCES
   "times_test.cc"
   "util_test.cc"
   "collections_test.cc"
-  "proto_util_test.cc"
 )
 
 # Add the test executable

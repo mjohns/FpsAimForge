@@ -2,10 +2,8 @@
 
 #include <chrono>
 #include <format>
-#include <iomanip>
-#include <sstream>
 
-#include "absl/time/clock.h"
+#include "absl/time/civil_time.h"
 #include "absl/time/time.h"
 #include "aim/common/log.h"
 #include "aim/common/util.h"
@@ -170,6 +168,27 @@ i64 GetNowEpochSeconds() {
 
 i32 GetNowEpochMinutes() {
   return GetNowEpochSeconds() / 60;
+}
+
+std::string EpochMicrosToIsoDateString(i64 micros, absl::TimeZone time_zone) {
+  return EpochSecondsToIsoDateString(micros / 1000000, time_zone);
+}
+
+std::string EpochSecondsToIsoDateString(i64 seconds, absl::TimeZone time_zone) {
+  return absl::FormatTime("%Y%m%d", absl::FromTimeT(seconds), time_zone);
+}
+
+int YyyymmddToEpochDays(std::string_view date_str) {
+  if (date_str.length() != 8) {
+    return 0;
+  }
+  std::string formatted_str =
+      std::format("{}-{}-{}", date_str.substr(0, 4), date_str.substr(4, 2), date_str.substr(6, 2));
+  absl::CivilDay cd;
+  if (!absl::ParseCivilTime(formatted_str, &cd)) {
+    return 0;
+  }
+  return (cd - absl::CivilDay(1970, 1, 1));
 }
 
 }  // namespace aim

@@ -5,11 +5,16 @@
 #include <optional>
 #include <string>
 
+#include "absl/time/time.h"
 #include "aim/common/simple_types.h"
 
 namespace aim {
 
 std::string EpochSecondsToString(i64 epoch_seconds);
+std::string EpochSecondsToIsoDateString(i64 micros, absl::TimeZone);
+std::string EpochMicrosToIsoDateString(i64 micros, absl::TimeZone);
+
+int YyyymmddToEpochDays(std::string_view date_str);
 
 i64 GetNowEpochMicros();
 i64 GetNowEpochMillis();
@@ -22,7 +27,7 @@ static i64 TimesPerSecondToIntervalMicros(float times_per_second) {
   return micros_per_second / times_per_second;
 }
 
-inline float MicrosToSeconds(u32 micros) {
+inline float MicrosToSeconds(i64 micros) {
   return micros / 1000000.0f;
 }
 
