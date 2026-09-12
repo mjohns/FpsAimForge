@@ -171,6 +171,17 @@ class ScenarioEditorScreen : public UiScreen {
         ImGui::HelpMarker(
             "Save the current changes in a new copy of the scenario leaving the original "
             "unchanged.");
+
+        if (ImGui::Selectable("Copy as reference")) {
+          PopSelf();
+          ScenarioEditorOptions opts;
+          opts.scenario_name = name_.full_name();
+          opts.is_new_copy = true;
+          opts.copy_as_reference = true;
+          app_.PushNextScreen(CreateScenarioEditorScreen(opts));
+        }
+        ImGui::SameLine();
+        ImGui::HelpMarker("Switch to making a new copy of the current scenario as a reference.");
       }
 
       if (ImGui::Selectable("Import Json")) {
