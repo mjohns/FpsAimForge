@@ -178,7 +178,7 @@ class ScenarioEditorScreen : public UiScreen {
           opts.scenario_name = name_.full_name();
           opts.is_new_copy = true;
           opts.copy_as_reference = true;
-          app_.PushNextScreen(CreateScenarioEditorScreen(opts));
+          PushNextScreen(CreateScenarioEditorScreen(opts));
         }
         ImGui::SameLine();
         ImGui::HelpMarker("Switch to making a new copy of the current scenario as a reference.");

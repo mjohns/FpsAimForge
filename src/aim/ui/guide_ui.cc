@@ -4,6 +4,7 @@
 #include <string>
 
 #include "absl/algorithm/container.h"
+#include "absl/container/linked_hash_map.h"
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/object_type.h"
@@ -193,7 +194,7 @@ class GuideViewer {
     for (auto& entry : highest_level_cache_) {
       items.push_back(&entry.second);
     }
-    absl::c_sort(items, &SortCacheItems);
+    absl::c_stable_sort(items, &SortCacheItems);
 
     i64 now_micros = GetNowEpochMicros();
     for (int i = 0; i < num_to_load && i < items.size(); ++i) {
@@ -213,7 +214,7 @@ class GuideViewer {
  private:
   Application& app_ = GetUiApp();
 
-  std::unordered_map<std::string, HighestLevelCacheItem> highest_level_cache_;
+  absl::linked_hash_map<std::string, HighestLevelCacheItem> highest_level_cache_;
   i64 cache_refresh_time_micros_ = SecondsToMicros(0.6);
   std::string guide_name_;
 };
