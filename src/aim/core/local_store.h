@@ -23,6 +23,10 @@ class LocalStore {
   void PutInt(const std::string& key, int value);
   std::optional<int> GetInt(const std::string& key);
 
+  void PutBool(const std::string& key, bool value);
+  std::optional<bool> GetOptionalBool(const std::string& key);
+  bool GetBool(const std::string& key);
+
  private:
   std::unique_ptr<LocalStoreDb> local_store_db_;
   std::unordered_map<std::string, std::string> value_cache_;

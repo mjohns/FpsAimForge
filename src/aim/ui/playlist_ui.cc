@@ -9,6 +9,7 @@
 #include "aim/core/application.h"
 #include "aim/core/bundle_manager.h"
 #include "aim/core/history_manager.h"
+#include "aim/core/local_store.h"
 #include "aim/core/scenario_manager.h"
 #include "aim/core/stats_manager.h"
 #include "aim/ui/copy_playlist_dialog.h"
@@ -22,6 +23,8 @@
 
 namespace aim {
 namespace {
+
+constexpr const char* kHideDescriptionsKey = "hide_playlist_descriptions";
 
 class AddPlaylistDialog {
  public:
@@ -160,6 +163,14 @@ class PlaylistComponentImpl : public PlaylistComponent {
         select_variation_dialog_.NotifyOpen(run->playlist.name);
       }
 
+      bool hide_description = app_.local_store().GetBool(kHideDescriptionsKey);
+      std::string description_text =
+          hide_description ? std::format("{} Show descriptions", icons::kVisibility)
+                           : std::format("{} Hide descriptions", icons::kVisibilityOff);
+      if (ImGui::Selectable(description_text)) {
+        app_.local_store().PutBool(kHideDescriptionsKey, !hide_description);
+      }
+
       ImGui::SpacedSeparator();
       if (is_readonly) {
         ImGui::AlignTextToFramePadding();
@@ -195,20 +206,23 @@ class PlaylistComponentImpl : public PlaylistComponent {
 
     const PlaylistDef& def = run->playlist.def();
 
-    if (def.levels().base_scenario().size() > 0) {
-      auto maybe_base =
-          app_.scenario_manager().GetEvaluatedScenarioDef(def.levels().base_scenario());
-      if (maybe_base) {
-        std::string description = maybe_base->description();
-        if (description.size() > 0) {
-          ImGui::TextWrapped(description);
+    bool hide_description = app_.local_store().GetBool(kHideDescriptionsKey);
+    if (!hide_description) {
+      if (def.levels().base_scenario().size() > 0) {
+        auto maybe_base =
+            app_.scenario_manager().GetEvaluatedScenarioDef(def.levels().base_scenario());
+        if (maybe_base) {
+          std::string description = maybe_base->description();
+          if (description.size() > 0) {
+            ImGui::TextWrapped(description);
+          }
         }
       }
-    }
 
-    std::string description = def.description();
-    if (description.size() > 0) {
-      ImGui::TextWrapped(description);
+      std::string description = def.description();
+      if (description.size() > 0) {
+        ImGui::TextWrapped(description);
+      }
     }
 
     ImGui::Spacing();

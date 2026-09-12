@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "absl/strings/numbers.h"
-#include "aim/common/util.h"
 #include "aim/database/local_store_db.h"
 
 namespace aim {
@@ -44,6 +43,18 @@ std::optional<int> LocalStore::GetInt(const std::string& key) {
   }
 
   return {};
+}
+
+void LocalStore::PutBool(const std::string& key, bool value) {
+  PutInt(key, value ? 1 : 0);
+}
+
+std::optional<bool> LocalStore::GetOptionalBool(const std::string& key) {
+  return GetInt(key).transform([](int val) { return val > 0; });
+}
+
+bool LocalStore::GetBool(const std::string& key) {
+  return GetOptionalBool(key).value_or(false);
 }
 
 }  // namespace aim
