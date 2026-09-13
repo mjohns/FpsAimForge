@@ -72,4 +72,74 @@ SimpleBackupActions GetSimpleBackupActions(const std::vector<std::string>& exist
   return actions;
 }
 
+std::optional<std::string> ParseYyyymmddFromBackupName(const std::string& backup_name,
+                                                       const std::string& prefix) {
+  if (!backup_name.starts_with(prefix)) {
+    return {};
+  }
+
+  int date_len = 8;
+  if (backup_name.size() < prefix.size() + date_len) {
+    return {};
+  }
+
+  std::string date = backup_name.substr(prefix.size(), date_len);
+  int date_num = YyyymmddToEpochDays(date);
+  if (date_num > 0) {
+    return date;
+  }
+  return {};
+}
+
+std::vector<ExistingBackup> GetExistingBackups(const std::filesystem::path& backup_dir,
+                                               const std::string& name_prefix) {
+  std::vector<ExistingBackup> backups;
+  if (!std::filesystem::exists(backup_dir)) {
+    return backups;
+  }
+  if (!std::filesystem::is_directory(backup_dir)) {
+    return backups;
+  }
+  for (const auto& entry : std::filesystem::directory_iterator(backup_dir)) {
+    std::string filename = entry.path().filename().string();
+    auto maybe_date = ParseYyyymmddFromBackupName(filename, name_prefix);
+    if (maybe_date) {
+      ExistingBackup backup;
+      backup.path = entry.path();
+      backup.date = *maybe_date;
+      backups.push_back(backup);
+    }
+  }
+  return backups;
+}
+
+BackupActions GetBackupActions(const std::filesystem::path& backup_dir,
+                               const std::string& name_prefix,
+                               const BackupOptions& options,
+                               const std::string& now_date) {
+  std::vector<ExistingBackup> existing_backups = GetExistingBackups(backup_dir, name_prefix);
+  std::vector<std::string> backup_dates;
+  for (auto& backup : existing_backups) {
+    backup_dates.push_back(backup.date);
+  }
+
+  SimpleBackupActions simple_actions = GetSimpleBackupActions(backup_dates, options, now_date);
+
+  BackupActions actions;
+  actions.make_new_backup = simple_actions.make_new_backup;
+
+  for (const ExistingBackup& existing_backup : existing_backups) {
+    if (VectorContains(simple_actions.delete_backups, existing_backup.date)) {
+      actions.delete_backups.push_back(existing_backup.path);
+    }
+  }
+
+  return actions;
+}
+
+std::string GetNowBackupDate() {
+  absl::TimeZone tz = absl::LocalTimeZone();
+  return EpochSecondsToYyyymmdd(GetNowEpochSeconds(), tz);
+}
+
 }  // namespace aim

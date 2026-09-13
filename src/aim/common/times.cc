@@ -170,11 +170,11 @@ i32 GetNowEpochMinutes() {
   return GetNowEpochSeconds() / 60;
 }
 
-std::string EpochMicrosToIsoDateString(i64 micros, absl::TimeZone time_zone) {
-  return EpochSecondsToIsoDateString(micros / 1000000, time_zone);
+std::string EpochMicrosToYyyymmdd(i64 micros, absl::TimeZone time_zone) {
+  return EpochSecondsToYyyymmdd(micros / 1000000, time_zone);
 }
 
-std::string EpochSecondsToIsoDateString(i64 seconds, absl::TimeZone time_zone) {
+std::string EpochSecondsToYyyymmdd(i64 seconds, absl::TimeZone time_zone) {
   return absl::FormatTime("%Y%m%d", absl::FromTimeT(seconds), time_zone);
 }
 

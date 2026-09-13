@@ -11,8 +11,8 @@
 namespace aim {
 
 std::string EpochSecondsToString(i64 epoch_seconds);
-std::string EpochSecondsToIsoDateString(i64 micros, absl::TimeZone);
-std::string EpochMicrosToIsoDateString(i64 micros, absl::TimeZone);
+std::string EpochSecondsToYyyymmdd(i64 micros, absl::TimeZone);
+std::string EpochMicrosToYyyymmdd(i64 micros, absl::TimeZone);
 
 int YyyymmddToEpochDays(std::string_view date_str);
 

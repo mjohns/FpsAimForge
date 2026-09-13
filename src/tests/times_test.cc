@@ -42,14 +42,14 @@ TEST(TimesTest, GetHowLongAgoString) {
   EXPECT_THAT(GetHowLongAgoStringFromEpochSeconds(0, 72 * week), StrEq("1.3 years ago"));
 }
 
-TEST(TimesTest, EpochSecondsToIsoDateString) {
+TEST(TimesTest, EpochSecondsToYyymmdd) {
   auto tz = absl::UTCTimeZone();
 
   i64 sept12 = 1789171200;
 
-  EXPECT_THAT(EpochSecondsToIsoDateString(sept12, tz), StrEq("20260912"));
-  EXPECT_THAT(EpochSecondsToIsoDateString(sept12 + 60, tz), StrEq("20260912"));
-  EXPECT_THAT(EpochSecondsToIsoDateString(sept12 - 1, tz), StrEq("20260911"));
+  EXPECT_THAT(EpochSecondsToYyyymmdd(sept12, tz), StrEq("20260912"));
+  EXPECT_THAT(EpochSecondsToYyyymmdd(sept12 + 60, tz), StrEq("20260912"));
+  EXPECT_THAT(EpochSecondsToYyyymmdd(sept12 - 1, tz), StrEq("20260911"));
 }
 
 TEST(TimesTest, YyyymmddToEpochDays) {

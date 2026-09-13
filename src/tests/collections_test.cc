@@ -1,7 +1,7 @@
 #include "aim/common/collections.h"
 
-#include "aim/proto/scenario.pb.h"
 #include "aim/proto/guide.pb.h"
+#include "aim/proto/scenario.pb.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "protobuf-matchers/protocol-buffer-matchers.h"
@@ -38,8 +38,6 @@ TEST(CollectionsTest, MoveRepeatedItem) {
   MoveRepeatedItem(section.mutable_playlists(), -1, 3);
   EXPECT_THAT(section, EqualsProto(CreateGuideSection({"2", "4", "3", "1"})));
 }
-
-
 
 TEST(CollectionsTest, InsertAtIndexInteger) {
   ProfileListInfo info;
