@@ -679,17 +679,29 @@ class ApplicationImpl : public Application {
       return std::format("Unable to load fonts from \"{}\"", fonts_path.string());
     }
 
-    MaybeBackupAimDb(settings_manager_->GetCurrentSettings());
+    MaybeBackupAimDb(settings_manager_->GetCurrentSettings().db_backups());
 
     return {};
   }
 
-  void MaybeBackupAimDb(const Settings& settings) {
+  void MaybeBackupAimDb(const BackupSettings& settings) {
+    if (settings.disable_backups()) {
+      return;
+    }
+
     auto backup_dir = file_system_->GetUserDataPath("db/backups");
     std::string now_date = GetNowBackupDate();
+
     BackupOptions options;
     options.backup_every_n_days = 1;
     options.max_backups = 12;
+    if (settings.has_max_backups_to_keep()) {
+      options.max_backups = settings.max_backups_to_keep();
+    }
+    if (settings.has_backup_every_n_days()) {
+      options.max_backups = settings.backup_every_n_days();
+    }
+
     BackupActions actions = GetBackupActions(backup_dir, "aim_", options, now_date);
     for (const std::filesystem::path& delete_backup : actions.delete_backups) {
       std::error_code ec;

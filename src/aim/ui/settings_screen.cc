@@ -383,7 +383,50 @@ class SettingsScreen : public UiScreen {
       ImGui::EndTabItem();
     }
 
+    if (ImGui::BeginTabItem("Backups")) {
+      ImGui::Spacing();
+      DrawBackupSettings();
+      ImGui::EndTabItem();
+    }
+
     ImGui::EndTabBar();
+  }
+
+  void DrawBackupSettings() {
+    ImGui::IdGuard cid("BackupSettings");
+    BackupSettings& s = *updater_.settings.mutable_db_backups();
+
+    ImGui::InputBool("Enable database backups",
+                     InvertBoolField(PROTO_BOOL_FIELD(BackupSettings, &s, disable_backups)));
+
+    if (!s.disable_backups()) {
+      ImGui::Indent();
+      ImGui::InputInt(ImGui::InputIntParams::WithLabelAsId("Backup every n days")
+                          .set_step(1, 1)
+                          .set_min(1)
+                          .set_default(1)
+                          .set_width(char_x_ * 10),
+                      PROTO_INT_FIELD(BackupSettings, &s, backup_every_n_days));
+      ImGui::SameLine();
+      ImGui::HelpMarker("1 means backup every day. 2 means backup every other day.");
+
+      ImGui::InputInt(ImGui::InputIntParams::WithLabelAsId("Max backups to keep")
+                          .set_step(1, 1)
+                          .set_min(1)
+                          .set_default(12)
+                          .set_width(char_x_ * 10),
+                      PROTO_INT_FIELD(BackupSettings, &s, max_backups_to_keep));
+
+      ImGui::Unindent();
+    }
+
+    ImGui::SpacedSeparator();
+
+    auto folder = app_.file_system().GetUserDataPath("db/backups");
+    if (ImGui::Button(std::format("{} Backups folder", icons::kOpenInNew))) {
+      OpenFolderInExplorer(folder);
+    }
+    ImGui::HelpTooltip(std::format("Open \"{}\"", folder.string()));
   }
 
   void DrawKeybinds() {

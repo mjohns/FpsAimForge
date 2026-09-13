@@ -20,6 +20,15 @@ enum MsaaLevel {
   MSAA_LEVEL_8X = 8;
 }
 
+message BackupSettings {
+  bool disable_backups = 1 [features.field_presence = IMPLICIT];
+
+  // Defaults to backing up every day.
+  int32 backup_every_n_days = 2;
+
+  int32 max_backups_to_keep = 3;
+}
+
 message Settings {
   float dpi = 1;
   float cm_per_360 = 2;
@@ -70,6 +79,8 @@ message Settings {
   // By default the display with the highest refresh rate will be chosen.
   // Specify the name of a different display to use here if that is not correct.
   string explicit_display_name = 24;
+
+  BackupSettings db_backups = 25;
 }
 
 message SoundItem {
