@@ -42,18 +42,19 @@ TEST(TimesTest, GetHowLongAgoString) {
   EXPECT_THAT(GetHowLongAgoStringFromEpochSeconds(0, 72 * week), StrEq("1.3 years ago"));
 }
 
-TEST(TimesTest, EpochSecondsToYyymmdd) {
+TEST(TimesTest, EpochSecondsToIsoDate) {
   auto tz = absl::UTCTimeZone();
 
   i64 sept12 = 1789171200;
 
-  EXPECT_THAT(EpochSecondsToYyyymmdd(sept12, tz), StrEq("20260912"));
-  EXPECT_THAT(EpochSecondsToYyyymmdd(sept12 + 60, tz), StrEq("20260912"));
-  EXPECT_THAT(EpochSecondsToYyyymmdd(sept12 - 1, tz), StrEq("20260911"));
+  EXPECT_THAT(EpochSecondsToIsoDate(sept12, tz), StrEq("2026-09-12"));
+  EXPECT_THAT(EpochSecondsToIsoDate(sept12 + 60, tz), StrEq("2026-09-12"));
+  EXPECT_THAT(EpochSecondsToIsoDate(sept12 - 1, tz), StrEq("2026-09-11"));
 }
 
-TEST(TimesTest, YyyymmddToEpochDays) {
-  EXPECT_THAT(YyyymmddToEpochDays("20260912"), Eq(20708));
-  EXPECT_THAT(YyyymmddToEpochDays("20260913"), Eq(20709));
-  EXPECT_THAT(YyyymmddToEpochDays("20260910"), Eq(20706));
+TEST(TimesTest, IsoDateToEpochDays) {
+  EXPECT_THAT(IsoDateToEpochDays("2026-09-12"), Eq(20708));
+  EXPECT_THAT(IsoDateToEpochDays("2026-09-13"), Eq(20709));
+  EXPECT_THAT(IsoDateToEpochDays("2026-09-10"), Eq(20706));
+  EXPECT_THAT(IsoDateToEpochDays("20260910"), Eq(0));
 }

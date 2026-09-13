@@ -11,10 +11,10 @@
 namespace aim {
 
 std::string EpochSecondsToString(i64 epoch_seconds);
-std::string EpochSecondsToYyyymmdd(i64 micros, absl::TimeZone);
-std::string EpochMicrosToYyyymmdd(i64 micros, absl::TimeZone);
+std::string EpochSecondsToIsoDate(i64 micros, absl::TimeZone);
+std::string EpochMicrosToIsoDate(i64 micros, absl::TimeZone);
 
-int YyyymmddToEpochDays(std::string_view date_str);
+int IsoDateToEpochDays(std::string_view date_str);
 
 i64 GetNowEpochMicros();
 i64 GetNowEpochMillis();

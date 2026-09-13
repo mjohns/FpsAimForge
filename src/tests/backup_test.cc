@@ -77,7 +77,7 @@ class BackupTest : public ::testing::Test {
 TEST_F(BackupTest, TestSimpleBackup_NoExistingBackups) {
   BackupOptions options;
   options.max_backups = 1;
-  SimpleBackupActions actions = GetSimpleBackupActions({}, options, "20260911");
+  SimpleBackupActions actions = GetSimpleBackupActions({}, options, "2026-09-11");
   EXPECT_THAT(actions.delete_backups, IsEmpty());
   EXPECT_TRUE(actions.make_new_backup);
 }
@@ -86,17 +86,17 @@ TEST_F(BackupTest, TestSimpleBackup_NotTimeForNewBackup) {
   BackupOptions options;
   options.max_backups = 10;
   options.backup_every_n_days = 1;
-  SimpleBackupActions actions = GetSimpleBackupActions({"20260911"}, options, "20260911");
+  SimpleBackupActions actions = GetSimpleBackupActions({"2026-09-11"}, options, "2026-09-11");
   EXPECT_THAT(actions.delete_backups, IsEmpty());
   EXPECT_FALSE(actions.make_new_backup);
 
   options.backup_every_n_days = 2;
-  actions = GetSimpleBackupActions({"20260911"}, options, "20260912");
+  actions = GetSimpleBackupActions({"2026-09-11"}, options, "2026-09-12");
   EXPECT_THAT(actions.delete_backups, IsEmpty());
   EXPECT_FALSE(actions.make_new_backup);
 
   options.backup_every_n_days = 2;
-  actions = GetSimpleBackupActions({"20260913"}, options, "20260912");
+  actions = GetSimpleBackupActions({"2026-09-13"}, options, "2026-09-12");
   EXPECT_THAT(actions.delete_backups, IsEmpty());
   EXPECT_FALSE(actions.make_new_backup);
 }
@@ -106,7 +106,7 @@ TEST_F(BackupTest, TestSimpleBackup_BackupNoDeletions) {
   options.max_backups = 3;
   options.backup_every_n_days = 1;
   SimpleBackupActions actions =
-      GetSimpleBackupActions({"20260911", "20260910"}, options, "20260912");
+      GetSimpleBackupActions({"2026-09-11", "2026-09-10"}, options, "2026-09-12");
   EXPECT_THAT(actions.delete_backups, IsEmpty());
   EXPECT_TRUE(actions.make_new_backup);
 }
@@ -116,8 +116,8 @@ TEST_F(BackupTest, TestSimpleBackup_BackupDeleteOne) {
   options.max_backups = 2;
   options.backup_every_n_days = 1;
   SimpleBackupActions actions =
-      GetSimpleBackupActions({"20260911", "20260910"}, options, "20260912");
-  EXPECT_THAT(actions.delete_backups, ElementsAre("20260910"));
+      GetSimpleBackupActions({"2026-09-11", "2026-09-10"}, options, "2026-09-12");
+  EXPECT_THAT(actions.delete_backups, ElementsAre("2026-09-10"));
   EXPECT_TRUE(actions.make_new_backup);
 }
 
@@ -126,54 +126,54 @@ TEST_F(BackupTest, TestSimpleBackup_BackupDeleteMany) {
   options.max_backups = 2;
   options.backup_every_n_days = 1;
   SimpleBackupActions actions =
-      GetSimpleBackupActions({"20260911", "20260910", "20260908", "20250912"}, options, "20260912");
-  EXPECT_THAT(actions.delete_backups, ElementsAre("20250912", "20260908", "20260910"));
+      GetSimpleBackupActions({"2026-09-11", "2026-09-10", "2026-09-08", "2025-09-12"}, options, "2026-09-12");
+  EXPECT_THAT(actions.delete_backups, ElementsAre("2025-09-12", "2026-09-08", "2026-09-10"));
   EXPECT_TRUE(actions.make_new_backup);
 }
 
 TEST_F(BackupTest, TestParseYyyymmddFromBackupName) {
   const std::string prefix = "aim_";
-  EXPECT_THAT(ParseYyyymmddFromBackupName("aim_20120122.db", prefix), Optional(StrEq("20120122")));
-  EXPECT_THAT(ParseYyyymmddFromBackupName("aim_20120122", prefix), Optional(StrEq("20120122")));
-  EXPECT_THAT(ParseYyyymmddFromBackupName("aim_2012012.db", prefix), Eq(std::nullopt));
-  EXPECT_THAT(ParseYyyymmddFromBackupName("aim_", prefix), Eq(std::nullopt));
-  EXPECT_THAT(ParseYyyymmddFromBackupName("aimfoo_20120122", prefix), Eq(std::nullopt));
+  EXPECT_THAT(ParseDateFromBackupName("aim_2012-01-22.db", prefix), Optional(StrEq("2012-01-22")));
+  EXPECT_THAT(ParseDateFromBackupName("aim_2012-01-22", prefix), Optional(StrEq("2012-01-22")));
+  EXPECT_THAT(ParseDateFromBackupName("aim_2012-01-2.db", prefix), Eq(std::nullopt));
+  EXPECT_THAT(ParseDateFromBackupName("aim_", prefix), Eq(std::nullopt));
+  EXPECT_THAT(ParseDateFromBackupName("aimfoo_2012-01-22", prefix), Eq(std::nullopt));
 }
 
 TEST_F(BackupTest, GetExistingBackups) {
-  ASSERT_TRUE(WriteBackup("aim_20250101.db", "1"));
-  ASSERT_TRUE(WriteBackup("aim_20250102.db", "2"));
-  ASSERT_TRUE(WriteBackup("aim_20250103.db", "3"));
-  ASSERT_TRUE(WriteBackup("aim_2025010", "bad"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-01.db", "1"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-02.db", "2"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-03.db", "3"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-0", "bad"));
 
-  ASSERT_TRUE(WriteBackup("other_aim_20250103.db", "4"));
-  ASSERT_TRUE(WriteBackup("other_aim_20250104.db", "5"));
+  ASSERT_TRUE(WriteBackup("other_aim_2025-01-03.db", "4"));
+  ASSERT_TRUE(WriteBackup("other_aim_2025-01-04.db", "5"));
 
   EXPECT_THAT(GetExistingBackups(temp_dir_path_, "aim_"),
-              UnorderedElementsAre(EqualsBackup("aim_20250101.db", "20250101"),
-                                   EqualsBackup("aim_20250102.db", "20250102"),
-                                   EqualsBackup("aim_20250103.db", "20250103")));
+              UnorderedElementsAre(EqualsBackup("aim_2025-01-01.db", "2025-01-01"),
+                                   EqualsBackup("aim_2025-01-02.db", "2025-01-02"),
+                                   EqualsBackup("aim_2025-01-03.db", "2025-01-03")));
 
   EXPECT_THAT(GetExistingBackups(temp_dir_path_, "other_aim_"),
-              UnorderedElementsAre(EqualsBackup("other_aim_20250103.db", "20250103"),
-                                   EqualsBackup("other_aim_20250104.db", "20250104")));
+              UnorderedElementsAre(EqualsBackup("other_aim_2025-01-03.db", "2025-01-03"),
+                                   EqualsBackup("other_aim_2025-01-04.db", "2025-01-04")));
 }
 
 TEST_F(BackupTest, GetBackupActions) {
-  ASSERT_TRUE(WriteBackup("aim_20250101.db", "1"));
-  ASSERT_TRUE(WriteBackup("aim_20250102.db", "2"));
-  ASSERT_TRUE(WriteBackup("aim_20250103.db", "3"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-01.db", "1"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-02.db", "2"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-03.db", "3"));
 
-  ASSERT_TRUE(WriteBackup("aim_2025010", "bad"));
-  ASSERT_TRUE(WriteBackup("other_aim_20250103.db", "4"));
-  ASSERT_TRUE(WriteBackup("other_aim_20250104.db", "5"));
+  ASSERT_TRUE(WriteBackup("aim_2025-01-0", "bad"));
+  ASSERT_TRUE(WriteBackup("other_aim_2025-01-03.db", "4"));
+  ASSERT_TRUE(WriteBackup("other_aim_2025-01-04.db", "5"));
 
   BackupOptions options;
   options.backup_every_n_days = 1;
   options.max_backups = 2;
-  BackupActions actions = GetBackupActions(temp_dir_path_, "aim_", options, "20250104");
+  BackupActions actions = GetBackupActions(temp_dir_path_, "aim_", options, "2025-01-04");
   EXPECT_TRUE(actions.make_new_backup);
   EXPECT_THAT(actions.delete_backups,
-              UnorderedElementsAre(Eq(temp_dir_path_ / "aim_20250101.db"),
-                                   Eq(temp_dir_path_ / "aim_20250102.db")));
+              UnorderedElementsAre(Eq(temp_dir_path_ / "aim_2025-01-01.db"),
+                                   Eq(temp_dir_path_ / "aim_2025-01-02.db")));
 }

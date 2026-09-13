@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include <filesystem>
 #include <functional>
 #include <memory>
 
@@ -12,6 +13,7 @@
 #include "absl/cleanup/cleanup.h"
 #include "absl/log/log_sink.h"
 #include "absl/log/log_sink_registry.h"
+#include "aim/common/backup.h"
 #include "aim/common/files.h"
 #include "aim/common/log.h"
 #include "aim/common/times.h"
@@ -117,6 +119,11 @@ std::optional<std::string> InitializeAimForgeFolder(FileSystem* fs) {
   auto db_path = fs->GetUserDataPath("db");
   if (!CreateDirectories(db_path)) {
     return std::format("Unable to create folder \"{}\"", db_path.string());
+  }
+
+  auto db_backups_path = fs->GetUserDataPath("db/backups");
+  if (!CreateDirectories(db_backups_path)) {
+    return std::format("Unable to create folder \"{}\"", db_backups_path.string());
   }
 
   auto bundles_path = fs->GetUserDataPath("bundles");
@@ -672,7 +679,37 @@ class ApplicationImpl : public Application {
       return std::format("Unable to load fonts from \"{}\"", fonts_path.string());
     }
 
+    MaybeBackupAimDb(settings_manager_->GetCurrentSettings());
+
     return {};
+  }
+
+  void MaybeBackupAimDb(const Settings& settings) {
+    auto backup_dir = file_system_->GetUserDataPath("db/backups");
+    std::string now_date = GetNowBackupDate();
+    BackupOptions options;
+    options.backup_every_n_days = 1;
+    options.max_backups = 12;
+    BackupActions actions = GetBackupActions(backup_dir, "aim_", options, now_date);
+    for (const std::filesystem::path& delete_backup : actions.delete_backups) {
+      std::error_code ec;
+      bool removed = std::filesystem::remove(delete_backup, ec);
+      if (!removed) {
+        Logger::get()->warn("Failed to delete aim.db backup: {}", delete_backup.string());
+      }
+    }
+    if (actions.make_new_backup) {
+      auto db_path = file_system_->GetUserDataPath("db/aim.db");
+      std::error_code ec;
+
+      auto backup_path =
+          file_system_->GetUserDataPath(std::format("db/backups/aim_{}.db", now_date));
+      bool copied = std::filesystem::copy_file(db_path, backup_path, ec);
+      if (!copied) {
+        Logger::get()->warn(
+            "Failed to create aim.db backup: {} -> {}", db_path.string(), backup_path.string());
+      }
+    }
   }
 
   void Initialize() {

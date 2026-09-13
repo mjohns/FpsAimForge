@@ -7,21 +7,21 @@
 
 namespace aim {
 
-std::optional<std::string> ParseYyyymmddFromBackupName(const std::string& backup_name,
-                                                       const std::string& prefix);
+std::optional<std::string> ParseDateFromBackupName(const std::string& backup_name,
+                                                   const std::string& prefix);
 
 struct BackupOptions {
   int max_backups = 10;
   int backup_every_n_days = 1;
 };
 
-// yyyymmdd strings for backups to create and delete.
+// yyyy-mm-dd strings for backups to create and delete.
 struct SimpleBackupActions {
   bool make_new_backup = false;
   std::vector<std::string> delete_backups;
 };
 
-// Provide existing_backups as the yyyymmdd values that exist.
+// Provide existing_backups as the yyyy-mm-dd values that exist.
 SimpleBackupActions GetSimpleBackupActions(const std::vector<std::string>& existing_backups,
                                            const BackupOptions& options,
                                            const std::string& now_date);
@@ -33,8 +33,8 @@ struct ExistingBackup {
 std::vector<ExistingBackup> GetExistingBackups(const std::filesystem::path& backup_dir,
                                                const std::string& name_prefix);
 
-std::optional<std::string> ParseYyyymmddFromBackupName(const std::string& backup_name,
-                                                       const std::string& prefix);
+std::optional<std::string> ParseDateFromBackupName(const std::string& backup_name,
+                                                   const std::string& prefix);
 
 struct BackupActions {
   bool make_new_backup = false;

@@ -35,13 +35,13 @@ SimpleBackupActions GetSimpleBackupActions(const std::vector<std::string>& exist
     return actions;
   }
 
-  int now = YyyymmddToEpochDays(now_date);
+  int now = IsoDateToEpochDays(now_date);
 
   std::vector<BackupDate> existing_dates;
   for (const std::string& val : existing_backups) {
     BackupDate d;
     d.date = val;
-    d.date_num = YyyymmddToEpochDays(val);
+    d.date_num = IsoDateToEpochDays(val);
     existing_dates.push_back(d);
   }
 
@@ -72,19 +72,19 @@ SimpleBackupActions GetSimpleBackupActions(const std::vector<std::string>& exist
   return actions;
 }
 
-std::optional<std::string> ParseYyyymmddFromBackupName(const std::string& backup_name,
+std::optional<std::string> ParseDateFromBackupName(const std::string& backup_name,
                                                        const std::string& prefix) {
   if (!backup_name.starts_with(prefix)) {
     return {};
   }
 
-  int date_len = 8;
+  int date_len = 10;
   if (backup_name.size() < prefix.size() + date_len) {
     return {};
   }
 
   std::string date = backup_name.substr(prefix.size(), date_len);
-  int date_num = YyyymmddToEpochDays(date);
+  int date_num = IsoDateToEpochDays(date);
   if (date_num > 0) {
     return date;
   }
@@ -102,7 +102,7 @@ std::vector<ExistingBackup> GetExistingBackups(const std::filesystem::path& back
   }
   for (const auto& entry : std::filesystem::directory_iterator(backup_dir)) {
     std::string filename = entry.path().filename().string();
-    auto maybe_date = ParseYyyymmddFromBackupName(filename, name_prefix);
+    auto maybe_date = ParseDateFromBackupName(filename, name_prefix);
     if (maybe_date) {
       ExistingBackup backup;
       backup.path = entry.path();
@@ -139,7 +139,7 @@ BackupActions GetBackupActions(const std::filesystem::path& backup_dir,
 
 std::string GetNowBackupDate() {
   absl::TimeZone tz = absl::LocalTimeZone();
-  return EpochSecondsToYyyymmdd(GetNowEpochSeconds(), tz);
+  return EpochSecondsToIsoDate(GetNowEpochSeconds(), tz);
 }
 
 }  // namespace aim

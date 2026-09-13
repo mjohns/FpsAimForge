@@ -170,22 +170,17 @@ i32 GetNowEpochMinutes() {
   return GetNowEpochSeconds() / 60;
 }
 
-std::string EpochMicrosToYyyymmdd(i64 micros, absl::TimeZone time_zone) {
-  return EpochSecondsToYyyymmdd(micros / 1000000, time_zone);
+std::string EpochMicrosToIsoDate(i64 micros, absl::TimeZone time_zone) {
+  return EpochSecondsToIsoDate(micros / 1000000, time_zone);
 }
 
-std::string EpochSecondsToYyyymmdd(i64 seconds, absl::TimeZone time_zone) {
-  return absl::FormatTime("%Y%m%d", absl::FromTimeT(seconds), time_zone);
+std::string EpochSecondsToIsoDate(i64 seconds, absl::TimeZone time_zone) {
+  return absl::FormatTime("%Y-%m-%d", absl::FromTimeT(seconds), time_zone);
 }
 
-int YyyymmddToEpochDays(std::string_view date_str) {
-  if (date_str.length() != 8) {
-    return 0;
-  }
-  std::string formatted_str =
-      std::format("{}-{}-{}", date_str.substr(0, 4), date_str.substr(4, 2), date_str.substr(6, 2));
+int IsoDateToEpochDays(std::string_view date_str) {
   absl::CivilDay cd;
-  if (!absl::ParseCivilTime(formatted_str, &cd)) {
+  if (!absl::ParseCivilTime(date_str, &cd)) {
     return 0;
   }
   return (cd - absl::CivilDay(1970, 1, 1));
