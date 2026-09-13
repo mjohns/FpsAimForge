@@ -135,7 +135,7 @@ bool SimpleTypeDropdown(const std::string& id,
 
 void HelpMarker(const std::string& text);
 void InfoMarker(const std::string& text);
-void HelpTooltip(const std::string& text);
+void HelpTooltip(const std::string& text, float hover_time = -1);
 void HelpTooltip(std::function<std::string()> get_text);
 
 void DrawItemBounds();

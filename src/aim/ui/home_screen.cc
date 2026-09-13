@@ -20,12 +20,14 @@
 #include "aim/ui/stats/stats_screen.h"
 #include "aim/ui/top_bar.h"
 #include "aim/ui/ui_screen.h"
+#include "imgui.h"
 #include "imgui/backends/imgui_impl_sdl3.h"
 
 namespace aim {
 namespace {
 
 const char* kSelectedAppScreenKey = "SelectedAppScreen";
+const char* kLeftNavCollapsedKey = "LeftNavCollapsed";
 
 class SetInitialDpiDialog {
  public:
@@ -206,17 +208,22 @@ class HomeScreen : public UiScreen {
     ImGui::Spacing();
     ImGui::Spacing();
 
-    ImGuiTableFlags main_column_flags = ImGuiTableFlags_SizingStretchProp |
-                                        ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter |
-                                        ImGuiTableFlags_BordersV;
+    ImGuiTableFlags main_column_flags =
+        ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV;
 
     if (ImGui::BeginTable("MainColumns", 2, main_column_flags)) {
-      ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, ImGui::GetFontSize() * 12);
+      bool left_nav_collapsed = app_.local_store().GetBool(kLeftNavCollapsedKey);
+      float left_size = ImGui::GetDefaultCharSizeX() * 9;
+      if (left_nav_collapsed) {
+        auto font = app_.font_manager().UseMedium();
+        left_size = ImGui::CalcTextSize(icons::kList).x;
+      }
+      ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, left_size);
       ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
       ImGui::TableNextRow();
 
       ImGui::TableNextColumn();
-      DrawLeftNav();
+      DrawLeftNav(left_nav_collapsed);
 
       ImGui::TableNextColumn();
 
@@ -283,27 +290,42 @@ class HomeScreen : public UiScreen {
     RunCurrentScenario();
   }
 
-  void DrawLeftNav() {
+  void DrawLeftNav(bool left_nav_collapsed) {
     AppScreen original_app_screen = app_screen_;
-    if (ImGui::Selectable(std::format("{} Guides", icons::kMap).c_str(),
-                          app_screen_ == AppScreen::GUIDES)) {
-      app_screen_ = AppScreen::GUIDES;
+
+    auto font =
+        left_nav_collapsed ? app_.font_manager().UseMedium() : app_.font_manager().UseDefault();
+
+    ImGui::Spacing();
+    if (ImGui::Selectable(
+            left_nav_collapsed ? icons::kKeyboardDoubleArrowRight : icons::kKeyboardDoubleArrowLeft,
+            false)) {
+      app_.local_store().PutBool(kLeftNavCollapsedKey, !left_nav_collapsed);
     }
-    if (ImGui::Selectable(std::format("{} Playlists", icons::kList).c_str(),
-                          app_screen_ == AppScreen::PLAYLISTS)) {
-      app_screen_ = AppScreen::PLAYLISTS;
-    }
-    if (ImGui::Selectable(std::format("{} Scenarios", icons::kCenterFocusWeak).c_str(),
-                          app_screen_ == AppScreen::SCENARIOS)) {
-      app_screen_ = AppScreen::SCENARIOS;
-    }
-    if (ImGui::Selectable(std::format("{} Bundles", icons::kAutoAwesomeMotion).c_str(),
-                          app_screen_ == AppScreen::BUNDLES)) {
-      app_screen_ = AppScreen::BUNDLES;
-    }
+    ImGui::HelpTooltip(left_nav_collapsed ? "Expand" : "Collapse");
+
+    ImGui::SpacedSeparator();
+
+    auto item_selectable =
+        [&](const std::string& icon, const std::string& name, AppScreen this_app_screen) {
+          std::string text = left_nav_collapsed ? icon : std::format("{} {}", icon, name);
+          if (ImGui::Selectable(text, app_screen_ == this_app_screen)) {
+            app_screen_ = this_app_screen;
+          }
+          if (left_nav_collapsed) {
+            ImGui::HelpTooltip(name, 0.8);
+          }
+        };
+
+    item_selectable(icons::kMap, "Guides", AppScreen::GUIDES);
+    item_selectable(icons::kList, "Playlists", AppScreen::PLAYLISTS);
+    item_selectable(icons::kCenterFocusWeak, "Scenarios", AppScreen::SCENARIOS);
+    item_selectable(icons::kAutoAwesomeMotion, "Bundles", AppScreen::BUNDLES);
     auto latest_run = app_.stats_manager().GetLatestRun();
     if (latest_run) {
-      if (ImGui::Selectable(std::format("{} Results", icons::kAssignment).c_str(), false)) {
+      auto* icon = icons::kAssignment;
+      std::string text = left_nav_collapsed ? icon : std::format("{} Results", icon);
+      if (ImGui::Selectable(text.c_str(), false)) {
         PushNextScreen(CreateStatsScreen(latest_run->scenario_name, latest_run->run_id, false));
       }
     }

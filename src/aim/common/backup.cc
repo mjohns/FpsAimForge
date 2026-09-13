@@ -73,7 +73,7 @@ SimpleBackupActions GetSimpleBackupActions(const std::vector<std::string>& exist
 }
 
 std::optional<std::string> ParseDateFromBackupName(const std::string& backup_name,
-                                                       const std::string& prefix) {
+                                                   const std::string& prefix) {
   if (!backup_name.starts_with(prefix)) {
     return {};
   }

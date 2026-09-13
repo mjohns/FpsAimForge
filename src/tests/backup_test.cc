@@ -125,8 +125,8 @@ TEST_F(BackupTest, TestSimpleBackup_BackupDeleteMany) {
   BackupOptions options;
   options.max_backups = 2;
   options.backup_every_n_days = 1;
-  SimpleBackupActions actions =
-      GetSimpleBackupActions({"2026-09-11", "2026-09-10", "2026-09-08", "2025-09-12"}, options, "2026-09-12");
+  SimpleBackupActions actions = GetSimpleBackupActions(
+      {"2026-09-11", "2026-09-10", "2026-09-08", "2025-09-12"}, options, "2026-09-12");
   EXPECT_THAT(actions.delete_backups, ElementsAre("2025-09-12", "2026-09-08", "2026-09-10"));
   EXPECT_TRUE(actions.make_new_backup);
 }

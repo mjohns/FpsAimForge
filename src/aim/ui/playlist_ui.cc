@@ -24,7 +24,7 @@
 namespace aim {
 namespace {
 
-constexpr const char* kHideDescriptionsKey = "hide_playlist_descriptions";
+constexpr const char* kHideDescriptionsKey = "HidePlaylistDescriptions";
 
 class AddPlaylistDialog {
  public:

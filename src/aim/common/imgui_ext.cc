@@ -8,6 +8,7 @@
 #include "imgui/backends/imgui_impl_sdl3.h"
 #include "imgui/backends/imgui_impl_sdlgpu3.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
+#include "imgui_internal.h"
 
 namespace ImGui {
 namespace {
@@ -202,8 +203,17 @@ void InfoMarker(const std::string& text) {
   }
 }
 
-void HelpTooltip(const std::string& text) {
-  if (ImGui::BeginItemTooltip()) {
+void HelpTooltip(const std::string& text, float hover_time) {
+  if (!ImGui::IsItemHovered()) {
+    return;
+  }
+  if (hover_time >= 0) {
+    float time_hovered = GImGui->HoveredIdTimer;
+    if (time_hovered < hover_time) {
+      return;
+    }
+  }
+  if (ImGui::BeginTooltip()) {
     ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
     ImGui::Text(text);
     ImGui::PopTextWrapPos();
