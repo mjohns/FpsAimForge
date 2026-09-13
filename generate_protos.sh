@@ -1,3 +1,3 @@
 #!/bin/bash
-cd aim/proto/schema
+cd src/aim/proto/schema
 ./generate.sh
