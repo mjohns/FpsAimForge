@@ -89,8 +89,12 @@ class PlaylistComponentImpl : public PlaylistComponent {
  public:
   explicit PlaylistComponentImpl() : app_(GetUiApp()) {}
 
-  void Show(std::shared_ptr<PlaylistRun> run, bool is_playlist_screen) override {
+  void Show(std::shared_ptr<PlaylistRun> run, Options options) override {
     ImGui::IdGuard cid("PlaylistComponent");
+    if (options.open_editing) {
+      editor_component_ = {};
+      showing_editor_ = true;
+    }
 
     const std::string& playlist_name = run->playlist.name;
 
@@ -101,14 +105,14 @@ class PlaylistComponentImpl : public PlaylistComponent {
     }
 
     if (copy_dialog_.Draw(app_)) {
-      if (!is_playlist_screen) {
+      if (!options.is_playlist_screen) {
         app_.state().go_to_app_screen = AppScreen::PLAYLISTS;
       }
     }
 
     if (playlist_name != current_playlist_name_) {
       current_playlist_name_ = playlist_name;
-      ResetForNewCurrentPlaylist();
+      ResetForNewCurrentPlaylist(options.open_editing);
     }
 
     if (showing_editor_) {
@@ -131,7 +135,7 @@ class PlaylistComponentImpl : public PlaylistComponent {
         app_.playlist_manager().SetCurrentPlaylist(updated_playlist_variation_name);
         app_.history_manager().UpdateRecentView(ObjectType::PLAYLIST,
                                                 updated_playlist_variation_name);
-        if (!is_playlist_screen) {
+        if (!options.is_playlist_screen) {
           app_.state().go_to_app_screen = AppScreen::PLAYLISTS;
         }
       }
@@ -231,9 +235,9 @@ class PlaylistComponentImpl : public PlaylistComponent {
   }
 
  private:
-  void ResetForNewCurrentPlaylist() {
+  void ResetForNewCurrentPlaylist(bool force_open_editor) {
     editor_component_ = {};
-    showing_editor_ = false;
+    showing_editor_ = force_open_editor;
   }
 
   bool showing_editor_ = false;
@@ -283,6 +287,7 @@ class PlaylistListComponentImpl : public PlaylistListComponent {
       result->open_playlist =
           app_.playlist_manager().GetPlaylist(*browser_result.selected_object_name);
     }
+    result->edit_playlist = browser_result.edit_object_name;
   }
 
  private:

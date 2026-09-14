@@ -350,6 +350,7 @@ class HomeScreen : public UiScreen {
     if (ImGui::BeginTable("PlaylistColumns", 3, flags)) {
       ImGui::TableNextColumn();
 
+      bool open_editing = false;
       if (ImGui::BeginChild("Playlists")) {
         PlaylistListResult result;
         playlist_list_component_->Show(&result);
@@ -358,21 +359,28 @@ class HomeScreen : public UiScreen {
           // app_.history_manager().UpdateRecentView(ObjectType::PLAYLIST, playlist.name);
           app_.playlist_manager().SetCurrentPlaylist(playlist.name);
         }
+        if (result.edit_playlist) {
+          app_.playlist_manager().SetCurrentPlaylist(*result.edit_playlist);
+          open_editing = true;
+        }
       }
       ImGui::EndChild();
 
       ImGui::TableNextColumn();
-      DrawCurrentPlaylistScreen();
+      DrawCurrentPlaylistScreen(open_editing);
 
       ImGui::EndTable();
     }
   }
 
-  void DrawCurrentPlaylistScreen() {
+  void DrawCurrentPlaylistScreen(bool open_editing) {
     ImVec2 sz = ImVec2(0.0f, 0.0f);
     std::shared_ptr<PlaylistRun> run = app_.playlist_manager().GetCurrentRun();
     if (run) {
-      playlist_component_->Show(run, /*is_playlist_screen*/ true);
+      PlaylistComponent::Options options;
+      options.is_playlist_screen = true;
+      options.open_editing = open_editing;
+      playlist_component_->Show(run, options);
     }
   }
 

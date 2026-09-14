@@ -309,7 +309,9 @@ class GuidesComponentImpl : public GuidesComponent {
       if (guide) {
         auto playlist_run = GetPlaylistRunIfInGuide(guide->def);
         if (playlist_run) {
-          playlist_component_->Show(playlist_run, /*is_playlist_screen*/ false);
+          PlaylistComponent::Options options;
+          options.is_playlist_screen = false;
+          playlist_component_->Show(playlist_run, options);
         }
       }
 

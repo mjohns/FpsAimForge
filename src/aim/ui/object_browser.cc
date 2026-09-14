@@ -179,7 +179,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
       auto resource_name = ResourceName::Parse(name);
       bool is_readonly = app_.bundle_manager().IsBundleReadonly(resource_name.bundle_name());
 
-      if (is_scenario && !is_readonly) {
+      if ((is_scenario || is_playlist) && !is_readonly) {
         if (ImGui::Selectable(std::format("{} Edit", icons::kEdit))) {
           result->edit_object_name = name;
         }

@@ -15,14 +15,18 @@ class PlaylistComponent {
  public:
   virtual ~PlaylistComponent() {}
 
-  virtual void Show(std::shared_ptr<PlaylistRun> run, bool is_playlist_screen) = 0;
+  struct Options {
+    bool is_playlist_screen = true;
+    bool open_editing = false;
+  };
+  virtual void Show(std::shared_ptr<PlaylistRun> run, Options options) = 0;
 };
 
 std::unique_ptr<PlaylistComponent> CreatePlaylistComponent();
 
 struct PlaylistListResult {
   std::optional<Playlist> open_playlist{};
-  bool reload_playlists = false;
+  std::optional<std::string> edit_playlist{};
 };
 
 class PlaylistListComponent {
