@@ -306,6 +306,7 @@ class HomeScreen : public UiScreen {
 
     ImGui::SpacedSeparator();
 
+    float tooltip_delay_seconds = 0.6;
     auto item_selectable =
         [&](const std::string& icon, const std::string& name, AppScreen this_app_screen) {
           std::string text = left_nav_collapsed ? icon : std::format("{} {}", icon, name);
@@ -313,7 +314,7 @@ class HomeScreen : public UiScreen {
             app_screen_ = this_app_screen;
           }
           if (left_nav_collapsed) {
-            ImGui::HelpTooltip(name, 0.8);
+            ImGui::HelpTooltip(name, tooltip_delay_seconds);
           }
         };
 
@@ -327,6 +328,9 @@ class HomeScreen : public UiScreen {
       std::string text = left_nav_collapsed ? icon : std::format("{} Results", icon);
       if (ImGui::Selectable(text.c_str(), false)) {
         PushNextScreen(CreateStatsScreen(latest_run->scenario_name, latest_run->run_id, false));
+      }
+      if (left_nav_collapsed) {
+        ImGui::HelpTooltip("Results", tooltip_delay_seconds);
       }
     }
 
