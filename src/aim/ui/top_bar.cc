@@ -2,6 +2,7 @@
 
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
+#include "aim/common/util.h"
 #include "aim/core/scenario_manager.h"
 #include "aim/graphics/textures.h"
 #include "aim/ui/crosshair_editor_screen.h"
@@ -12,6 +13,7 @@
 #include "aim/ui/theme_editor_screen.h"
 #include "aim/ui/ui_screen.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 
 namespace aim {
 namespace {
@@ -34,6 +36,22 @@ class TopBarImpl : public TopBar {
                    ImVec2(size + 6, size + 6),
                    ImVec2(0.0f, 0.0f),
                    ImVec2(1.0f, 1.0f));
+
+      // Draw circle around logo.
+      // ImGui::DebugDrawItemRect();
+      auto min = ImGui::GetItemRectMin();
+      auto max = ImGui::GetItemRectMax();
+
+      float radius = (max.x - min.x) / 2.0;
+
+      auto center_x = min.x + radius;
+      auto center_y = min.y + radius;
+
+      ImDrawList* draw_list = ImGui::GetWindowDrawList();
+      float thickness = 3;
+      auto white = IM_COL32(230, 230, 230, 255);
+      draw_list->AddCircle(
+          ImVec2(center_x, center_y), radius - (thickness / 2.0), white, 400, thickness);
       ImGui::SameLine();
     }
     {

@@ -232,7 +232,7 @@ class BundleUiComponentImpl : public BundleUiComponent {
         selected_bundle_name_ = bundle.bundle_name();
       }
       if (help_text.size() > 0) {
-        ImGui::HelpTooltip(help_text);
+        ImGui::HelpTooltip(help_text, 0.5);
       }
     }
   }
