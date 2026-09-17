@@ -103,6 +103,10 @@ NameInfo GetPlaylistNameInfo(const std::string& name) {
   return GetNameInfo(name, true);
 }
 
+NameInfo GetNameInfo(const std::string& name) {
+  return GetNameInfo(name, true);
+}
+
 std::vector<std::string> GetSortedLevelNames(const NameInfo& name,
                                              const std::vector<NameInfo>& candidates) {
   std::vector<NameInfo> names;

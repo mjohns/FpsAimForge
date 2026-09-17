@@ -6,7 +6,6 @@
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/name_util.h"
-#include "aim/common/proto_util.h"
 #include "aim/common/resource_name.h"
 #include "aim/core/application.h"
 #include "aim/core/bundle_manager.h"
@@ -366,8 +365,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
   ImGui::NotificationPopup notification_popup_{"Notification"};
   std::string description_;
   ImGui::MultilineTextEntryDialog description_dialog_{"DescriptionEditor"};
-  SelectVariationDialog select_variation_dialog_ =
-      SelectVariationDialog::ForScenarios("SelectScenarioVariation");
+  SelectVariationDialog select_variation_dialog_{"SelectScenarioVariation", ObjectType::SCENARIO};
 };
 
 }  // namespace

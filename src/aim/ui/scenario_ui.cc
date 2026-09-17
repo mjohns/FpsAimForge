@@ -101,8 +101,7 @@ class CreateLevelsPlaylistDialog {
 struct ScenarioDialogs {
   ImGui::ConfirmationDialog<std::string> delete_confirmation_dialog{"DeleteConfirmationDialog"};
   CreateLevelsPlaylistDialog create_levels_playlist_dialog;
-  SelectVariationDialog select_variation_dialog =
-      SelectVariationDialog::ForScenarios("SelectScenarioVariation");
+  SelectVariationDialog select_variation_dialog{"SelectScenarioVariation", ObjectType::SCENARIO};
 };
 
 // TODO: Share with ObjectBrowser menu somehow.

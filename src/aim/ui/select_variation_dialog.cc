@@ -57,7 +57,6 @@ void DrawSensTable(const std::string& name,
 bool SelectVariationDialog::Draw(std::string* updated_name) {
   ImGui::IdGuard cid("SelectVariationDialog_" + id_);
   bool selected = false;
-  bool is_scenario = !is_playlist_;
   if (popup_.Begin()) {
     ImGui::Spacing();
     ImGui::Text(name_info_.GetFullName());

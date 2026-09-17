@@ -2,6 +2,7 @@
 
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
+#include "aim/common/object_type.h"
 #include "aim/common/util.h"
 #include "aim/core/scenario_manager.h"
 #include "aim/graphics/textures.h"
@@ -145,8 +146,8 @@ class TopBarImpl : public TopBar {
 
  private:
   Application& app_ = GetUiApp();
-  SelectVariationDialog select_variation_dialog_ =
-      SelectVariationDialog::ForScenarios("TopBarSelectScenarioVariation");
+  SelectVariationDialog select_variation_dialog_{"TopBarSelectScenarioVariation",
+                                                 ObjectType::SCENARIO};
 };
 }  // namespace
 
