@@ -266,6 +266,11 @@ class GuidesComponentImpl : public GuidesComponent {
         app_.guide_manager().SetCurrentGuide(*result.selected_object_name);
         app_.history_manager().UpdateRecentView(ObjectType::GUIDE, *result.selected_object_name);
       }
+      if (result.edit_object_name) {
+        GuideEditorOptions opts;
+        opts.name = *result.edit_object_name;
+        app_.PushNextScreen(CreateGuideEditorScreen(opts));
+      }
 
       ImGui::EndChild();
 
