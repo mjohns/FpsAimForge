@@ -159,52 +159,52 @@ void BaseScenario::HandleProximityTrackingHits(UpdateStateData* data) {
   i64 delta_micros = now_micros - last_proximity_tracking_update_time_micros_;
   last_proximity_tracking_update_time_micros_ = now_micros;
 
-  if (data->is_click_held) {
-    if (!proximity_tracking_sound_) {
-      proximity_tracking_sound_ =
-          std::make_unique<ProximityTrackingSound>(settings_.sounds(),
-                                                   settings_.proximity_min_shots_per_second(),
-                                                   settings_.proximity_max_shots_per_second());
-    }
-    std::optional<float> normalized_distance_from_center;
-    const auto& targets = target_manager_.GetTargets();
-    if (targets.size() > 0) {
-      const Target& target = targets[0];
-      glm::vec3 position = target.position;
+  if (!data->is_click_held) {
+    TrackingHoldDone();
+    return;
+  }
 
-      std::optional<float> maybe_distance =
-          target.is_pill
-              ? GetPillMissedShotDistance(camera_.GetPosition(),
-                                          camera_.GetLookAt().front,
-                                          position,
-                                          target.height - target.radius)
-              : GetMissedShotDistance(camera_.GetPosition(), camera_.GetLookAt().front, position);
+  if (!proximity_tracking_sound_) {
+    proximity_tracking_sound_ =
+        std::make_unique<ProximityTrackingSound>(settings_.sounds(),
+                                                 settings_.proximity_min_shots_per_second(),
+                                                 settings_.proximity_max_shots_per_second());
+  }
+  std::optional<float> normalized_distance_from_center;
+  const auto& targets = target_manager_.GetTargets();
+  if (targets.size() > 0) {
+    const Target& target = targets[0];
+    glm::vec3 position = target.position;
 
-      if (maybe_distance) {
-        float max_distance = target.radius;
-        float value = (max_distance - *maybe_distance) / max_distance;
-        if (value > 0) {
-          // Max value for score is 750.
-          stats_.num_hits += delta_micros * ((value + 0.05) * 0.00001);
-          normalized_distance_from_center = 1.0f - value;
+    std::optional<float> maybe_distance =
+        target.is_pill
+            ? GetPillMissedShotDistance(camera_.GetPosition(),
+                                        camera_.GetLookAt().front,
+                                        position,
+                                        target.height - target.radius)
+            : GetMissedShotDistance(camera_.GetPosition(), camera_.GetLookAt().front, position);
 
-          stats_.proximity.hit_micros_map[100] += delta_micros;
-          int comparison_distance = *normalized_distance_from_center * 100;
-          for (int i = 1; i <= 9; ++i) {
-            int percent_key = i * 10;
-            if (comparison_distance <= percent_key) {
-              stats_.proximity.hit_micros_map[percent_key] += delta_micros;
-            }
+    if (maybe_distance) {
+      float max_distance = target.radius;
+      float value = (max_distance - *maybe_distance) / max_distance;
+      if (value > 0) {
+        stats_.num_hits += delta_micros * value;
+        normalized_distance_from_center = 1.0f - value;
+
+        stats_.proximity.hit_micros_map[100] += delta_micros;
+        int comparison_distance = *normalized_distance_from_center * 100;
+        for (int i = 1; i <= 9; ++i) {
+          int percent_key = i * 10;
+          if (comparison_distance <= percent_key) {
+            stats_.proximity.hit_micros_map[percent_key] += delta_micros;
           }
         }
       }
     }
-
-    proximity_tracking_sound_->DoTick(
-        timer_.GetElapsedMicros(), normalized_distance_from_center, replay_.get());
-  } else {
-    TrackingHoldDone();
   }
+
+  proximity_tracking_sound_->DoTick(
+      timer_.GetElapsedMicros(), normalized_distance_from_center, replay_.get());
 }
 
 void BaseScenario::HandleTrackingHits(UpdateStateData* data,
@@ -673,7 +673,11 @@ float BaseScenario::CalculateScore(float current_time) {
       float hit_percent = stats_.hit_stopwatch.GetElapsedSeconds() / current_time;
       return 100 * hit_percent;
     }
-    case ShotType::kTrackingProximity:
+    case ShotType::kTrackingProximity: {
+      // Will have value of 1.0 if 100% time hitting center of target.
+      double prox_hit_percent = stats_.num_hits / SecondsToMicros(current_time);
+      return prox_hit_percent * 1000;
+    }
     case ShotType::kTrackingKill: {
       return stats_.num_hits * time_normalized_multiplier;
     }
