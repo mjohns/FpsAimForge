@@ -174,6 +174,7 @@ class Scenario : public Screen {
   const CreateScenarioParams create_params_;
   ImU32 health_color_;
   ImU32 health_background_color_;
+  i64 waiting_start_time_micros_ = -1;
 };
 
 }  // namespace aim

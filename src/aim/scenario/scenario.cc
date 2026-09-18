@@ -46,6 +46,8 @@ constexpr const i16 kReplayFps = 240;
 constexpr const i16 kStaticReplayFps = 480;
 constexpr const int kDefaultTargetRenderFps = 600;
 constexpr const i64 kClickDebounceMicros = 3 * 1000;
+// Maximum amount of time on "click to start" screen before exiting back to menu.
+constexpr const i64 kMaxWaitTimeMicros = SecondsToMicros(60 * 2);
 
 bool RequiresPerFrameTargetData(const ScenarioDef& def) {
   // Does the scenario require position, radius, health to change after the target has been added?
@@ -373,6 +375,15 @@ void Scenario::OnTick() {
 }
 
 void Scenario::OnWaitingForClickTick() {
+  if (waiting_start_time_micros_ < 0) {
+    waiting_start_time_micros_ = GetNowEpochMicros();
+  }
+  i64 wait_time_micros = GetNowEpochMicros() - waiting_start_time_micros_;
+  if (wait_time_micros > kMaxWaitTimeMicros) {
+    PopSelf();
+    return;
+  }
+
   if (update_data_.has_click) {
     BeginRunWithOptionalCountdown();
     return;

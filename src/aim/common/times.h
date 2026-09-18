@@ -27,11 +27,11 @@ static i64 TimesPerSecondToIntervalMicros(float times_per_second) {
   return micros_per_second / times_per_second;
 }
 
-inline float MicrosToSeconds(i64 micros) {
+constexpr inline float MicrosToSeconds(i64 micros) {
   return micros / 1000000.0f;
 }
 
-inline i64 SecondsToMicros(float seconds) {
+constexpr inline i64 SecondsToMicros(float seconds) {
   return seconds * 1000000;
 }
 
