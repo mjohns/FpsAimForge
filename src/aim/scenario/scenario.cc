@@ -156,7 +156,7 @@ void Scenario::RefreshState() {
 
   effective_cm_per_360_ = settings_.cm_per_360();
 
-  NameInfo name_info = GetScenarioNameInfo(scenario_name_);
+  NameInfo name_info = GetNameInfo(scenario_name_);
   if (name_info.cm_per_360) {
     effective_cm_per_360_ = *name_info.cm_per_360;
   }

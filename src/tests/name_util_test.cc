@@ -60,8 +60,8 @@ TEST(NameUtilTest, GetLevelFromWord) {
   EXPECT_THAT(GetLevelFromWord("L0"), Optional(0));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_NoSuffix) {
-  NameInfo info = GetScenarioNameInfo("Scenario One");
+TEST(NameUtilTest, GetNameInfo_NoSuffix) {
+  NameInfo info = GetNameInfo("Scenario One");
   EXPECT_THAT(info.base_name, StrEq("Scenario One"));
   EXPECT_FALSE(info.level.has_value());
   EXPECT_FALSE(info.cm_per_360.has_value());
@@ -69,38 +69,38 @@ TEST(NameUtilTest, GetScenarioNameInfo_NoSuffix) {
   EXPECT_THAT(info.GetFullName(), StrEq("Scenario One"));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_Empty) {
-  NameInfo info = GetScenarioNameInfo("");
+TEST(NameUtilTest, GetNameInfo_Empty) {
+  NameInfo info = GetNameInfo("");
   EXPECT_THAT(info.base_name, IsEmpty());
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_SingleChar) {
-  NameInfo info = GetScenarioNameInfo("a");
+TEST(NameUtilTest, GetNameInfo_SingleChar) {
+  NameInfo info = GetNameInfo("a");
   EXPECT_THAT(info.base_name, StrEq("a"));
 
-  info = GetScenarioNameInfo("1");
+  info = GetNameInfo("1");
   EXPECT_THAT(info.base_name, StrEq("1"));
 
-  info = GetScenarioNameInfo("-");
+  info = GetNameInfo("-");
   EXPECT_THAT(info.base_name, StrEq("-"));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_TrailingWhitespace) {
+TEST(NameUtilTest, GetNameInfo_TrailingWhitespace) {
   // TODO: Should this strip? We really don't want trailing whitespace in the system.
-  NameInfo info = GetScenarioNameInfo("ab ");
+  NameInfo info = GetNameInfo("ab ");
   EXPECT_THAT(info.base_name, StrEq("ab "));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_StripCm360) {
-  NameInfo info = GetScenarioNameInfo("Scenario 25cm");
+TEST(NameUtilTest, GetNameInfo_StripCm360) {
+  NameInfo info = GetNameInfo("Scenario 25cm");
   EXPECT_THAT(info.base_name, StrEq("Scenario"));
   EXPECT_THAT(info.cm_per_360, Optional(25));
   EXPECT_FALSE(info.level.has_value());
   EXPECT_THAT(info.GetFullName(), StrEq("Scenario 25cm"));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_StripLevel) {
-  NameInfo info = GetScenarioNameInfo("Scenario L1.5");
+TEST(NameUtilTest, GetNameInfo_StripLevel) {
+  NameInfo info = GetNameInfo("Scenario L1.5");
   EXPECT_THAT(info.base_name, StrEq("Scenario"));
   EXPECT_THAT(info.level, Optional(1.5));
   EXPECT_FALSE(info.cm_per_360.has_value());
@@ -108,8 +108,8 @@ TEST(NameUtilTest, GetScenarioNameInfo_StripLevel) {
   EXPECT_THAT(info.GetFullName(), StrEq("Scenario L1.5"));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_StripAll) {
-  NameInfo info = GetScenarioNameInfo("Scenario L1.5 35cm 40s");
+TEST(NameUtilTest, GetNameInfo_StripAll) {
+  NameInfo info = GetNameInfo("Scenario L1.5 35cm 40s");
   EXPECT_THAT(info.base_name, StrEq("Scenario"));
   EXPECT_THAT(info.level, Optional(1.5));
   EXPECT_THAT(info.cm_per_360, Optional(35));
@@ -118,16 +118,16 @@ TEST(NameUtilTest, GetScenarioNameInfo_StripAll) {
   EXPECT_THAT(info.GetFullName(), StrEq("Scenario L1.5 40s 35cm"));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_NoSuffixMatch) {
-  NameInfo info = GetScenarioNameInfo("SERF ww5t Int -1Bot");
+TEST(NameUtilTest, GetNameInfo_NoSuffixMatch) {
+  NameInfo info = GetNameInfo("SERF ww5t Int -1Bot");
 
   EXPECT_THAT(info.base_name, StrEq("SERF ww5t Int -1Bot"));
 
   EXPECT_THAT(info.GetFullName(), StrEq("SERF ww5t Int -1Bot"));
 }
 
-TEST(NameUtilTest, GetScenarioNameInfo_NoSuffixMatch_HasDynamicSuffixToo) {
-  NameInfo info = GetScenarioNameInfo("SERF ww5t Int -1Bot 120fov");
+TEST(NameUtilTest, GetNameInfo_NoSuffixMatch_HasDynamicSuffixToo) {
+  NameInfo info = GetNameInfo("SERF ww5t Int -1Bot 120fov");
 
   EXPECT_THAT(info.base_name, StrEq("SERF ww5t Int -1Bot"));
 
@@ -135,35 +135,35 @@ TEST(NameUtilTest, GetScenarioNameInfo_NoSuffixMatch_HasDynamicSuffixToo) {
 }
 
 TEST(NameUtilTest, GetSortedLevelNames) {
-  NameInfo cm35 = GetScenarioNameInfo("S 35cm");
-  NameInfo cm35_ln1 = GetScenarioNameInfo("S L-1 35cm");
-  NameInfo cm35_l0 = GetScenarioNameInfo("S L0 35cm");
-  NameInfo cm35_l1 = GetScenarioNameInfo("S L1 35cm");
-  NameInfo cm35_l2 = GetScenarioNameInfo("S L2 35cm");
-  NameInfo cm35_l3 = GetScenarioNameInfo("S L3 35cm");
-  NameInfo cm35_l4 = GetScenarioNameInfo("S L4 35cm");
-  NameInfo cm35_l5_5 = GetScenarioNameInfo("S L5.5 35cm");
-  NameInfo cm35_l10 = GetScenarioNameInfo("S L10 35cm");
-  NameInfo cm35_l11 = GetScenarioNameInfo("S L11 35cm");
+  NameInfo cm35 = GetNameInfo("S 35cm");
+  NameInfo cm35_ln1 = GetNameInfo("S L-1 35cm");
+  NameInfo cm35_l0 = GetNameInfo("S L0 35cm");
+  NameInfo cm35_l1 = GetNameInfo("S L1 35cm");
+  NameInfo cm35_l2 = GetNameInfo("S L2 35cm");
+  NameInfo cm35_l3 = GetNameInfo("S L3 35cm");
+  NameInfo cm35_l4 = GetNameInfo("S L4 35cm");
+  NameInfo cm35_l5_5 = GetNameInfo("S L5.5 35cm");
+  NameInfo cm35_l10 = GetNameInfo("S L10 35cm");
+  NameInfo cm35_l11 = GetNameInfo("S L11 35cm");
 
-  NameInfo cm45 = GetScenarioNameInfo("S 45cm");
-  NameInfo cm45_l1 = GetScenarioNameInfo("S L1 45cm");
-  NameInfo cm45_l2 = GetScenarioNameInfo("S L2 45cm");
-  NameInfo cm45_l3 = GetScenarioNameInfo("S L3 45cm");
-  NameInfo cm45_l4 = GetScenarioNameInfo("S L4 45cm");
-  NameInfo cm45_l5_5 = GetScenarioNameInfo("S L5.5 45cm");
-  NameInfo cm45_l10 = GetScenarioNameInfo("S L10 45cm");
-  NameInfo cm45_l11 = GetScenarioNameInfo("S L11 45cm");
+  NameInfo cm45 = GetNameInfo("S 45cm");
+  NameInfo cm45_l1 = GetNameInfo("S L1 45cm");
+  NameInfo cm45_l2 = GetNameInfo("S L2 45cm");
+  NameInfo cm45_l3 = GetNameInfo("S L3 45cm");
+  NameInfo cm45_l4 = GetNameInfo("S L4 45cm");
+  NameInfo cm45_l5_5 = GetNameInfo("S L5.5 45cm");
+  NameInfo cm45_l10 = GetNameInfo("S L10 45cm");
+  NameInfo cm45_l11 = GetNameInfo("S L11 45cm");
 
-  NameInfo l1 = GetScenarioNameInfo("S L1");
-  NameInfo l2 = GetScenarioNameInfo("S L2");
-  NameInfo l3 = GetScenarioNameInfo("S L3");
-  NameInfo l4 = GetScenarioNameInfo("S L4");
-  NameInfo l5_5 = GetScenarioNameInfo("S L5.5");
-  NameInfo l10 = GetScenarioNameInfo("S L10");
-  NameInfo l11 = GetScenarioNameInfo("S L11");
+  NameInfo l1 = GetNameInfo("S L1");
+  NameInfo l2 = GetNameInfo("S L2");
+  NameInfo l3 = GetNameInfo("S L3");
+  NameInfo l4 = GetNameInfo("S L4");
+  NameInfo l5_5 = GetNameInfo("S L5.5");
+  NameInfo l10 = GetNameInfo("S L10");
+  NameInfo l11 = GetNameInfo("S L11");
 
-  NameInfo base_name = GetScenarioNameInfo("S");
+  NameInfo base_name = GetNameInfo("S");
 
   std::vector<NameInfo> names{
       cm35,      cm35_ln1, cm35_l0, cm35_l1, cm35_l2, cm35_l3, cm35_l4,   cm35_l5_5, cm35_l10,

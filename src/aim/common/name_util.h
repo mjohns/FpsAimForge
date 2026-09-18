@@ -38,7 +38,7 @@ struct NameInfo {
   void MergeDynamicSuffixes(const NameInfo& to_merge_in);
 };
 
-NameInfo GetPlaylistNameInfo(const std::string& name);
+NameInfo GetNameInfo(const std::string& name);
 NameInfo GetScenarioNameInfo(const std::string& name);
 NameInfo GetNameInfo(const std::string& name);
 

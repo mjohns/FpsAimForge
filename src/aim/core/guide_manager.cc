@@ -129,8 +129,8 @@ class GuideManagerImpl : public GuideManager {
 
   void RenamePlaylistInAllGuides(const std::string& old_name,
                                  const std::string& new_name) override {
-    std::string old_base_name = GetPlaylistNameInfo(old_name).base_name;
-    std::string new_base_name = GetPlaylistNameInfo(new_name).base_name;
+    std::string old_base_name = GetNameInfo(old_name).base_name;
+    std::string new_base_name = GetNameInfo(new_name).base_name;
 
     auto guides_copy = guides_;
     for (const GuideItem& guide : *guides_copy) {
@@ -138,7 +138,7 @@ class GuideManagerImpl : public GuideManager {
       GuideDef def = guide.def;
       for (auto& section : *def.mutable_sections()) {
         for (std::string& playlist : *section.mutable_playlists()) {
-          NameInfo item_name_info = GetPlaylistNameInfo(playlist);
+          NameInfo item_name_info = GetNameInfo(playlist);
           if (item_name_info.base_name == old_base_name) {
             changed = true;
             item_name_info.base_name = new_base_name;

@@ -117,7 +117,7 @@ class PlaylistComponentImpl : public PlaylistComponent {
 
     if (showing_editor_) {
       if (!editor_component_) {
-        std::string base_playlist_name = GetPlaylistNameInfo(playlist_name).base_name;
+        std::string base_playlist_name = GetNameInfo(playlist_name).base_name;
         editor_component_ = CreatePlaylistEditorComponent(base_playlist_name);
       }
       EditorResult editor_result;

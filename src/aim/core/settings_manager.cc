@@ -21,7 +21,7 @@ namespace {
 constexpr const float kDefaultDpi = 800;
 
 std::string GetBaseNameForScenarioSettings(const std::string& full_name) {
-  NameInfo name_info = GetScenarioNameInfo(full_name);
+  NameInfo name_info = GetNameInfo(full_name);
 
   // Clear fields where the settings should be saved for the scenario.
   name_info.level = std::nullopt;

@@ -99,10 +99,6 @@ NameInfo GetScenarioNameInfo(const std::string& name) {
   return GetNameInfo(name, true);
 }
 
-NameInfo GetPlaylistNameInfo(const std::string& name) {
-  return GetNameInfo(name, true);
-}
-
 NameInfo GetNameInfo(const std::string& name) {
   return GetNameInfo(name, true);
 }

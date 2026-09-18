@@ -812,10 +812,10 @@ class StatsScreen : public UiScreen {
 
  private:
   std::vector<std::string> GetCompareToList() {
-    NameInfo name_info = GetScenarioNameInfo(scenario_name_);
+    NameInfo name_info = GetNameInfo(scenario_name_);
     std::vector<NameInfo> candidate_scenarios;
     for (const std::string& candidate : app_.db().GetScenarioNamesWithPrefix(name_info.base_name)) {
-      candidate_scenarios.push_back(GetScenarioNameInfo(candidate));
+      candidate_scenarios.push_back(GetNameInfo(candidate));
     }
 
     std::vector<std::string> result = GetSortedLevelNames(name_info, candidate_scenarios);

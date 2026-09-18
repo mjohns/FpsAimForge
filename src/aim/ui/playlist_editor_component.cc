@@ -315,7 +315,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
     }
 
     ResourceName final_name(bundle_name_, new_playlist_name_);
-    NameInfo final_name_info = GetPlaylistNameInfo(final_name.full_name());
+    NameInfo final_name_info = GetNameInfo(final_name.full_name());
     if (final_name_info.HasDynamicSuffix()) {
       notification_popup_.NotifyOpen("Cannot name playlist with explicit cm/360 suffix.");
       return false;

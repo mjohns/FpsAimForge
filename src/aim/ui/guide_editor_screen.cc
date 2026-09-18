@@ -334,7 +334,7 @@ class GuideEditorScreen : public UiScreen {
 
     {
       // Make sure we preserve the original level/sens in the name for the current scenario.
-      // NameInfo current_name = GetScenarioNameInfo(name_.full_name());
+      // NameInfo current_name = GetNameInfo(name_.full_name());
       // current_name.level = original_level_;
       // current_name.cm_per_360 = original_cm_per_360_;
       app_.guide_manager().SetCurrentGuide(name_.full_name());

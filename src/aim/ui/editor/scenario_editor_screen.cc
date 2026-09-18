@@ -52,7 +52,7 @@ class ScenarioEditorScreen : public UiScreen {
     bundle_names_ = app_.bundle_manager().GetWritableBundleNames();
 
     if (!opts.scenario_name.empty()) {
-      NameInfo original_name_info = GetScenarioNameInfo(opts.scenario_name);
+      NameInfo original_name_info = GetNameInfo(opts.scenario_name);
       original_level_ = original_name_info.level;
       original_cm_per_360_ = original_name_info.cm_per_360;
 
@@ -83,7 +83,7 @@ class ScenarioEditorScreen : public UiScreen {
       is_new_scenario_ = true;
     } else {
       // Stip any dynamic suffixes from the name displayed in the editor.
-      NameInfo name_info = GetScenarioNameInfo(opts.scenario_name);
+      NameInfo name_info = GetNameInfo(opts.scenario_name);
       name_ = ResourceName::Parse(name_info.base_name);
       if (name_info.level.has_value()) {
         bake_level_ = *name_info.level;
@@ -448,7 +448,7 @@ class ScenarioEditorScreen : public UiScreen {
 
     absl::StripAsciiWhitespace(name_.mutable_relative_name());
 
-    NameInfo name_info = GetScenarioNameInfo(name_.full_name());
+    NameInfo name_info = GetNameInfo(name_.full_name());
     if (name_info.HasDynamicSuffix()) {
       SetErrorMessage(
           "Unable to save scenario with name ending in 'L#' or '#cm'. These scenarios are "
@@ -485,7 +485,7 @@ class ScenarioEditorScreen : public UiScreen {
 
     {
       // Make sure we preserve the original level/sens in the name for the current scenario.
-      NameInfo current_name = GetScenarioNameInfo(name_.full_name());
+      NameInfo current_name = GetNameInfo(name_.full_name());
       current_name.level = original_level_;
       current_name.cm_per_360 = original_cm_per_360_;
       app_.scenario_manager().SetCurrentScenario(current_name.GetFullName());

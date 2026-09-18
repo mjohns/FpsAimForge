@@ -30,7 +30,7 @@ class CreateLevelsPlaylistDialog {
  public:
   void NotifyOpen(const std::string& scenario_name) {
     open_ = true;
-    scenario_name_ = GetScenarioNameInfo(scenario_name).base_name;
+    scenario_name_ = GetNameInfo(scenario_name).base_name;
   }
 
   bool Draw(Application& app) {
@@ -177,7 +177,7 @@ void DrawScenarioRightClickMenu(const char* popup_id,
   if (!is_readonly) {
     ImGui::SpacedSeparator();
     if (ImGui::Selectable("Delete")) {
-      std::string base_name = GetScenarioNameInfo(scenario_name).base_name;
+      std::string base_name = GetNameInfo(scenario_name).base_name;
       dialogs->delete_confirmation_dialog.NotifyOpen(std::format("Delete \"{}\"?", base_name),
                                                      base_name);
     }

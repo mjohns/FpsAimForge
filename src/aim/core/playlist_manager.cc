@@ -133,7 +133,7 @@ class PlaylistManagerImpl : public PlaylistManager {
     for (const BundlePlaylist& playlist : bundle.playlists()) {
       ResourceName name(bundle_name, playlist.name());
       std::string full_name = name.full_name();
-      NameInfo info = GetPlaylistNameInfo(full_name);
+      NameInfo info = GetNameInfo(full_name);
       if (!info.HasDynamicSuffix()) {
         auto& item = playlist_map_[full_name];
         item.name = full_name;
@@ -214,7 +214,7 @@ class PlaylistManagerImpl : public PlaylistManager {
       return {};
     }
     visited->insert(playlist_name);
-    NameInfo name_info = GetPlaylistNameInfo(playlist_name);
+    NameInfo name_info = GetNameInfo(playlist_name);
     if (name_info.HasDynamicSuffix()) {
       auto playlist = GetPlaylistInternal(name_info.base_name, depth + 1, visited);
       if (playlist) {
@@ -230,7 +230,7 @@ class PlaylistManagerImpl : public PlaylistManager {
   void AddScenarioToPlaylist(const std::string& playlist_name,
                              const std::string& scenario_name) override {
     // Make sure we add the scenarios to the base playlist.
-    NameInfo name_info = GetPlaylistNameInfo(playlist_name);
+    NameInfo name_info = GetNameInfo(playlist_name);
     auto it = playlist_map_.find(name_info.base_name);
     if (it == playlist_map_.end()) {
       return;
@@ -256,7 +256,7 @@ class PlaylistManagerImpl : public PlaylistManager {
   }
 
   void UpdatePlaylist(const std::string& name, const PlaylistDef& def) override {
-    NameInfo info = GetPlaylistNameInfo(name);
+    NameInfo info = GetNameInfo(name);
     if (info.HasDynamicSuffix()) {
       assert(false && "Trying to update playlist with dynamic suffix");
       return;
@@ -308,15 +308,15 @@ class PlaylistManagerImpl : public PlaylistManager {
 
   void RenameScenarioInAllPlaylists(const std::string& old_name,
                                     const std::string& new_name) override {
-    std::string old_base_name = GetScenarioNameInfo(old_name).base_name;
-    std::string new_base_name = GetScenarioNameInfo(new_name).base_name;
+    std::string old_base_name = GetNameInfo(old_name).base_name;
+    std::string new_base_name = GetNameInfo(new_name).base_name;
 
     auto playlists_copy = playlists_;
     for (const Playlist& playlist : *playlists_copy) {
       bool changed = false;
       PlaylistDef def = playlist.def();
       for (auto& item : *def.mutable_items()) {
-        NameInfo item_name_info = GetScenarioNameInfo(item.scenario());
+        NameInfo item_name_info = GetNameInfo(item.scenario());
         if (item_name_info.base_name == old_base_name) {
           changed = true;
           item_name_info.base_name = new_base_name;
@@ -326,7 +326,7 @@ class PlaylistManagerImpl : public PlaylistManager {
 
       const std::string& level_scenario = def.levels().base_scenario();
       if (level_scenario.size() > 0) {
-        NameInfo item_name_info = GetScenarioNameInfo(level_scenario);
+        NameInfo item_name_info = GetNameInfo(level_scenario);
         if (item_name_info.base_name == old_base_name) {
           changed = true;
           item_name_info.base_name = new_base_name;
@@ -342,18 +342,18 @@ class PlaylistManagerImpl : public PlaylistManager {
 
   std::vector<std::string> FindPlaylistsContainingScenario(
       const std::string& scenario_name) const override {
-    std::string base_name = GetScenarioNameInfo(scenario_name).base_name;
+    std::string base_name = GetNameInfo(scenario_name).base_name;
     std::vector<std::string> matching_playlists;
     for (const Playlist& playlist : *playlists_) {
       bool is_match = false;
       for (const auto& item : playlist.def().items()) {
-        if (GetScenarioNameInfo(item.scenario()).base_name == base_name) {
+        if (GetNameInfo(item.scenario()).base_name == base_name) {
           is_match = true;
         }
       }
 
       if (!playlist.def().levels().base_scenario().empty()) {
-        if (GetScenarioNameInfo(playlist.def().levels().base_scenario()).base_name == base_name) {
+        if (GetNameInfo(playlist.def().levels().base_scenario()).base_name == base_name) {
           is_match = true;
         }
       }
@@ -450,7 +450,7 @@ class PlaylistManagerImpl : public PlaylistManager {
     }
     std::optional<float> highest_level;
     for (const auto& item : playlist.items()) {
-      NameInfo name = GetScenarioNameInfo(item.scenario());
+      NameInfo name = GetNameInfo(item.scenario());
       if (!name.level) {
         continue;
       }
@@ -525,7 +525,7 @@ class PlaylistManagerImpl : public PlaylistManager {
       if (!run_name.starts_with(playlist_name)) {
         continue;
       }
-      std::string base_run_name = GetPlaylistNameInfo(run_name).base_name;
+      std::string base_run_name = GetNameInfo(run_name).base_name;
       if (base_run_name != playlist_name) {
         continue;
       }
@@ -579,7 +579,7 @@ std::vector<PlaylistItem> GetPlaylistItemsNoSuffix(const PlaylistDef& def) {
     if (def.levels().base_scenario().empty()) {
       return items;
     }
-    NameInfo base_name = GetScenarioNameInfo(def.levels().base_scenario());
+    NameInfo base_name = GetNameInfo(def.levels().base_scenario());
     items.reserve(50);
     float current_level = 1.0;
     if (def.levels().has_min_level()) {
@@ -625,7 +625,7 @@ std::vector<PlaylistItem> Playlist::items() const {
   auto item_list = GetPlaylistItemsNoSuffix(def_);
   for (auto& item : item_list) {
     if (playlist_name_info.HasDynamicSuffix()) {
-      NameInfo scenario_name_info = GetScenarioNameInfo(item.scenario());
+      NameInfo scenario_name_info = GetNameInfo(item.scenario());
       scenario_name_info.MergeDynamicSuffixes(playlist_name_info);
       item.set_scenario(scenario_name_info.GetFullName());
     }

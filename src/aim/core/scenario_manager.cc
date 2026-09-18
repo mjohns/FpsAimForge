@@ -84,7 +84,7 @@ class ScenarioManagerImpl : public ScenarioManager {
     }
     visited->insert(scenario_name);
 
-    NameInfo name_info = GetScenarioNameInfo(scenario_name);
+    NameInfo name_info = GetNameInfo(scenario_name);
     auto base_scenario = GetScenarioInternal(name_info.base_name, depth + 1, visited);
     if (!base_scenario) {
       return {};
@@ -126,7 +126,7 @@ class ScenarioManagerImpl : public ScenarioManager {
   }
 
   void UpdateScenario(const std::string& name, const ScenarioDef& def) override {
-    NameInfo name_info = GetScenarioNameInfo(name);
+    NameInfo name_info = GetNameInfo(name);
     if (name_info.HasDynamicSuffix()) {
       assert(false && "Trying to update scenario with dynamic suffix");
       return;
@@ -212,11 +212,10 @@ class ScenarioManagerImpl : public ScenarioManager {
   std::vector<std::string> GetReferencingScenarios(const std::string& scenario_name) override {
     std::vector<std::string> result;
     result.reserve(30);
-    std::string base_name = GetScenarioNameInfo(scenario_name).base_name;
+    std::string base_name = GetNameInfo(scenario_name).base_name;
     for (const auto& entry : scenario_map_) {
       const ScenarioCacheItem& cache_item = entry.second;
-      if (GetScenarioNameInfo(cache_item.def.reference_def().scenario_name()).base_name ==
-          scenario_name) {
+      if (GetNameInfo(cache_item.def.reference_def().scenario_name()).base_name == scenario_name) {
         result.push_back(cache_item.name);
       }
     }
