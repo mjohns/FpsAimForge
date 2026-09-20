@@ -302,30 +302,28 @@ void NameInfo::MergeDynamicSuffixes(const NameInfo& other) {
   if (other.fov) {
     fov = other.fov;
   }
-  if (other.radius_smaller) {
-    radius_smaller = other.radius_smaller;
-  }
-  if (other.radius_larger) {
-    radius_larger = other.radius_larger;
-  }
-  if (other.faster) {
-    faster = other.faster;
-  }
-  if (other.slower) {
-    slower = other.slower;
-  }
-  if (other.wider) {
-    wider = other.wider;
-  }
-  if (other.taller) {
-    taller = other.taller;
-  }
-  if (other.wall_larger) {
-    wall_larger = other.wall_larger;
-  }
-  if (other.wall_smaller) {
-    wall_smaller = other.wall_smaller;
-  }
+
+  auto merge_percent_values = [](const std::optional<float>& existing,
+                                 const std::optional<float>& other) {
+    if (other) {
+      if (existing) {
+        return std::optional<float>(*existing + *other);
+      } else {
+        return other;
+      }
+    } else {
+      return existing;
+    }
+  };
+  radius_smaller = merge_percent_values(radius_smaller, other.radius_smaller);
+  radius_larger = merge_percent_values(radius_larger, other.radius_larger);
+  faster = merge_percent_values(faster, other.faster);
+  slower = merge_percent_values(slower, other.slower);
+  wider = merge_percent_values(wider, other.wider);
+  taller = merge_percent_values(taller, other.taller);
+  wall_larger = merge_percent_values(wall_larger, other.wall_larger);
+  wall_smaller = merge_percent_values(wall_smaller, other.wall_smaller);
+
   if (other.is_poke) {
     is_poke = true;
   }
