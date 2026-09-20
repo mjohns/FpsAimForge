@@ -188,15 +188,16 @@ class GuideEditorScreen : public UiScreen {
   GuideEditorScreen(const GuideEditorOptions& opts) : UiScreen(), options_(opts) {
     bundle_names_ = app_.bundle_manager().GetWritableBundleNames();
     if (!opts.name.empty()) {
-      original_name_ = ResourceName::Parse(opts.name);
+      std::string base_name = GetNameInfo(opts.name).base_name;
+      original_name_ = ResourceName::Parse(base_name);
       name_ = *original_name_;
 
-      auto initial_guide = app_.guide_manager().GetGuide(opts.name);
+      auto initial_guide = app_.guide_manager().GetGuide(base_name);
       if (initial_guide) {
         original_guide_ = initial_guide->def;
         updated_guide_ = original_guide_;
       } else {
-        notification_popup_.NotifyOpen(std::format("Guide \"{}\" does not exist.", opts.name));
+        notification_popup_.NotifyOpen(std::format("Guide \"{}\" does not exist.", base_name));
         exit_after_notification_ = true;
       }
     }
@@ -309,6 +310,14 @@ class GuideEditorScreen : public UiScreen {
     }
 
     absl::StripAsciiWhitespace(name_.mutable_relative_name());
+
+    NameInfo name_info = GetNameInfo(name_.full_name());
+    if (name_info.HasDynamicSuffix()) {
+      SetErrorMessage(
+          "Unable to save guide with name ending in 'L#' or '#cm'. These guides are "
+          "automatically defined.");
+      return false;
+    }
 
     auto& mgr = app_.guide_manager();
 
