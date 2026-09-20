@@ -505,3 +505,46 @@ TEST_F(AimDbTest, TestRenameScenario_WithDynamicSuffixes) {
   EXPECT_THAT(db_->GetScenarioId("s1"), Ne(s1));
   EXPECT_THAT(db_->GetScenarioId("s1 25cm"), Ne(s1_25));
 }
+
+TEST_F(AimDbTest, GetHighestCompleteLevel_NoScenarios) {
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel("Base scenario", 150), Eq(std::nullopt));
+}
+
+TEST_F(AimDbTest, GetHighestCompleteLevel_NoRuns) {
+  std::string base_name = "Base scenario";
+  db_->GetScenarioId(base_name);
+  db_->GetScenarioId(base_name + " 15cm");
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name, 150), Eq(std::nullopt));
+}
+
+TEST_F(AimDbTest, GetHighestCompleteLevel) {
+  auto create = [&](const std::string& name, std::vector<float> scores) {
+    i64 id = db_->GetScenarioId(name);
+    for (float score : scores) {
+      StatsDbRow stats;
+      stats.score = score;
+      db_->AddStats(id, &stats);
+    }
+  };
+
+  std::string base_name = "Base scenario";
+
+  create(base_name, {1, 2, 3});
+
+  // Only looking for complete levels.
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name, 2), Eq(std::nullopt));
+
+  create(base_name + " L1 15cm", {1, 2, 3, 4});
+  create(base_name + " L2 15cm", {1, 2, 3});
+  create(base_name + " L3 15cm", {1, 2, 3});
+  create(base_name + " L3 25cm", {10});
+  create(base_name + " L10 15cm", {1});
+
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name + " 15cm", 2), Optional(3));
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name + " 15cm", 1), Optional(10));
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name + " 15cm", 3), Optional(3));
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name + " 15cm", 4), Optional(1));
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name + " 15cm", 4.1), Eq(std::nullopt));
+
+  EXPECT_THAT(db_->GetHighestCompleteScenarioLevel(base_name + " 25cm", 4.1), Optional(3));
+}

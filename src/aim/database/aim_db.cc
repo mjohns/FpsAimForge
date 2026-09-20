@@ -757,7 +757,7 @@ class AimDbImpl : public AimDb {
       placeholders += (i == 0) ? "?" : ", ?";
     }
     std::string query = std::format(
-        "SELECT ScenarioId FROM STATS WHERE ScenarioId IN ({}) AND Score > ? GROUP BY 1;",
+        "SELECT ScenarioId FROM STATS WHERE ScenarioId IN ({}) AND Score >= ? GROUP BY 1;",
         placeholders);
 
     sqlite3_stmt* stmt = nullptr;
@@ -771,7 +771,27 @@ class AimDbImpl : public AimDb {
 
     sqlite3_bind_double(stmt, bind_idx, target_score);
 
-    return {};
+    std::vector<i64> complete_scenario_ids;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+      i64 id = sqlite3_column_int64(stmt, 0);
+      complete_scenario_ids.push_back(id);
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (complete_scenario_ids.empty()) {
+      return {};
+    }
+
+    float highest_complete_level = -100000;
+    for (i64 complete_scenario_id : complete_scenario_ids) {
+      auto& name_info = name_map[complete_scenario_id];
+      if (name_info.level && *name_info.level > highest_complete_level) {
+        highest_complete_level = *name_info.level;
+      }
+    }
+
+    return highest_complete_level;
   }
 
   void CopyAllStats(i64 from_scenario_id, i64 to_scenario_id) override {}
