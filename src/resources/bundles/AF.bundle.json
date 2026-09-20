@@ -3541,6 +3541,114 @@
    }
   },
   {
+   "name": "SmoothSwerve 3d",
+   "def": {
+    "durationSeconds": 40,
+    "shotType": {
+     "trackingInvincible": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 3,
+       "speed": 100,
+       "acceleration": 170
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+     },
+     "simpleRoom": {
+      "height": 150,
+      "width": 190
+     }
+    },
+    "overrides": {},
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.96,
+     "speedMultiplier": 1.04,
+     "accelerationMultiplier": 1.02
+    },
+    "strafeDef": {
+     "bounds": {
+      "width": {
+       "xPercentValue": 0.9
+      },
+      "height": {
+       "yPercentValue": 0.9
+      },
+      "depth": {
+       "depthPercentValue": 0.4
+      }
+     },
+     "leftRightProfiles": [
+      {
+       "centerBias": 0.2,
+       "distance": {
+        "xPercentValue": 0.5
+       },
+       "distanceJitter": {
+        "xPercentValue": 0.2
+       },
+       "speedMultiplier": 1,
+       "speedMultiplierJitter": 0.05,
+       "accelerationMultiplier": 1,
+       "accelerationMultiplierJitter": 0.05
+      }
+     ],
+     "forwardBackProfiles": [
+      {
+       "centerBias": 0.4,
+       "distance": {
+        "depthPercentValue": 0.17
+       },
+       "distanceJitter": {
+        "depthPercentValue": 0.115
+       },
+       "speedMultiplier": 0.47,
+       "accelerationMultiplier": 0.71
+      }
+     ],
+     "upDownProfiles": [
+      {
+       "centerBias": 0.2,
+       "distance": {
+        "yPercentValue": 0.5
+       },
+       "distanceJitter": {
+        "yPercentValue": 0.15
+       },
+       "speedMultiplier": 0.2,
+       "accelerationMultiplier": 0.1
+      }
+     ],
+     "leftRightInitialDirection": "DIRECTION_POSITIVE",
+     "upDownInitialDirection": "DIRECTION_RANDOM",
+     "forwardBackInitialDirection": "DIRECTION_RANDOM"
+    }
+   }
+  },
+  {
+   "name": "SmoothSwerve 3d Precision Ladder",
+   "def": {
+    "overrides": {
+     "targetRadiusMultiplier": 0.96
+    },
+    "scoreTargets": {
+     "targetScore": 75
+    },
+    "referenceDef": {
+     "scenarioName": "AF SmoothSwerve 3d",
+     "explicitTargetRadius": 6
+    }
+   }
+  },
+  {
    "name": "SmoothSwerve Ladder",
    "def": {
     "overrides": {},
@@ -4245,6 +4353,32 @@
        "turnRateJitter": 40
       }
      ]
+    }
+   }
+  },
+  {
+   "name": "UpsideDown Popcorn",
+   "def": {
+    "overrides": {},
+    "referenceDef": {
+     "scenarioName": "AF Popcorn",
+     "room": {
+      "cameraPosition": {
+       "x": 0,
+       "y": -200,
+       "z": 0
+      },
+      "cameraUp": {
+       "x": 0,
+       "y": 0,
+       "z": -1
+      },
+      "simpleRoom": {
+       "height": 147,
+       "width": 230
+      }
+     },
+     "description": "Popcorn but camera up is reversed."
     }
    }
   },
@@ -5032,6 +5166,17 @@
       "numPlays": 1
      }
     ]
+   }
+  },
+  {
+   "name": "SmoothSwerve 3d Precision Ladder",
+   "def": {
+    "description": "",
+    "levels": {
+     "baseScenario": "AF SmoothSwerve 3d Precision Ladder",
+     "maxLevel": 30,
+     "numPlaysPerLevel": 1
+    }
    }
   },
   {
