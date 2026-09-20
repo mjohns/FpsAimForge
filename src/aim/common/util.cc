@@ -165,29 +165,27 @@ glm::vec3 ToVec3(const StoredRgb& v) {
 }
 
 std::string MaybeIntToString(float value, int decimal_places) {
-  std::stringstream ss;
-  ss << std::fixed << std::setprecision(decimal_places) << value;
-  std::string s = ss.str();
+  std::string s = std::to_string(value);
 
-  if (!s.contains('.')) {
+  size_t dot_pos = s.find('.');
+  if (dot_pos == std::string::npos) {
     return s;
   }
-  int cutoff_at_index = 0;
-  bool found_decimal = false;
 
-  cutoff_at_index = s.size();
-  for (int i = s.size() - 1; i >= 0; --i) {
-    if (s[i] != '0') {
-      break;
+  size_t decimals_start = dot_pos + 1;
+
+  int last_non_zero = -1;
+  for (size_t i = 0; i < decimal_places && (decimals_start + i) < s.size(); ++i) {
+    bool keep = s[decimals_start + i] != '0';
+    if (keep) {
+      last_non_zero = i;
     }
-    cutoff_at_index = i;
   }
 
-  s = s.substr(0, cutoff_at_index);
-  if (s.back() == '.') {
-    s.pop_back();
+  if (last_non_zero < 0) {
+    return s.substr(0, dot_pos);
   }
-  return s;
+  return s.substr(0, decimals_start + last_non_zero + 1);
 }
 
 float FirstNonZero(float v1, float v2) {

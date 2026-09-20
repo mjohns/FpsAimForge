@@ -17,4 +17,20 @@ TEST(UtilTest, MaybeIntToString) {
   EXPECT_THAT(MaybeIntToString(0, 1), StrEq("0"));
   EXPECT_THAT(MaybeIntToString(10.2, 0), StrEq("10"));
   EXPECT_THAT(MaybeIntToString(0.03, 1), StrEq("0"));
+  EXPECT_THAT(MaybeIntToString(4.999, 1), StrEq("4.9"));
+}
+
+TEST(UtilTest, MaybeIntToString_NoDecimals) {
+  EXPECT_THAT(MaybeIntToString(1), StrEq("1"));
+  EXPECT_THAT(MaybeIntToString(10), StrEq("10"));
+  EXPECT_THAT(MaybeIntToString(0.1, 0), StrEq("0"));
+  EXPECT_THAT(MaybeIntToString(10.001, 0), StrEq("10"));
+  EXPECT_THAT(MaybeIntToString(10.001, 2), StrEq("10"));
+}
+
+TEST(UtilTest, MaybeIntToString_ExactNumber) {
+  EXPECT_THAT(MaybeIntToString(1.123, 3), StrEq("1.123"));
+  EXPECT_THAT(MaybeIntToString(1.023, 3), StrEq("1.023"));
+  EXPECT_THAT(MaybeIntToString(1.003, 3), StrEq("1.003"));
+  EXPECT_THAT(MaybeIntToString(1.000, 3), StrEq("1"));
 }
