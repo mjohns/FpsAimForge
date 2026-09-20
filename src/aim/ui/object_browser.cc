@@ -194,6 +194,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
       if (ImGui::Selectable(std::format("{} Copy", icons::kContentCopy))) {
         result->copy_object_name = name;
       }
+
       if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
         select_variation_dialog_.NotifyOpen(name);
       }

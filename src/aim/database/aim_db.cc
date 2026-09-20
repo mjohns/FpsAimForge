@@ -724,6 +724,56 @@ class AimDbImpl : public AimDb {
     return run_id;
   }
 
+  std::optional<float> GetHighestCompleteScenarioLevel(const std::string& raw_base_name,
+                                                       float target_score) override {
+    NameInfo base_name_info = GetNameInfo(raw_base_name);
+    base_name_info.level = {};
+    const std::string base_name = base_name_info.GetFullName();
+
+    std::vector<std::string> candidate_names = GetScenarioNamesWithPrefix(base_name_info.base_name);
+    std::vector<i64> matching_ids;
+    matching_ids.reserve(candidate_names.size());
+
+    std::unordered_map<i64, NameInfo> name_map;
+    for (const std::string& name : candidate_names) {
+      NameInfo name_info = GetNameInfo(name);
+      if (!name_info.level) {
+        continue;
+      }
+      base_name_info.level = name_info.level;
+      if (base_name_info.GetFullName() == name_info.GetFullName()) {
+        i64 id = GetScenarioId(name);
+        matching_ids.push_back(id);
+        name_map[id] = name_info;
+      }
+    }
+
+    if (matching_ids.empty()) {
+      return {};
+    }
+
+    std::string placeholders;
+    for (size_t i = 0; i < matching_ids.size(); ++i) {
+      placeholders += (i == 0) ? "?" : ", ?";
+    }
+    std::string query = std::format(
+        "SELECT ScenarioId FROM STATS WHERE ScenarioId IN ({}) AND Score > ? GROUP BY 1;",
+        placeholders);
+
+    sqlite3_stmt* stmt = nullptr;
+    sqlite3_prepare_v2(db_, query.c_str(), -1, &stmt, nullptr);
+
+    int bind_idx = 1;
+    for (int64_t id : matching_ids) {
+      sqlite3_bind_int64(stmt, bind_idx, id);
+      bind_idx++;
+    }
+
+    sqlite3_bind_double(stmt, bind_idx, target_score);
+
+    return {};
+  }
+
   void CopyAllStats(i64 from_scenario_id, i64 to_scenario_id) override {}
 
   void DeleteStats(i64 scenario_id, i64 stats_run_id) override {

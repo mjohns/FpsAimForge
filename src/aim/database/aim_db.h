@@ -80,6 +80,9 @@ class AimDb {
   virtual std::vector<std::string> GetScenarioNamesWithPrefix(const std::string& prefix) = 0;
   virtual std::string GetScenarioName(i64 scenario_id) = 0;
 
+  virtual std::optional<float> GetHighestCompleteScenarioLevel(const std::string& base_name,
+                                                               float target_score) = 0;
+
   //
   // Stats
   //
