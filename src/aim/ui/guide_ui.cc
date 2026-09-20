@@ -183,7 +183,11 @@ class GuideViewer {
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
 
     ImGui::LoopId loop_id;
-    for (const std::string& guide : section.guides()) {
+    for (const std::string& unmerged_guide : section.guides()) {
+      NameInfo guide_info = GetNameInfo(unmerged_guide);
+      guide_info.MergeDynamicSuffixes(guide_name_info_);
+      std::string guide = guide_info.GetFullName();
+
       ImGui::TableNextRow();
       auto lid = loop_id.Get("Guide");
       ImGui::TableNextColumn();
