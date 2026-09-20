@@ -23,6 +23,7 @@
 #include "aim/ui/object_browser.h"
 #include "aim/ui/playlist_ui.h"
 #include "aim/ui/search_selector.h"
+#include "aim/ui/select_variation_dialog.h"
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -266,6 +267,11 @@ class GuidesComponentImpl : public GuidesComponent {
       app_.PushNextScreen(CreateGuideEditorScreen(opts));
     }
 
+    std::string updated_guide_variation_name;
+    if (select_variation_dialog_.Draw(&updated_guide_variation_name)) {
+      app_.guide_manager().SetCurrentGuide(updated_guide_variation_name);
+    }
+
     {
       const std::string& current_guide_name = app_.guide_manager().current_guide_name();
       if (!current_guide_name.empty()) {
@@ -321,11 +327,26 @@ class GuidesComponentImpl : public GuidesComponent {
         }
         ImGui::AlignTextToFramePadding();
         ImGui::Text(guide->name);
+
+        const char* menu_id = "GuideMenu";
+        if (ImGui::BeginPopupContextItem(menu_id)) {
+          bool is_readonly = app_.bundle_manager().IsBundleReadonly(GetBundleName(guide->name));
+          if (!is_readonly) {
+            if (ImGui::Selectable(std::format("{} Edit", icons::kEdit))) {
+              GuideEditorOptions opts;
+              opts.name = guide->name;
+              app_.PushNextScreen(CreateGuideEditorScreen(opts));
+            }
+          }
+          if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
+            select_variation_dialog_.NotifyOpen(guide->name);
+          }
+          ImGui::EndPopup();
+        }
+
         ImGui::SameLine();
-        if (ImGui::Button(icons::kEdit)) {
-          GuideEditorOptions opts;
-          opts.name = guide->name;
-          app_.PushNextScreen(CreateGuideEditorScreen(opts));
+        if (ImGui::MenuButton()) {
+          ImGui::OpenPopup(menu_id);
         }
 
         ImGui::SpacedSeparator();
@@ -385,6 +406,7 @@ class GuidesComponentImpl : public GuidesComponent {
   AddGuideDialog add_dialog_{"AddGuideDialog"};
   GuideViewer viewer_;
   std::deque<std::string> guide_history_;
+  SelectVariationDialog select_variation_dialog_{"CurrentGuideVariation"};
 };
 
 }  // namespace
