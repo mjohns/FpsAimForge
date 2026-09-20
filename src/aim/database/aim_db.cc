@@ -392,9 +392,9 @@ class AimDbImpl : public AimDb {
     return {};
   }
 
-  i64 CreatePlaylistEntry(const std::string& name) {
+  i64 CreateIdEntry(const std::string& name, const char* create_entry_sql) {
     sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db_, kCreatePlaylistSql, -1, &stmt, nullptr);
+    int rc = sqlite3_prepare_v2(db_, create_entry_sql, -1, &stmt, nullptr);
     if (rc != SQLITE_OK) {
       Logger::get()->warn("Failed to prepare statement: {}", sqlite3_errmsg(db_));
       return -1;
@@ -411,19 +411,26 @@ class AimDbImpl : public AimDb {
     return GetNameToIdMap(kGetAllPlaylistIdsSql);
   }
 
-  i64 GetPlaylistId(const std::string& name) override {
-    auto it = partial_playlist_id_map_.find(name);
-    if (it != partial_playlist_id_map_.end()) {
+  i64 GetId(const std::string& name,
+            std::unordered_map<std::string, i64>& partial_id_map,
+            const char* get_id_sql,
+            const char* create_id_sql) {
+    auto it = partial_id_map.find(name);
+    if (it != partial_id_map.end()) {
       return it->second;
     }
-    auto existing_entry = GetExistingIdFromDb(name, kGetPlaylistIdSql);
+    auto existing_entry = GetExistingIdFromDb(name, get_id_sql);
     if (existing_entry) {
-      partial_playlist_id_map_[name] = *existing_entry;
+      partial_id_map[name] = *existing_entry;
       return *existing_entry;
     }
-    i64 playlist_id = CreatePlaylistEntry(name);
-    partial_playlist_id_map_[name] = playlist_id;
-    return playlist_id;
+    i64 id = CreateIdEntry(name, create_id_sql);
+    partial_id_map[name] = id;
+    return id;
+  }
+
+  i64 GetPlaylistId(const std::string& name) override {
+    return GetId(name, partial_playlist_id_map_, kGetPlaylistIdSql, kCreatePlaylistSql);
   }
 
   void RenamePlaylist(const std::string& old_name, const std::string& new_name) override {
@@ -474,34 +481,8 @@ class AimDbImpl : public AimDb {
     return GetNameToIdMap(kGetAllGuideIdsSql);
   }
 
-  i64 CreateGuideEntry(const std::string& name) {
-    sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db_, kCreateGuideSql, -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
-      Logger::get()->warn("Failed to prepare statement: {}", sqlite3_errmsg(db_));
-      return -1;
-    }
-
-    BindString(stmt, 1, name);
-
-    rc = sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-    return sqlite3_last_insert_rowid(db_);
-  }
-
   i64 GetGuideId(const std::string& name) override {
-    auto it = partial_guide_id_map_.find(name);
-    if (it != partial_guide_id_map_.end()) {
-      return it->second;
-    }
-    auto existing_entry = GetExistingIdFromDb(name, kGetGuideIdSql);
-    if (existing_entry) {
-      partial_guide_id_map_[name] = *existing_entry;
-      return *existing_entry;
-    }
-    i64 guide_id = CreateGuideEntry(name);
-    partial_guide_id_map_[name] = guide_id;
-    return guide_id;
+    return GetId(name, partial_guide_id_map_, kGetGuideIdSql, kCreateGuideSql);
   }
 
   void RenameGuide(const std::string& old_name, const std::string& new_name) override {
