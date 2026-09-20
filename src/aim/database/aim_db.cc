@@ -330,7 +330,9 @@ LIMIT ?;
 )AIMS";
 
 class AimDbImpl;
-using IdGetter = i64 (AimDbImpl::*)(const std::string& name);
+using GetIdFn = i64 (AimDbImpl::*)(const std::string& name);
+using RenameSingleItemFn = i64 (AimDbImpl::*)(const std::string& old_name,
+                                              const std::string& new_name);
 
 class AimDbImpl : public AimDb {
  public:
@@ -432,6 +434,20 @@ class AimDbImpl : public AimDb {
     return id;
   }
 
+  std::optional<i64> GetIdForType(const std::string& name, ObjectType type) {
+    if (type == ObjectType::SCENARIO) {
+      return GetScenarioId(name);
+    }
+    if (type == ObjectType::PLAYLIST) {
+      return GetPlaylistId(name);
+    }
+    if (type == ObjectType::GUIDE) {
+      return GetGuideId(name);
+    }
+
+    return {};
+  }
+
   i64 GetPlaylistId(const std::string& name) override {
     return GetId(name, partial_playlist_id_map_, kGetPlaylistIdSql, kCreatePlaylistSql);
   }
@@ -444,31 +460,51 @@ class AimDbImpl : public AimDb {
     return GetId(name, partial_guide_id_map_, kGetGuideIdSql, kCreateGuideSql);
   }
 
-  void RenamePlaylist(const std::string& old_name, const std::string& new_name) override {
+  void RenameItem(const std::string& old_name,
+                  const std::string& new_name,
+                  const char* get_names_with_prefix_sql,
+                  RenameSingleItemFn rename_single_item) {
+    // return GetNamesWithPrefix(prefix, kGetPlaylistNamesWithPrefixSql);
     NameInfo old_info = GetNameInfo(old_name);
     NameInfo new_info = GetNameInfo(new_name);
     if (old_info.HasDynamicSuffix() || new_info.HasDynamicSuffix()) {
-      // The base playlists should be renamed and not the dynamic variations. This determination
+      // The base item should be renamed and not the dynamic variations. This determination
       // should be handled at the application layer.
-      assert(false && "Renaming non base playlists");
+      assert(false && "Renaming non base item");
+      // TODO: Should we just force to using base names here?
       return;
     }
 
-    std::vector<std::string> candidate_names = GetPlaylistNamesWithPrefix(old_name);
+    std::vector<std::string> candidate_names =
+        GetNamesWithPrefix(old_name, get_names_with_prefix_sql);
     for (const std::string& candidate_name : candidate_names) {
       NameInfo info = GetNameInfo(candidate_name);
       if (info.base_name == old_name && info.HasDynamicSuffix()) {
         info.base_name = new_name;
-        RenameSinglePlaylist(candidate_name, info.GetFullName());
+        (this->*rename_single_item)(candidate_name, info.GetFullName());
       }
     }
 
-    RenameSinglePlaylist(old_name, new_name);
+    (this->*rename_single_item)(old_name, new_name);
+  }
+
+  void RenamePlaylist(const std::string& old_name, const std::string& new_name) override {
+    RenameItem(
+        old_name, new_name, kGetPlaylistNamesWithPrefixSql, &AimDbImpl::RenameSinglePlaylist);
+  }
+
+  void RenameScenario(const std::string& old_name, const std::string& new_name) override {
+    RenameItem(
+        old_name, new_name, kGetScenarioNamesWithPrefixSql, &AimDbImpl::RenameSingleScenario);
+  }
+
+  void RenameGuide(const std::string& old_name, const std::string& new_name) override {
+    RenameItem(old_name, new_name, kGetGuideNamesWithPrefixSql, &AimDbImpl::RenameSingleGuide);
   }
 
   i64 RenameSingleItem(const std::string& old_name,
                        const std::string& new_name,
-                       IdGetter id_getter,
+                       GetIdFn id_getter,
                        std::unordered_map<std::string, i64>& partial_id_map,
                        const char* update_name_sql) {
     i64 existing_id = (this->*id_getter)(old_name);
@@ -515,50 +551,6 @@ class AimDbImpl : public AimDb {
 
   std::unordered_map<std::string, i64> GetGuideIdMap() override {
     return GetNameToIdMap(kGetAllGuideIdsSql);
-  }
-
-  void RenameGuide(const std::string& old_name, const std::string& new_name) override {
-    RenameSingleGuide(old_name, new_name);
-  }
-
-  i64 CreateScenarioEntry(const std::string& name) {
-    sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db_, kCreateScenarioSql, -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
-      Logger::get()->warn("Failed to prepare statement: {}", sqlite3_errmsg(db_));
-      return -1;
-    }
-
-    // This byte string needs to stay around until after step is done.
-    std::string settings_content;
-
-    BindString(stmt, 1, name);
-
-    rc = sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-    return sqlite3_last_insert_rowid(db_);
-  }
-
-  void RenameScenario(const std::string& old_name, const std::string& new_name) override {
-    NameInfo old_info = GetNameInfo(old_name);
-    NameInfo new_info = GetNameInfo(new_name);
-    if (old_info.HasDynamicSuffix() || new_info.HasDynamicSuffix()) {
-      // The base scenarios should be renamed and not the dynamic variations. This determination
-      // should be handled at the application layer.
-      assert(false && "Renaming non base scenarios");
-      return;
-    }
-
-    std::vector<std::string> candidate_names = GetScenarioNamesWithPrefix(old_name);
-    for (const std::string& candidate_name : candidate_names) {
-      NameInfo info = GetNameInfo(candidate_name);
-      if (info.base_name == old_name && info.HasDynamicSuffix()) {
-        info.base_name = new_name;
-        RenameSingleScenario(candidate_name, info.GetFullName());
-      }
-    }
-
-    RenameSingleScenario(old_name, new_name);
   }
 
   std::vector<std::string> GetScenarioNamesWithPrefix(const std::string& prefix) override {
@@ -840,14 +832,9 @@ class AimDbImpl : public AimDb {
   }
 
   void UpdateRecentView(ObjectType type, const std::string& name) override {
-    if (type == ObjectType::SCENARIO) {
-      return UpdateRecentIdView(type, GetScenarioId(name));
-    }
-    if (type == ObjectType::PLAYLIST) {
-      return UpdateRecentIdView(type, GetPlaylistId(name));
-    }
-    if (type == ObjectType::GUIDE) {
-      return UpdateRecentIdView(type, GetGuideId(name));
+    auto maybe_id = GetIdForType(name, type);
+    if (maybe_id) {
+      return UpdateRecentIdView(type, *maybe_id);
     }
 
     sqlite3_stmt* stmt;
@@ -888,14 +875,9 @@ class AimDbImpl : public AimDb {
   }
 
   void DeleteRecentView(ObjectType type, const std::string& name) override {
-    if (type == ObjectType::SCENARIO) {
-      return DeleteRecentIdView(type, GetScenarioId(name));
-    }
-    if (type == ObjectType::PLAYLIST) {
-      return DeleteRecentIdView(type, GetPlaylistId(name));
-    }
-    if (type == ObjectType::GUIDE) {
-      return DeleteRecentIdView(type, GetGuideId(name));
+    auto maybe_id = GetIdForType(name, type);
+    if (maybe_id) {
+      return DeleteRecentIdView(type, *maybe_id);
     }
 
     sqlite3_stmt* stmt;

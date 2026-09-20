@@ -176,6 +176,24 @@ TEST_F(AimDbTest, RenameBasePlaylist) {
   EXPECT_THAT(db_->GetPlaylistId("p3"), Eq(other_id2));
 }
 
+TEST_F(AimDbTest, RenameBaseGuide) {
+  i64 id1 = db_->GetGuideId("p1");
+  i64 id2 = db_->GetGuideId("p1 15cm");
+  i64 id3 = db_->GetGuideId("p1 25cm");
+
+  i64 other_id1 = db_->GetGuideId("p2");
+  i64 other_id2 = db_->GetGuideId("p3");
+
+  db_->RenameGuide("p1", "p4");
+
+  EXPECT_THAT(db_->GetGuideId("p4"), Eq(id1));
+  EXPECT_THAT(db_->GetGuideId("p4 15cm"), Eq(id2));
+  EXPECT_THAT(db_->GetGuideId("p4 25cm"), Eq(id3));
+
+  EXPECT_THAT(db_->GetGuideId("p2"), Eq(other_id1));
+  EXPECT_THAT(db_->GetGuideId("p3"), Eq(other_id2));
+}
+
 TEST_F(AimDbTest, GetGuideNameMap) {
   i64 id1 = db_->GetGuideId("p1");
   ASSERT_THAT(id1, Gt(0));
