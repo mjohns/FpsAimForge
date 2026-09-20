@@ -220,7 +220,11 @@ class GuideViewer {
       if (!playlist.def().has_levels()) {
         continue;
       }
-      const auto& base_name = playlist.def().levels().base_scenario();
+      NameInfo playlist_name_info = GetNameInfo(item->playlist_name);
+      NameInfo scenario_name_info = GetNameInfo(playlist.def().levels().base_scenario());
+      scenario_name_info.level = {};
+      scenario_name_info.MergeDynamicSuffixes(playlist_name_info);
+      std::string base_name = scenario_name_info.GetFullName();
       auto maybe_scenario = app_.scenario_manager().GetEvaluatedScenarioDef(base_name);
       if (!maybe_scenario) {
         continue;
