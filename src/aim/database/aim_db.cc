@@ -113,6 +113,16 @@ SELECT ScenarioName FROM Scenarios
 WHERE ScenarioName LIKE ?;
 )AIMS";
 
+const char* kGetPlaylistNamesWithPrefixSql = R"AIMS(
+SELECT PlaylistName FROM Playlists
+WHERE PlaylistName LIKE ?;
+)AIMS";
+
+const char* kGetGuideNamesWithPrefixSql = R"AIMS(
+SELECT GuideName FROM Guides
+WHERE GuideName LIKE ?;
+)AIMS";
+
 const char* kGetScenarioSettingsSql = R"AIMS(
 SELECT Settings FROM Scenarios WHERE ScenarioId = ?;
 )AIMS";
@@ -416,7 +426,29 @@ class AimDbImpl : public AimDb {
     return playlist_id;
   }
 
-  i64 RenamePlaylist(const std::string& old_name, const std::string& new_name) override {
+  void RenamePlaylist(const std::string& old_name, const std::string& new_name) override {
+    NameInfo old_info = GetNameInfo(old_name);
+    NameInfo new_info = GetNameInfo(new_name);
+    if (old_info.HasDynamicSuffix() || new_info.HasDynamicSuffix()) {
+      // The base playlists should be renamed and not the dynamic variations. This determination
+      // should be handled at the application layer.
+      assert(false && "Renaming non base playlists");
+      return;
+    }
+
+    std::vector<std::string> candidate_names = GetPlaylistNamesWithPrefix(old_name);
+    for (const std::string& candidate_name : candidate_names) {
+      NameInfo info = GetNameInfo(candidate_name);
+      if (info.base_name == old_name && info.HasDynamicSuffix()) {
+        info.base_name = new_name;
+        RenameSinglePlaylist(candidate_name, info.GetFullName());
+      }
+    }
+
+    RenameSinglePlaylist(old_name, new_name);
+  }
+
+  i64 RenameSinglePlaylist(const std::string& old_name, const std::string& new_name) {
     i64 existing_id = GetPlaylistId(old_name);
 
     sqlite3_stmt* stmt;
@@ -472,14 +504,14 @@ class AimDbImpl : public AimDb {
     return guide_id;
   }
 
-  i64 RenameGuide(const std::string& old_name, const std::string& new_name) override {
+  void RenameGuide(const std::string& old_name, const std::string& new_name) override {
     i64 existing_id = GetGuideId(old_name);
 
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(db_, kUpdateGuideNameSql, -1, &stmt, nullptr);
     if (rc != SQLITE_OK) {
       Logger::get()->warn("Failed to prepare statement: {}", sqlite3_errmsg(db_));
-      return existing_id;
+      return;
     }
 
     BindString(stmt, 1, new_name);
@@ -491,7 +523,6 @@ class AimDbImpl : public AimDb {
 
     partial_guide_id_map_.erase(old_name);
     partial_guide_id_map_[new_name] = existing_id;
-    return existing_id;
   }
 
   i64 GetScenarioId(const std::string& name) override {
@@ -550,9 +581,21 @@ class AimDbImpl : public AimDb {
   }
 
   std::vector<std::string> GetScenarioNamesWithPrefix(const std::string& prefix) override {
+    return GetNamesWithPrefix(prefix, kGetScenarioNamesWithPrefixSql);
+  }
+
+  std::vector<std::string> GetGuideNamesWithPrefix(const std::string& prefix) override {
+    return GetNamesWithPrefix(prefix, kGetGuideNamesWithPrefixSql);
+  }
+
+  std::vector<std::string> GetPlaylistNamesWithPrefix(const std::string& prefix) override {
+    return GetNamesWithPrefix(prefix, kGetPlaylistNamesWithPrefixSql);
+  }
+
+  std::vector<std::string> GetNamesWithPrefix(const std::string& prefix, const char* sql) {
     sqlite3_stmt* stmt;
 
-    int rc = sqlite3_prepare_v2(db_, kGetScenarioNamesWithPrefixSql, -1, &stmt, nullptr);
+    int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
     if (rc != SQLITE_OK) {
       Logger::get()->warn("Failed to fetch data: {}", sqlite3_errmsg(db_));
       return {};

@@ -56,7 +56,8 @@ class AimDb {
 
   virtual std::unordered_map<std::string, i64> GetPlaylistIdMap() = 0;
   virtual i64 GetPlaylistId(const std::string& name) = 0;
-  virtual i64 RenamePlaylist(const std::string& old_name, const std::string& new_name) = 0;
+  virtual void RenamePlaylist(const std::string& old_name, const std::string& new_name) = 0;
+  virtual std::vector<std::string> GetPlaylistNamesWithPrefix(const std::string& prefix) = 0;
 
   //
   // Guides
@@ -64,7 +65,8 @@ class AimDb {
 
   virtual std::unordered_map<std::string, i64> GetGuideIdMap() = 0;
   virtual i64 GetGuideId(const std::string& name) = 0;
-  virtual i64 RenameGuide(const std::string& old_name, const std::string& new_name) = 0;
+  virtual void RenameGuide(const std::string& old_name, const std::string& new_name) = 0;
+  virtual std::vector<std::string> GetGuideNamesWithPrefix(const std::string& prefix) = 0;
 
   //
   // Scenarios

@@ -144,7 +144,9 @@ TEST_F(AimDbTest, GetPlaylistNameMap) {
       db_->GetPlaylistIdMap(),
       UnorderedElementsAre(Pair("p1", id1), Pair("p2", id2), Pair("p3", id3), Pair("p4", id4)));
 
-  i64 id5 = db_->RenamePlaylist("p3", "p5");
+  db_->RenamePlaylist("p3", "p5");
+  i64 id5 = db_->GetPlaylistId("p5");
+
   ASSERT_THAT(id5, Eq(id3));
 
   i64 new_id3 = db_->GetPlaylistId("p3");
@@ -154,6 +156,24 @@ TEST_F(AimDbTest, GetPlaylistNameMap) {
       db_->GetPlaylistIdMap(),
       UnorderedElementsAre(
           Pair("p1", id1), Pair("p2", id2), Pair("p5", id5), Pair("p4", id4), Pair("p3", new_id3)));
+}
+
+TEST_F(AimDbTest, RenameBasePlaylist) {
+  i64 id1 = db_->GetPlaylistId("p1");
+  i64 id2 = db_->GetPlaylistId("p1 15cm");
+  i64 id3 = db_->GetPlaylistId("p1 25cm");
+
+  i64 other_id1 = db_->GetPlaylistId("p2");
+  i64 other_id2 = db_->GetPlaylistId("p3");
+
+  db_->RenamePlaylist("p1", "p4");
+
+  EXPECT_THAT(db_->GetPlaylistId("p4"), Eq(id1));
+  EXPECT_THAT(db_->GetPlaylistId("p4 15cm"), Eq(id2));
+  EXPECT_THAT(db_->GetPlaylistId("p4 25cm"), Eq(id3));
+
+  EXPECT_THAT(db_->GetPlaylistId("p2"), Eq(other_id1));
+  EXPECT_THAT(db_->GetPlaylistId("p3"), Eq(other_id2));
 }
 
 TEST_F(AimDbTest, GetGuideNameMap) {
@@ -171,7 +191,8 @@ TEST_F(AimDbTest, GetGuideNameMap) {
       db_->GetGuideIdMap(),
       UnorderedElementsAre(Pair("p1", id1), Pair("p2", id2), Pair("p3", id3), Pair("p4", id4)));
 
-  i64 id5 = db_->RenameGuide("p3", "p5");
+  db_->RenameGuide("p3", "p5");
+  i64 id5 = db_->GetGuideId("p5");
   ASSERT_THAT(id5, Eq(id3));
 
   i64 new_id3 = db_->GetGuideId("p3");
