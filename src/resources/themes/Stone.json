@@ -1,68 +1,71 @@
 {
-  "backAppearance": {
-    "color": {}
+ "roofAppearance": {
+  "texture": {
+   "textureName": "Stone.png",
+   "scale": 1.2
   },
-  "crosshair": {
-    "color": {
-      "hex": "#ffcf00"
-    },
-    "outlineColor": {
-      "hex": "#000000"
-    }
+  "mixColor": {},
+  "mixPercent": 0.399999917
+ },
+ "sideAppearance": {
+  "texture": {
+   "textureName": "Stone.png",
+   "scale": 1.2
   },
-  "floorAppearance": {
-    "mixColor": {},
-    "mixPercent": 0.410000056,
-    "texture": {
-      "scale": 1.19999981,
-      "textureName": "Stone.png"
-    }
+  "mixColor": {},
+  "mixPercent": 0.339999974
+ },
+ "frontAppearance": {
+  "texture": {
+   "textureName": "Stone.png",
+   "scale": 1.2
   },
-  "frontAppearance": {
-    "mixColor": {
-      "b": 117,
-      "g": 117,
-      "r": 117
-    },
-    "mixPercent": 0.299999863,
-    "texture": {
-      "scale": 1.19999969,
-      "textureName": "Stone.png"
-    }
+  "mixColor": {
+   "r": 117,
+   "g": 117,
+   "b": 117
   },
-  "ghostTargetColor": {
-    "hex": "#787878"
+  "mixPercent": 0.299999863
+ },
+ "floorAppearance": {
+  "texture": {
+   "textureName": "Stone.png",
+   "scale": 1.2
   },
-  "healthBar": {
-    "backgroundAlpha": 0.8,
-    "backgroundColor": {
-      "b": 213,
-      "g": 213,
-      "r": 242
-    },
-    "healthColor": {
-      "b": 155,
-      "g": 155,
-      "r": 255
-    }
+  "mixColor": {},
+  "mixPercent": 0.410000056
+ },
+ "crosshair": {
+  "color": {
+   "hex": "#ffcf00"
   },
-  "roofAppearance": {
-    "mixColor": {},
-    "mixPercent": 0.399999917,
-    "texture": {
-      "scale": 1.19999981,
-      "textureName": "Stone.png"
-    }
-  },
-  "sideAppearance": {
-    "mixColor": {},
-    "mixPercent": 0.339999974,
-    "texture": {
-      "scale": 1.19999981,
-      "textureName": "Stone.png"
-    }
-  },
-  "targetColor": {
-    "hex": "#000000"
+  "outlineColor": {
+   "hex": "#000000"
   }
+ },
+ "targetColor": {
+  "hex": "#000000"
+ },
+ "ghostTargetColor": {
+  "hex": "#787878"
+ },
+ "centerTargetColor": {
+  "r": 188,
+  "g": 187,
+  "b": 187
+ },
+ "healthBar": {
+  "healthColor": {
+   "r": 255,
+   "g": 155,
+   "b": 155
+  },
+  "backgroundColor": {
+   "r": 242,
+   "g": 213,
+   "b": 213
+  },
+  "backgroundAlpha": 0.8
+ }
 }
+

@@ -1,64 +1,65 @@
 {
-  "backAppearance": {
-    "texture": {
-      "textureName": "Brick.png"
-    }
+ "roofAppearance": {
+  "texture": {
+   "textureName": "Brick.png"
   },
-  "crosshair": {
-    "color": {
-      "hex": "#0cf00c"
-    },
-    "outlineColor": {
-      "hex": "#000000"
-    }
+  "mixColor": {},
+  "mixPercent": 0.42
+ },
+ "sideAppearance": {
+  "texture": {
+   "textureName": "Brick.png"
   },
-  "floorAppearance": {
-    "mixColor": {},
-    "mixPercent": 0.539999962,
-    "texture": {
-      "textureName": "Brick.png"
-    }
+  "mixColor": {},
+  "mixPercent": 0.580000043
+ },
+ "frontAppearance": {
+  "texture": {
+   "textureName": "Brick.png"
   },
-  "frontAppearance": {
-    "mixColor": {},
-    "mixPercent": 0.4,
-    "texture": {
-      "textureName": "Brick.png"
-    }
+  "mixColor": {},
+  "mixPercent": 0.4
+ },
+ "floorAppearance": {
+  "texture": {
+   "textureName": "Brick.png"
   },
-  "ghostTargetColor": {
-    "hex": "#c9c0c4",
-    "multiplier": 0.75000006
+  "mixColor": {},
+  "mixPercent": 0.539999962
+ },
+ "crosshair": {
+  "color": {
+   "hex": "#0cf00c"
   },
-  "healthBar": {
-    "backgroundAlpha": 0.62,
-    "backgroundColor": {
-      "b": 27,
-      "g": 37,
-      "r": 63
-    },
-    "healthAlpha": 0.850000143,
-    "healthColor": {
-      "b": 164,
-      "g": 184,
-      "r": 196
-    }
-  },
-  "roofAppearance": {
-    "mixColor": {},
-    "mixPercent": 0.42,
-    "texture": {
-      "textureName": "Brick.png"
-    }
-  },
-  "sideAppearance": {
-    "mixColor": {},
-    "mixPercent": 0.580000043,
-    "texture": {
-      "textureName": "Brick.png"
-    }
-  },
-  "targetColor": {
-    "hex": "#fdf6e3"
+  "outlineColor": {
+   "hex": "#000000"
   }
+ },
+ "targetColor": {
+  "hex": "#fdf6e3"
+ },
+ "ghostTargetColor": {
+  "hex": "#c9c0c4",
+  "multiplier": 0.75
+ },
+ "centerTargetColor": {
+  "r": 207,
+  "g": 181,
+  "b": 181
+ },
+ "healthBar": {
+  "healthColor": {
+   "r": 196,
+   "g": 184,
+   "b": 164
+  },
+  "healthAlpha": 0.85,
+  "backgroundColor": {
+   "r": 63,
+   "g": 37,
+   "b": 27
+  },
+  "backgroundAlpha": 0.62
+ }
 }
+

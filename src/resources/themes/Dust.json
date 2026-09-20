@@ -49,6 +49,11 @@
   "b": 153,
   "multiplier": 0.8
  },
+ "centerTargetColor": {
+  "r": 17,
+  "g": 124,
+  "b": 136
+ },
  "healthBar": {
   "healthColor": {
    "r": 52,
