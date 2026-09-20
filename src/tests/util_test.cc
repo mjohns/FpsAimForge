@@ -26,6 +26,8 @@ TEST(UtilTest, MaybeIntToString_NoDecimals) {
   EXPECT_THAT(MaybeIntToString(0.1, 0), StrEq("0"));
   EXPECT_THAT(MaybeIntToString(10.001, 0), StrEq("10"));
   EXPECT_THAT(MaybeIntToString(10.001, 2), StrEq("10"));
+  EXPECT_THAT(MaybeIntToString(1.0001, 3), StrEq("1"));
+  EXPECT_THAT(MaybeIntToString(1.0000001, 3), StrEq("1"));
 }
 
 TEST(UtilTest, MaybeIntToString_ExactNumber) {
