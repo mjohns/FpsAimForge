@@ -329,6 +329,9 @@ ORDER BY RecentIdViews.TimestampMicros DESC
 LIMIT ?;
 )AIMS";
 
+class AimDbImpl;
+using IdGetter = i64 (AimDbImpl::*)(const std::string& name);
+
 class AimDbImpl : public AimDb {
  public:
   explicit AimDbImpl(const std::filesystem::path& db_path) {
@@ -433,6 +436,14 @@ class AimDbImpl : public AimDb {
     return GetId(name, partial_playlist_id_map_, kGetPlaylistIdSql, kCreatePlaylistSql);
   }
 
+  i64 GetScenarioId(const std::string& name) override {
+    return GetId(name, partial_scenario_id_map_, kGetScenarioIdSql, kCreateScenarioSql);
+  }
+
+  i64 GetGuideId(const std::string& name) override {
+    return GetId(name, partial_guide_id_map_, kGetGuideIdSql, kCreateGuideSql);
+  }
+
   void RenamePlaylist(const std::string& old_name, const std::string& new_name) override {
     NameInfo old_info = GetNameInfo(old_name);
     NameInfo new_info = GetNameInfo(new_name);
@@ -455,11 +466,15 @@ class AimDbImpl : public AimDb {
     RenameSinglePlaylist(old_name, new_name);
   }
 
-  i64 RenameSinglePlaylist(const std::string& old_name, const std::string& new_name) {
-    i64 existing_id = GetPlaylistId(old_name);
+  i64 RenameSingleItem(const std::string& old_name,
+                       const std::string& new_name,
+                       IdGetter id_getter,
+                       std::unordered_map<std::string, i64>& partial_id_map,
+                       const char* update_name_sql) {
+    i64 existing_id = (this->*id_getter)(old_name);
 
     sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db_, kUpdatePlaylistNameSql, -1, &stmt, nullptr);
+    int rc = sqlite3_prepare_v2(db_, update_name_sql, -1, &stmt, nullptr);
     if (rc != SQLITE_OK) {
       Logger::get()->warn("Failed to prepare statement: {}", sqlite3_errmsg(db_));
       return existing_id;
@@ -472,53 +487,38 @@ class AimDbImpl : public AimDb {
     rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
 
-    partial_playlist_id_map_.erase(old_name);
-    partial_playlist_id_map_[new_name] = existing_id;
+    partial_id_map.erase(old_name);
+    partial_id_map[new_name] = existing_id;
     return existing_id;
+  }
+
+  i64 RenameSinglePlaylist(const std::string& old_name, const std::string& new_name) {
+    return RenameSingleItem(old_name,
+                            new_name,
+                            &AimDbImpl::GetPlaylistId,
+                            partial_playlist_id_map_,
+                            kUpdatePlaylistNameSql);
+  }
+
+  i64 RenameSingleScenario(const std::string& old_name, const std::string& new_name) {
+    return RenameSingleItem(old_name,
+                            new_name,
+                            &AimDbImpl::GetScenarioId,
+                            partial_scenario_id_map_,
+                            kUpdateScenarioNameSql);
+  }
+
+  i64 RenameSingleGuide(const std::string& old_name, const std::string& new_name) {
+    return RenameSingleItem(
+        old_name, new_name, &AimDbImpl::GetGuideId, partial_guide_id_map_, kUpdateGuideNameSql);
   }
 
   std::unordered_map<std::string, i64> GetGuideIdMap() override {
     return GetNameToIdMap(kGetAllGuideIdsSql);
   }
 
-  i64 GetGuideId(const std::string& name) override {
-    return GetId(name, partial_guide_id_map_, kGetGuideIdSql, kCreateGuideSql);
-  }
-
   void RenameGuide(const std::string& old_name, const std::string& new_name) override {
-    i64 existing_id = GetGuideId(old_name);
-
-    sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db_, kUpdateGuideNameSql, -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
-      Logger::get()->warn("Failed to prepare statement: {}", sqlite3_errmsg(db_));
-      return;
-    }
-
-    BindString(stmt, 1, new_name);
-
-    sqlite3_bind_int64(stmt, 2, existing_id);
-
-    rc = sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-
-    partial_guide_id_map_.erase(old_name);
-    partial_guide_id_map_[new_name] = existing_id;
-  }
-
-  i64 GetScenarioId(const std::string& name) override {
-    auto it = partial_scenario_id_map_.find(name);
-    if (it != partial_scenario_id_map_.end()) {
-      return it->second;
-    }
-    auto existing_entry = GetExistingIdFromDb(name, kGetScenarioIdSql);
-    if (existing_entry) {
-      partial_scenario_id_map_[name] = *existing_entry;
-      return *existing_entry;
-    }
-    i64 scenario_id = CreateScenarioEntry(name);
-    partial_scenario_id_map_[name] = scenario_id;
-    return scenario_id;
+    RenameSingleGuide(old_name, new_name);
   }
 
   i64 CreateScenarioEntry(const std::string& name) {
@@ -592,27 +592,6 @@ class AimDbImpl : public AimDb {
 
     sqlite3_finalize(stmt);
     return names;
-  }
-
-  void RenameSingleScenario(const std::string& old_name, const std::string& new_name) {
-    i64 existing_id = GetScenarioId(old_name);
-
-    sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db_, kUpdateScenarioNameSql, -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
-      Logger::get()->warn("Failed to prepare statement: {}", sqlite3_errmsg(db_));
-      return;
-    }
-
-    BindString(stmt, 1, new_name);
-
-    sqlite3_bind_int64(stmt, 2, existing_id);
-
-    rc = sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-
-    partial_scenario_id_map_.erase(old_name);
-    partial_scenario_id_map_[new_name] = existing_id;
   }
 
   void UpdateScenarioSettings(i64 scenario_id, ScenarioSettings settings) override {
