@@ -107,6 +107,7 @@ class GuideViewer {
   void Draw(const GuideItem& guide_item, Result* result) {
     if (guide_item.name != guide_name_) {
       guide_name_ = guide_item.name;
+      guide_name_info_ = GetNameInfo(guide_name_);
       highest_level_cache_.clear();
     }
     const GuideDef& guide = guide_item.def;
@@ -143,7 +144,11 @@ class GuideViewer {
 
     LoadSomeHighestLevelPlaylistItems(1);
     ImGui::LoopId loop_id;
-    for (const std::string& playlist : section.playlists()) {
+    for (const std::string& unmerged_playlist : section.playlists()) {
+      NameInfo playlist_name_info = GetNameInfo(unmerged_playlist);
+      playlist_name_info.MergeDynamicSuffixes(guide_name_info_);
+      std::string playlist = playlist_name_info.GetFullName();
+
       ImGui::TableNextRow();
       auto lid = loop_id.Get("Playlist");
       ImGui::TableNextColumn();
@@ -217,6 +222,7 @@ class GuideViewer {
   absl::linked_hash_map<std::string, HighestLevelCacheItem> highest_level_cache_;
   i64 cache_refresh_time_micros_ = SecondsToMicros(0.6);
   std::string guide_name_;
+  NameInfo guide_name_info_;
 };
 
 class GuidesComponentImpl : public GuidesComponent {

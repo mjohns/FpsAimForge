@@ -365,7 +365,7 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
   ImGui::NotificationPopup notification_popup_{"Notification"};
   std::string description_;
   ImGui::MultilineTextEntryDialog description_dialog_{"DescriptionEditor"};
-  SelectVariationDialog select_variation_dialog_{"SelectScenarioVariation", ObjectType::SCENARIO};
+  SelectVariationDialog select_variation_dialog_{"SelectScenarioVariation"};
 };
 
 }  // namespace

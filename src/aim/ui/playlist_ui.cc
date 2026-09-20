@@ -244,7 +244,7 @@ class PlaylistComponentImpl : public PlaylistComponent {
   std::unique_ptr<PlaylistEditorComponent> editor_component_;
   std::string current_playlist_name_;
   NameInfo current_playlist_name_info_;
-  SelectVariationDialog select_variation_dialog_{"PlaylistVariation", ObjectType::PLAYLIST};
+  SelectVariationDialog select_variation_dialog_{"PlaylistVariation"};
   Application& app_;
 
   ImGui::ConfirmationDialog<Playlist> delete_confirmation_dialog_{"DeleteConfirmationDialog1"};

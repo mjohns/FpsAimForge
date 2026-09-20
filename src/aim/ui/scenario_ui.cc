@@ -101,7 +101,7 @@ class CreateLevelsPlaylistDialog {
 struct ScenarioDialogs {
   ImGui::ConfirmationDialog<std::string> delete_confirmation_dialog{"DeleteConfirmationDialog"};
   CreateLevelsPlaylistDialog create_levels_playlist_dialog;
-  SelectVariationDialog select_variation_dialog{"SelectScenarioVariation", ObjectType::SCENARIO};
+  SelectVariationDialog select_variation_dialog{"SelectScenarioVariation"};
 };
 
 // TODO: Share with ObjectBrowser menu somehow.
@@ -246,9 +246,6 @@ class ScenariosComponentImpl : public ScenariosComponent {
       opts.scenario_name = *result.copy_object_name;
       opts.is_new_copy = true;
       app_.PushNextScreen(CreateScenarioEditorScreen(opts));
-    }
-    if (result.select_variation_object_name) {
-      dialogs_.select_variation_dialog.NotifyOpen(*result.select_variation_object_name);
     }
     if (result.create_level_playlist_for_scenario) {
       dialogs_.create_levels_playlist_dialog.NotifyOpen(*result.create_level_playlist_for_scenario);

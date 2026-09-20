@@ -146,8 +146,7 @@ class TopBarImpl : public TopBar {
 
  private:
   Application& app_ = GetUiApp();
-  SelectVariationDialog select_variation_dialog_{"TopBarSelectScenarioVariation",
-                                                 ObjectType::SCENARIO};
+  SelectVariationDialog select_variation_dialog_{"TopBarSelectScenarioVariation"};
 };
 }  // namespace
 

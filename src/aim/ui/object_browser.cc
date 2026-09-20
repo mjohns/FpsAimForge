@@ -17,6 +17,7 @@
 #include "aim/core/stats_manager.h"
 #include "aim/ui/editor/scenario_editor_screen.h"
 #include "aim/ui/search_selector.h"
+#include "aim/ui/select_variation_dialog.h"
 #include "aim/ui/stats/stats_screen.h"
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
@@ -58,6 +59,11 @@ class ObjectBrowserImpl : public ObjectBrowser {
   // std::function<void(const std::string& name, ObjectBrowserResult*)> draw_item,
   void Draw(Result* result) override {
     ImGui::IdGuard cid(type_name_ + "SearchList");
+
+    std::string selected_variation_name;
+    if (select_variation_dialog_.Draw(&selected_variation_name)) {
+      result->selected_object_name = selected_variation_name;
+    }
 
     auto to_delete = delete_confirmation_dialog_.Draw("Delete");
     if (to_delete) {
@@ -188,10 +194,8 @@ class ObjectBrowserImpl : public ObjectBrowser {
       if (ImGui::Selectable(std::format("{} Copy", icons::kContentCopy))) {
         result->copy_object_name = name;
       }
-      if (type_ != ObjectType::GUIDE) {
-        if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
-          result->select_variation_object_name = name;
-        }
+      if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
+        select_variation_dialog_.NotifyOpen(name);
       }
 
       if (ImGui::Selectable(std::format("{} Recents", icons::kClose))) {
@@ -362,6 +366,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
   ImGui::ConfirmationDialog<std::string> delete_confirmation_dialog_{"DeleteConfirmationDialog"};
   std::shared_ptr<std::vector<std::string>> all_names_;
   std::optional<std::vector<int>> filtered_names_indices_;
+  SelectVariationDialog select_variation_dialog_{"ObjectBrowserVariationDialog"};
 };
 
 }  // namespace
