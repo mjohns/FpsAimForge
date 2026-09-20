@@ -16,6 +16,8 @@
 #include "aim/core/guide_manager.h"
 #include "aim/core/history_manager.h"
 #include "aim/core/playlist_manager.h"
+#include "aim/core/scenario_manager.h"
+#include "aim/core/stats_manager.h"
 #include "aim/proto/guide.pb.h"
 #include "aim/ui/guide_editor_screen.h"
 #include "aim/ui/object_browser.h"
@@ -204,14 +206,29 @@ class GuideViewer {
     i64 now_micros = GetNowEpochMicros();
     for (int i = 0; i < num_to_load && i < items.size(); ++i) {
       HighestLevelCacheItem* item = items[i];
-      if (now_micros - item->update_time_micros > cache_refresh_time_micros_) {
-        item->update_time_micros = now_micros;
-        item->highest_level = {};
-        auto maybe_playlist = app_.playlist_manager().GetPlaylist(item->playlist_name);
-        if (maybe_playlist) {
-          item->highest_level = app_.playlist_manager().GetHighestCompleteLevel(
-              *maybe_playlist, app_.scenario_manager(), app_.stats_manager());
-        }
+      bool needs_refresh = now_micros - item->update_time_micros > cache_refresh_time_micros_;
+      if (!needs_refresh) {
+        continue;
+      }
+      item->update_time_micros = now_micros;
+      item->highest_level = {};
+      auto maybe_playlist = app_.playlist_manager().GetPlaylist(item->playlist_name);
+      if (!maybe_playlist) {
+        continue;
+      }
+      auto& playlist = *maybe_playlist;
+      if (!playlist.def().has_levels()) {
+        continue;
+      }
+      const auto& base_name = playlist.def().levels().base_scenario();
+      auto maybe_scenario = app_.scenario_manager().GetEvaluatedScenarioDef(base_name);
+      if (!maybe_scenario) {
+        continue;
+      }
+      float target_score = maybe_scenario->score_targets().target_score();
+      if (target_score > 0) {
+        item->highest_level =
+            app_.stats_manager().GetHighestCompleteScenarioLevel(base_name, target_score);
       }
     }
   }

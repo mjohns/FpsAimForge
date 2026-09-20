@@ -59,6 +59,9 @@ class StatsManager {
   virtual bool GetStatsDetails(const std::string& scenario_name,
                                i64 run_id,
                                StatsDetails* details) = 0;
+
+  virtual std::optional<float> GetHighestCompleteScenarioLevel(const std::string& base_name,
+                                                               float target_score) = 0;
 };
 
 std::unique_ptr<StatsManager> CreateStatsManager(AimDb* db);

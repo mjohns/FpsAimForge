@@ -1,6 +1,8 @@
 #include "stats_manager.h"
 
+#include <map>
 #include <memory>
+#include <tuple>
 
 #include "aim/common/times.h"
 #include "aim/core/playlist_manager.h"
@@ -18,6 +20,9 @@ class StatsManagerImpl : public StatsManager {
     stats_cache_.erase(scenario_id);
     latest_scenario_id_ = scenario_id;
     latest_run_id_ = row->stats_id;
+
+    // TODO: Invalidate more precisely
+    highest_complete_level_cache_.clear();
   }
 
   std::vector<StatsDbRow> GetStats(const std::string& scenario_name) override {
@@ -144,6 +149,20 @@ class StatsManagerImpl : public StatsManager {
     return run;
   }
 
+  std::optional<float> GetHighestCompleteScenarioLevel(const std::string& base_name,
+                                                       float target_score) override {
+    i64 id = db_->GetScenarioId(base_name);
+    auto it = highest_complete_level_cache_.find({id, target_score});
+    if (it != highest_complete_level_cache_.end()) {
+      return it->second;
+    }
+
+    auto highest_level = db_->GetHighestCompleteScenarioLevel(base_name, target_score);
+    highest_complete_level_cache_[{id, target_score}] = highest_level;
+
+    return highest_level;
+  }
+
  private:
   std::vector<StatsDbRow> GetStats(i64 scenario_id) {
     // TODO: Cache at this layer?
@@ -175,6 +194,7 @@ class StatsManagerImpl : public StatsManager {
 
   std::unique_ptr<StatsDbRow> stats_db_;
   std::unordered_map<i64, AggregateScenarioStats> stats_cache_;
+  std::map<std::tuple<i64, float>, std::optional<float>> highest_complete_level_cache_;
   AimDb* db_;
 
   i64 latest_scenario_id_ = -1;
