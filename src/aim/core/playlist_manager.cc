@@ -279,6 +279,13 @@ class PlaylistManagerImpl : public PlaylistManager {
   }
 
   bool RenamePlaylist(const std::string& old_name, const std::string& new_name) override {
+    NameInfo old_info = GetNameInfo(old_name);
+    NameInfo new_info = GetNameInfo(new_name);
+    if (old_info.HasDynamicSuffix() || new_info.HasDynamicSuffix()) {
+      assert(false && "Trying to rename playlist with dynamic suffix");
+      return false;
+    }
+
     if (playlist_map_.contains(new_name)) {
       return false;
     }

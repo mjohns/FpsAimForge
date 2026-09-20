@@ -51,9 +51,12 @@ class GuideManagerImpl : public GuideManager {
   }
 
   std::optional<GuideItem> GetGuide(const std::string& guide_name) override {
-    auto it = guide_map_.find(guide_name);
+    NameInfo name_info = GetNameInfo(guide_name);
+    auto it = guide_map_.find(name_info.base_name);
     if (it != guide_map_.end()) {
-      return it->second;
+      GuideItem item = it->second;
+      item.name = guide_name;
+      return item;
     }
     return {};
   }
@@ -78,6 +81,12 @@ class GuideManagerImpl : public GuideManager {
   }
 
   void UpdateGuide(const std::string& name, const GuideDef& def) override {
+    NameInfo info = GetNameInfo(name);
+    if (info.HasDynamicSuffix()) {
+      assert(false && "Trying to update guide with dynamic suffix");
+      return;
+    }
+
     auto& g = guide_map_[name];
     g.name = name;
     g.def = def;
@@ -93,6 +102,13 @@ class GuideManagerImpl : public GuideManager {
   }
 
   bool RenameGuide(const std::string& old_name, const std::string& new_name) override {
+    NameInfo old_info = GetNameInfo(old_name);
+    NameInfo new_info = GetNameInfo(new_name);
+    if (old_info.HasDynamicSuffix() || new_info.HasDynamicSuffix()) {
+      assert(false && "Trying to rename guide with dynamic suffix");
+      return false;
+    }
+
     if (current_guide_name_ == old_name) {
       current_guide_name_ = new_name;
     }
@@ -107,7 +123,6 @@ class GuideManagerImpl : public GuideManager {
       auto& new_guide = guide_map_[new_name];
       new_guide.name = new_name;
       new_guide.def = def;
-
       UpdateGuideListFromMap();
     }
     RenameGuideInAllGuides(old_name, new_name);
@@ -129,6 +144,12 @@ class GuideManagerImpl : public GuideManager {
 
   void RenamePlaylistInAllGuides(const std::string& old_name,
                                  const std::string& new_name) override {
+    RenameGuideItems(old_name, new_name, /*is_playlist=*/true);
+  }
+
+  void RenameGuideItems(const std::string& old_name,
+                        const std::string& new_name,
+                        bool is_playlist) {
     std::string old_base_name = GetNameInfo(old_name).base_name;
     std::string new_base_name = GetNameInfo(new_name).base_name;
 
@@ -137,12 +158,13 @@ class GuideManagerImpl : public GuideManager {
       bool changed = false;
       GuideDef def = guide.def;
       for (auto& section : *def.mutable_sections()) {
-        for (std::string& playlist : *section.mutable_playlists()) {
-          NameInfo item_name_info = GetNameInfo(playlist);
+        auto& names = is_playlist ? *section.mutable_playlists() : *section.mutable_guides();
+        for (std::string& name : names) {
+          NameInfo item_name_info = GetNameInfo(name);
           if (item_name_info.base_name == old_base_name) {
             changed = true;
             item_name_info.base_name = new_base_name;
-            playlist = item_name_info.GetFullName();
+            name = item_name_info.GetFullName();
           }
         }
       }
@@ -155,23 +177,7 @@ class GuideManagerImpl : public GuideManager {
 
   // Renames references to the guide from within guides.
   void RenameGuideInAllGuides(const std::string& old_name, const std::string& new_name) {
-    auto guides_copy = guides_;
-    for (const GuideItem& guide : *guides_copy) {
-      bool changed = false;
-      GuideDef def = guide.def;
-      for (auto& section : *def.mutable_sections()) {
-        for (std::string& guide : *section.mutable_guides()) {
-          if (guide == old_name) {
-            changed = true;
-            guide = new_name;
-          }
-        }
-      }
-
-      if (changed) {
-        UpdateGuide(guide.name, def);
-      }
-    }
+    RenameGuideItems(old_name, new_name, /*is_playlist=*/false);
   }
 
   void RegisterRenameListener(std::function<void(const std::string& old_name,

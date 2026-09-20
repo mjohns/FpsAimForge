@@ -95,10 +95,6 @@ std::optional<float> GetLevelFromWord(const std::string_view& word) {
   return level;
 }
 
-NameInfo GetScenarioNameInfo(const std::string& name) {
-  return GetNameInfo(name, true);
-}
-
 NameInfo GetNameInfo(const std::string& name) {
   return GetNameInfo(name, true);
 }

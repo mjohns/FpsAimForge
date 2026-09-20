@@ -39,8 +39,6 @@ struct NameInfo {
 };
 
 NameInfo GetNameInfo(const std::string& name);
-NameInfo GetScenarioNameInfo(const std::string& name);
-NameInfo GetNameInfo(const std::string& name);
 
 std::string GetBundleName(const std::string& name);
 
