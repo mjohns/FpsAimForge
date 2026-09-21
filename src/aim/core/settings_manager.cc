@@ -454,7 +454,11 @@ class SettingsManagerImpl : public SettingsManager {
       scenario_settings.set_enable_metronome(settings_.enable_metronome());
       scenario_settings.set_theme_name(settings_.theme_name());
       scenario_settings.set_auto_hold_tracking(settings_.auto_hold_tracking());
-      *scenario_settings.mutable_health_bar() = settings_.health_bar();
+      if (settings_.has_health_bar()) {
+        *scenario_settings.mutable_health_bar() = settings_.health_bar();
+      } else {
+        scenario_settings.clear_health_bar();
+      }
       i64 scenario_id = db_->GetScenarioId(scenario_name);
       db_->UpdateScenarioSettings(scenario_id, scenario_settings);
       scenario_settings_cache_[scenario_name] = scenario_settings;
