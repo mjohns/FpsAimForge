@@ -880,7 +880,8 @@
        },
        "angle": 0,
        "angleJitter": 17,
-       "directionChangePercent": 0.2
+       "directionChangePercent": 0.2,
+       "centerBias": 0.2
       },
       {
        "info": {
@@ -904,29 +905,8 @@
   {
    "name": "AngleStrafe Ladder",
    "def": {
-    "durationSeconds": 30,
-    "shotType": {
-     "trackingInvincible": true
-    },
-    "targetDef": {
-     "numTargets": 1,
-     "profiles": [
-      {
-       "targetRadius": 5,
-       "speed": 50
-      }
-     ]
-    },
-    "room": {
-     "cameraPosition": {
-      "x": 0,
-      "y": -200,
-      "z": 0
-     },
-     "simpleRoom": {
-      "height": 111,
-      "width": 150
-     }
+    "overrides": {
+     "speedMultiplier": 0.78
     },
     "levelOverrides": {
      "targetRadiusMultiplier": 0.98,
@@ -935,46 +915,9 @@
     "scoreTargets": {
      "targetScore": 55
     },
-    "angleStrafeDef": {
-     "bounds": {
-      "width": {
-       "xPercentValue": 0.9
-      },
-      "height": {
-       "yPercentValue": 0.9
-      }
-     },
-     "profiles": [
-      {
-       "info": {
-        "weight": 3
-       },
-       "distance": {
-        "xPercentValue": 0.36
-       },
-       "distanceJitter": {
-        "xPercentValue": 0.12
-       },
-       "angle": 0,
-       "angleJitter": 17,
-       "directionChangePercent": 0.2
-      },
-      {
-       "info": {
-        "description": "Longer",
-        "weight": 1
-       },
-       "distance": {
-        "xPercentValue": 0.6
-       },
-       "distanceJitter": {
-        "xPercentValue": 0.05
-       },
-       "angle": 0,
-       "angleJitter": 11,
-       "directionChangePercent": 0.31
-      }
-     ]
+    "referenceDef": {
+     "scenarioName": "AF AngleStrafe",
+     "explicitTargetRadius": 5
     }
    }
   },
