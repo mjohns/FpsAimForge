@@ -2171,6 +2171,7 @@ class Keybinds final : public ::google::protobuf::Message
     kAdjustCrosshairSizeFieldNumber = 5,
     kQuickMetronomeFieldNumber = 6,
     kEditScenarioFieldNumber = 7,
+    kAdjustHealthBarSizeFieldNumber = 8,
   };
   // .aim.KeyMapping fire = 1;
   bool has_fire() const;
@@ -2277,12 +2278,27 @@ class Keybinds final : public ::google::protobuf::Message
   ::aim::KeyMapping* PROTOBUF_NONNULL _internal_mutable_edit_scenario();
 
   public:
+  // .aim.KeyMapping adjust_health_bar_size = 8;
+  bool has_adjust_health_bar_size() const;
+  void clear_adjust_health_bar_size() ;
+  const ::aim::KeyMapping& adjust_health_bar_size() const;
+  [[nodiscard]] ::aim::KeyMapping* PROTOBUF_NULLABLE release_adjust_health_bar_size();
+  ::aim::KeyMapping* PROTOBUF_NONNULL mutable_adjust_health_bar_size();
+  void set_allocated_adjust_health_bar_size(::aim::KeyMapping* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_adjust_health_bar_size(::aim::KeyMapping* PROTOBUF_NULLABLE value);
+  ::aim::KeyMapping* PROTOBUF_NULLABLE unsafe_arena_release_adjust_health_bar_size();
+
+  private:
+  const ::aim::KeyMapping& _internal_adjust_health_bar_size() const;
+  ::aim::KeyMapping* PROTOBUF_NONNULL _internal_mutable_adjust_health_bar_size();
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.Keybinds)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 7,
-                                   7, 0,
+  static const ::google::protobuf::internal::TcParseTable<3, 8,
+                                   8, 0,
                                    2>
       _table_;
 
@@ -2310,6 +2326,7 @@ class Keybinds final : public ::google::protobuf::Message
     ::aim::KeyMapping* PROTOBUF_NULLABLE adjust_crosshair_size_;
     ::aim::KeyMapping* PROTOBUF_NULLABLE quick_metronome_;
     ::aim::KeyMapping* PROTOBUF_NULLABLE edit_scenario_;
+    ::aim::KeyMapping* PROTOBUF_NULLABLE adjust_health_bar_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -6778,6 +6795,105 @@ inline void Keybinds::set_allocated_edit_scenario(::aim::KeyMapping* PROTOBUF_NU
 
   _impl_.edit_scenario_ = reinterpret_cast<::aim::KeyMapping*>(value);
   // @@protoc_insertion_point(field_set_allocated:aim.Keybinds.edit_scenario)
+}
+
+// .aim.KeyMapping adjust_health_bar_size = 8;
+inline bool Keybinds::has_adjust_health_bar_size() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000080U);
+  PROTOBUF_ASSUME(!value || _impl_.adjust_health_bar_size_ != nullptr);
+  return value;
+}
+inline void Keybinds::clear_adjust_health_bar_size() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.adjust_health_bar_size_ != nullptr) _impl_.adjust_health_bar_size_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000080U);
+}
+inline const ::aim::KeyMapping& Keybinds::_internal_adjust_health_bar_size() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::aim::KeyMapping* p = _impl_.adjust_health_bar_size_;
+  return p != nullptr ? *p : reinterpret_cast<const ::aim::KeyMapping&>(::aim::_KeyMapping_default_instance_);
+}
+inline const ::aim::KeyMapping& Keybinds::adjust_health_bar_size() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.Keybinds.adjust_health_bar_size)
+  return _internal_adjust_health_bar_size();
+}
+inline void Keybinds::unsafe_arena_set_allocated_adjust_health_bar_size(
+    ::aim::KeyMapping* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.adjust_health_bar_size_);
+  }
+  _impl_.adjust_health_bar_size_ = reinterpret_cast<::aim::KeyMapping*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:aim.Keybinds.adjust_health_bar_size)
+}
+inline ::aim::KeyMapping* PROTOBUF_NULLABLE Keybinds::release_adjust_health_bar_size() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::aim::KeyMapping* released = _impl_.adjust_health_bar_size_;
+  _impl_.adjust_health_bar_size_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::aim::KeyMapping* PROTOBUF_NULLABLE Keybinds::unsafe_arena_release_adjust_health_bar_size() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.Keybinds.adjust_health_bar_size)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::aim::KeyMapping* temp = _impl_.adjust_health_bar_size_;
+  _impl_.adjust_health_bar_size_ = nullptr;
+  return temp;
+}
+inline ::aim::KeyMapping* PROTOBUF_NONNULL Keybinds::_internal_mutable_adjust_health_bar_size() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.adjust_health_bar_size_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::aim::KeyMapping>(GetArena());
+    _impl_.adjust_health_bar_size_ = reinterpret_cast<::aim::KeyMapping*>(p);
+  }
+  return _impl_.adjust_health_bar_size_;
+}
+inline ::aim::KeyMapping* PROTOBUF_NONNULL Keybinds::mutable_adjust_health_bar_size()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::aim::KeyMapping* _msg = _internal_mutable_adjust_health_bar_size();
+  // @@protoc_insertion_point(field_mutable:aim.Keybinds.adjust_health_bar_size)
+  return _msg;
+}
+inline void Keybinds::set_allocated_adjust_health_bar_size(::aim::KeyMapping* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.adjust_health_bar_size_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = value->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  }
+
+  _impl_.adjust_health_bar_size_ = reinterpret_cast<::aim::KeyMapping*>(value);
+  // @@protoc_insertion_point(field_set_allocated:aim.Keybinds.adjust_health_bar_size)
 }
 
 #ifdef __GNUC__

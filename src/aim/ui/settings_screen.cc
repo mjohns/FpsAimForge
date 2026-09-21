@@ -118,6 +118,8 @@ const char* kQuickSettingsHelpText =
     "wheel can be used to adjust mouse sensitivity.";
 const char* kAdjustCrosshairSizeHelpText =
     "Hold the key to enable using the scroll wheel to adjust crosshair size.";
+const char* kAdjustHealthBarSizeHelpText =
+    "Hold the key to enable using the scroll wheel to adjust health bar size.";
 
 class SettingsScreen : public UiScreen {
  public:
@@ -139,6 +141,9 @@ class SettingsScreen : public UiScreen {
         {"Adjust Crosshair Size",
          kAdjustCrosshairSizeHelpText,
          updater_.settings.mutable_keybinds()->mutable_adjust_crosshair_size()},
+        {"Adjust Health Bar Size",
+         kAdjustHealthBarSizeHelpText,
+         updater_.settings.mutable_keybinds()->mutable_adjust_health_bar_size()},
     };
   }
 

@@ -217,6 +217,15 @@ void Scenario::OnEvent(const SDL_Event& event) {
       }
     }
   }
+  if (is_adjusting_health_bar_size_) {
+    if (event.type == SDL_EVENT_MOUSE_WHEEL) {
+      if (event.wheel.y != 0) {
+        float health_bar_scale = 0.05;
+        settings_.mutable_health_bar()->set_size(settings_.health_bar().size() +
+                                                 health_bar_scale * event.wheel.y);
+      }
+    }
+  }
 
   if (IsMappableKeyDownEvent(event)) {
     std::string event_name = absl::AsciiStrToLower(GetKeyNameForEvent(event));
@@ -269,6 +278,9 @@ void Scenario::OnEvent(const SDL_Event& event) {
     if (KeyMappingMatchesEvent(event_name, settings_.keybinds().adjust_crosshair_size())) {
       is_adjusting_crosshair_ = true;
     }
+    if (KeyMappingMatchesEvent(event_name, settings_.keybinds().adjust_health_bar_size())) {
+      is_adjusting_health_bar_size_ = true;
+    }
   }
   if (IsEscapeKeyDown(event)) {
     PopSelf();
@@ -278,6 +290,10 @@ void Scenario::OnEvent(const SDL_Event& event) {
     if (KeyMappingMatchesEvent(event_name, settings_.keybinds().adjust_crosshair_size())) {
       is_adjusting_crosshair_ = false;
       save_crosshair_ = true;
+    }
+    if (KeyMappingMatchesEvent(event_name, settings_.keybinds().adjust_health_bar_size())) {
+      is_adjusting_health_bar_size_ = false;
+      save_health_bar_ = true;
     }
     if (KeyMappingMatchesEvent(event_name, settings_.keybinds().fire())) {
       is_click_held_ = false;
@@ -333,6 +349,10 @@ void Scenario::OnTickStart() {
   if (save_crosshair_) {
     DoneAdjustingCrosshairSize();
     save_crosshair_ = false;
+  }
+  if (save_health_bar_) {
+    DoneAdjustingHealthBarSize();
+    save_health_bar_ = false;
   }
 
   if (run_state_ == ScenarioRunState::NOT_STARTED) {
@@ -685,6 +705,20 @@ void Scenario::DoneAdjustingCrosshairSize() {
       app_.settings_manager().MaybeFlushToDisk(scenario_name_);
       RefreshState();
     }
+  }
+}
+
+void Scenario::DoneAdjustingHealthBarSize() {
+  Settings* current_settings = app_.settings_manager().GetMutableCurrentSettings();
+  if (current_settings == nullptr) {
+    return;
+  }
+  float health_bar_size = settings_.health_bar().size();
+  if (health_bar_size != current_settings->health_bar().size()) {
+    current_settings->mutable_health_bar()->set_size(health_bar_size);
+    app_.settings_manager().MarkDirty();
+    app_.settings_manager().MaybeFlushToDisk(scenario_name_);
+    RefreshState();
   }
 }
 

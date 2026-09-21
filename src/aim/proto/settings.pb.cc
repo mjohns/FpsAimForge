@@ -257,7 +257,8 @@ inline constexpr Keybinds::Impl_::Impl_(
         quick_settings_{nullptr},
         adjust_crosshair_size_{nullptr},
         quick_metronome_{nullptr},
-        edit_scenario_{nullptr} {}
+        edit_scenario_{nullptr},
+        adjust_health_bar_size_{nullptr} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR Keybinds::Keybinds(::_pbi::ConstantInitialized)
@@ -494,7 +495,7 @@ const ::uint32_t
         3,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_._has_bits_),
-        10, // hasbit index offset
+        11, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.fire_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.restart_scenario_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.next_scenario_),
@@ -502,6 +503,7 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.adjust_crosshair_size_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.quick_metronome_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.edit_scenario_),
+        PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.adjust_health_bar_size_),
         0,
         1,
         2,
@@ -509,6 +511,7 @@ const ::uint32_t
         4,
         5,
         6,
+        7,
 };
 
 static const ::_pbi::MigrationSchema
@@ -595,20 +598,22 @@ const char descriptor_table_protodef_settings_2eproto[] ABSL_ATTRIBUTE_SECTION_V
     "ots_per_second\030\t \001(\0162\036.aim.ScenarioSetti"
     "ngsStoreType\"T\n\nKeyMapping\022\020\n\010mapping1\030\001"
     " \001(\t\022\020\n\010mapping2\030\002 \001(\t\022\020\n\010mapping3\030\003 \001(\t"
-    "\022\020\n\010mapping4\030\004 \001(\t\"\247\002\n\010Keybinds\022\035\n\004fire\030"
+    "\022\020\n\010mapping4\030\004 \001(\t\"\330\002\n\010Keybinds\022\035\n\004fire\030"
     "\001 \001(\0132\017.aim.KeyMapping\022)\n\020restart_scenar"
     "io\030\002 \001(\0132\017.aim.KeyMapping\022&\n\rnext_scenar"
     "io\030\003 \001(\0132\017.aim.KeyMapping\022\'\n\016quick_setti"
     "ngs\030\004 \001(\0132\017.aim.KeyMapping\022.\n\025adjust_cro"
     "sshair_size\030\005 \001(\0132\017.aim.KeyMapping\022(\n\017qu"
     "ick_metronome\030\006 \001(\0132\017.aim.KeyMapping\022&\n\r"
-    "edit_scenario\030\007 \001(\0132\017.aim.KeyMapping*p\n\t"
-    "MsaaLevel\022\026\n\022MSAA_LEVEL_UNKNOWN\020\000\022\022\n\016MSA"
-    "A_LEVEL_OFF\020\001\022\021\n\rMSAA_LEVEL_2X\020\002\022\021\n\rMSAA"
-    "_LEVEL_4X\020\004\022\021\n\rMSAA_LEVEL_8X\020\010*q\n\031Scenar"
-    "ioSettingsStoreType\022(\n$SCENARIO_SETTINGS"
-    "_STORE_TYPE_UNKNOWN\020\000\022\026\n\022STORE_PER_SCENA"
-    "RIO\020\001\022\022\n\016STORE_GLOBALLY\020\002b\010editionsp\350\007"
+    "edit_scenario\030\007 \001(\0132\017.aim.KeyMapping\022/\n\026"
+    "adjust_health_bar_size\030\010 \001(\0132\017.aim.KeyMa"
+    "pping*p\n\tMsaaLevel\022\026\n\022MSAA_LEVEL_UNKNOWN"
+    "\020\000\022\022\n\016MSAA_LEVEL_OFF\020\001\022\021\n\rMSAA_LEVEL_2X\020"
+    "\002\022\021\n\rMSAA_LEVEL_4X\020\004\022\021\n\rMSAA_LEVEL_8X\020\010*"
+    "q\n\031ScenarioSettingsStoreType\022(\n$SCENARIO"
+    "_SETTINGS_STORE_TYPE_UNKNOWN\020\000\022\026\n\022STORE_"
+    "PER_SCENARIO\020\001\022\022\n\016STORE_GLOBALLY\020\002b\010edit"
+    "ionsp\350\007"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_settings_2eproto_deps[1] = {
@@ -618,7 +623,7 @@ static ::absl::once_flag descriptor_table_settings_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_settings_2eproto = {
     false,
     false,
-    2918,
+    2967,
     descriptor_table_protodef_settings_2eproto,
     "settings.proto",
     &descriptor_table_settings_2eproto_once,
@@ -4347,6 +4352,9 @@ Keybinds::Keybinds(
   _impl_.edit_scenario_ = (CheckHasBit(cached_has_bits, 0x00000040U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.edit_scenario_)
                 : nullptr;
+  _impl_.adjust_health_bar_size_ = (CheckHasBit(cached_has_bits, 0x00000080U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.adjust_health_bar_size_)
+                : nullptr;
 
   // @@protoc_insertion_point(copy_constructor:aim.Keybinds)
 }
@@ -4360,9 +4368,9 @@ inline void Keybinds::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, fire_),
            0,
-           offsetof(Impl_, edit_scenario_) -
+           offsetof(Impl_, adjust_health_bar_size_) -
                offsetof(Impl_, fire_) +
-               sizeof(Impl_::edit_scenario_));
+               sizeof(Impl_::adjust_health_bar_size_));
 }
 Keybinds::~Keybinds() {
   // @@protoc_insertion_point(destructor:aim.Keybinds)
@@ -4382,6 +4390,7 @@ inline void Keybinds::SharedDtor(MessageLite& self) {
   delete this_._impl_.adjust_crosshair_size_;
   delete this_._impl_.quick_metronome_;
   delete this_._impl_.edit_scenario_;
+  delete this_._impl_.adjust_health_bar_size_;
   this_._impl_.~Impl_();
 }
 
@@ -4428,17 +4437,17 @@ Keybinds::GetClassData() const {
   return Keybinds_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 7, 7, 0, 2>
+const ::_pbi::TcParseTable<3, 8, 8, 0, 2>
 Keybinds::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Keybinds, _impl_._has_bits_),
     0, // no _extensions_
-    7, 56,  // max_field_number, fast_idx_mask
+    8, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967168,  // skipmap
+    4294967040,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    7,  // num_field_entries
-    7,  // num_aux_entries
+    8,  // num_field_entries
+    8,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Keybinds_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -4447,7 +4456,10 @@ Keybinds::_table_ = {
     ::_pbi::TcParser::GetTable<::aim::Keybinds>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // .aim.KeyMapping adjust_health_bar_size = 8;
+    {::_pbi::TcParser::FastMtS1,
+     {66, 7, 7,
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.adjust_health_bar_size_)}},
     // .aim.KeyMapping fire = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
@@ -4493,8 +4505,11 @@ Keybinds::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.quick_metronome_), _Internal::kHasBitsOffset + 5, 5, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // .aim.KeyMapping edit_scenario = 7;
     {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.edit_scenario_), _Internal::kHasBitsOffset + 6, 6, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .aim.KeyMapping adjust_health_bar_size = 8;
+    {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.adjust_health_bar_size_), _Internal::kHasBitsOffset + 7, 7, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
+      {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
       {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
       {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
       {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
@@ -4514,7 +4529,7 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       ABSL_DCHECK(_impl_.fire_ != nullptr);
       _impl_.fire_->Clear();
@@ -4542,6 +4557,10 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
     if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       ABSL_DCHECK(_impl_.edit_scenario_ != nullptr);
       _impl_.edit_scenario_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
+      ABSL_DCHECK(_impl_.adjust_health_bar_size_ != nullptr);
+      _impl_.adjust_health_bar_size_->Clear();
     }
   }
   _impl_._has_bits_.Clear();
@@ -4616,6 +4635,13 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
         stream);
   }
 
+  // .aim.KeyMapping adjust_health_bar_size = 8;
+  if (CheckHasBit(cached_has_bits, 0x00000080U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        8, *this_._impl_.adjust_health_bar_size_, this_._impl_.adjust_health_bar_size_->GetCachedSize(), target,
+        stream);
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -4641,7 +4667,7 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
     // .aim.KeyMapping fire = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -4677,6 +4703,11 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.edit_scenario_);
     }
+    // .aim.KeyMapping adjust_health_bar_size = 8;
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.adjust_health_bar_size_);
+    }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
                                              &this_._impl_._cached_size_);
@@ -4697,7 +4728,7 @@ void Keybinds::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       ABSL_DCHECK(from._impl_.fire_ != nullptr);
       if (_this->_impl_.fire_ == nullptr) {
@@ -4754,6 +4785,14 @@ void Keybinds::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.edit_scenario_->MergeFrom(*from._impl_.edit_scenario_);
       }
     }
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
+      ABSL_DCHECK(from._impl_.adjust_health_bar_size_ != nullptr);
+      if (_this->_impl_.adjust_health_bar_size_ == nullptr) {
+        _this->_impl_.adjust_health_bar_size_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.adjust_health_bar_size_);
+      } else {
+        _this->_impl_.adjust_health_bar_size_->MergeFrom(*from._impl_.adjust_health_bar_size_);
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -4773,8 +4812,8 @@ void Keybinds::InternalSwap(Keybinds* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) 
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.edit_scenario_)
-      + sizeof(Keybinds::_impl_.edit_scenario_)
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.adjust_health_bar_size_)
+      + sizeof(Keybinds::_impl_.adjust_health_bar_size_)
       - PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.fire_)>(
           reinterpret_cast<char*>(&_impl_.fire_),
           reinterpret_cast<char*>(&other->_impl_.fire_));

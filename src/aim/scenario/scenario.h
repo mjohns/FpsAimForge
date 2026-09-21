@@ -142,6 +142,7 @@ class Scenario : public Screen {
   void RefreshState();
 
   void DoneAdjustingCrosshairSize();
+  void DoneAdjustingHealthBarSize();
 
   void UpdatePerfStats();
   void HandleScenarioDone();
@@ -164,7 +165,9 @@ class Scenario : public Screen {
   RunPerformanceStats perf_stats_;
   bool force_start_immediately_ = false;
   bool is_adjusting_crosshair_ = false;
+  bool is_adjusting_health_bar_size_ = false;
   bool save_crosshair_ = false;
+  bool save_health_bar_ = false;
   bool initialized_ = false;
   i64 last_click_time_micros_ = 0;
   UpdateStateData update_data_;

@@ -58,6 +58,7 @@ Settings GetDefaultSettings() {
   binds->mutable_next_scenario()->set_mapping1("Space");
   binds->mutable_quick_metronome()->set_mapping1("B");
   binds->mutable_adjust_crosshair_size()->set_mapping1("C");
+  binds->mutable_adjust_health_bar_size()->set_mapping1("H");
   binds->mutable_quick_settings()->set_mapping1("S");
   binds->mutable_edit_scenario()->set_mapping1("U");
 
@@ -453,6 +454,7 @@ class SettingsManagerImpl : public SettingsManager {
       scenario_settings.set_enable_metronome(settings_.enable_metronome());
       scenario_settings.set_theme_name(settings_.theme_name());
       scenario_settings.set_auto_hold_tracking(settings_.auto_hold_tracking());
+      *scenario_settings.mutable_health_bar() = settings_.health_bar();
       i64 scenario_id = db_->GetScenarioId(scenario_name);
       db_->UpdateScenarioSettings(scenario_id, scenario_settings);
       scenario_settings_cache_[scenario_name] = scenario_settings;

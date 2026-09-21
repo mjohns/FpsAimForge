@@ -156,4 +156,5 @@ message Keybinds {
   KeyMapping adjust_crosshair_size = 5;
   KeyMapping quick_metronome = 6;
   KeyMapping edit_scenario = 7;
+  KeyMapping adjust_health_bar_size = 8;
 }
