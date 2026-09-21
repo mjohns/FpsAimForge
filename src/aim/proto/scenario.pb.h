@@ -6497,6 +6497,7 @@ class AngleStrafeProfile final : public ::google::protobuf::Message
     kAccelerationMultiplierFieldNumber = 14,
     kSpeedMultiplierJitterFieldNumber = 15,
     kAccelerationMultiplierJitterFieldNumber = 16,
+    kCenterBiasFieldNumber = 17,
   };
   // .aim.ProfileInfo info = 1;
   bool has_info() const;
@@ -6620,11 +6621,22 @@ class AngleStrafeProfile final : public ::google::protobuf::Message
   void _internal_set_acceleration_multiplier_jitter(float value);
 
   public:
+  // float center_bias = 17;
+  bool has_center_bias() const;
+  void clear_center_bias() ;
+  float center_bias() const;
+  void set_center_bias(float value);
+
+  private:
+  float _internal_center_bias() const;
+  void _internal_set_center_bias(float value);
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.AngleStrafeProfile)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<4, 10,
+  static const ::google::protobuf::internal::TcParseTable<4, 11,
                                    3, 0,
                                    2>
       _table_;
@@ -6656,6 +6668,7 @@ class AngleStrafeProfile final : public ::google::protobuf::Message
     float acceleration_multiplier_;
     float speed_multiplier_jitter_;
     float acceleration_multiplier_jitter_;
+    float center_bias_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -20579,6 +20592,35 @@ inline float AngleStrafeProfile::_internal_acceleration_multiplier_jitter() cons
 inline void AngleStrafeProfile::_internal_set_acceleration_multiplier_jitter(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.acceleration_multiplier_jitter_ = value;
+}
+
+// float center_bias = 17;
+inline bool AngleStrafeProfile::has_center_bias() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000400U);
+  return value;
+}
+inline void AngleStrafeProfile::clear_center_bias() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.center_bias_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000400U);
+}
+inline float AngleStrafeProfile::center_bias() const {
+  // @@protoc_insertion_point(field_get:aim.AngleStrafeProfile.center_bias)
+  return _internal_center_bias();
+}
+inline void AngleStrafeProfile::set_center_bias(float value) {
+  _internal_set_center_bias(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000400U);
+  // @@protoc_insertion_point(field_set:aim.AngleStrafeProfile.center_bias)
+}
+inline float AngleStrafeProfile::_internal_center_bias() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.center_bias_;
+}
+inline void AngleStrafeProfile::_internal_set_center_bias(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.center_bias_ = value;
 }
 
 // -------------------------------------------------------------------

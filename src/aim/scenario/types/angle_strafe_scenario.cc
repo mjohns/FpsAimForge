@@ -119,6 +119,42 @@ class StrafeMovementController : public BasicWallMovementController {
     float distance = app_.rand().GetJittered(wall_.GetRegionLength(profile.distance()),
                                              wall_.GetRegionLength(profile.distance_jitter()));
 
+    if (profile.center_bias() > 0) {
+      float max_dist = (bounds_.max_x - bounds_.min_x) / 2.0f;
+      // Only add time if outside the middle 30% of bounds
+      float cutoff = 0.15;
+      float min_dist = max_dist * cutoff;
+
+      float current_position = current_pos.x;
+      bool on_right = current_position > 0;
+      bool on_far_right = current_position > min_dist;
+      bool on_left = current_position < 0;
+      bool on_far_left = current_position < (-1 * min_dist);
+
+      // Direction has not been reversed yet. This is whether it will be going left after this
+      // direction change.
+      bool going_left = direction_.x > 0;
+
+      float bias_increment = distance * profile.center_bias();
+      if (going_left) {
+        if (on_far_right) {
+          distance += bias_increment;
+        }
+        if (on_left) {
+          // Subtract as long as it is on the wrong side trying to move further away from center.
+          distance -= bias_increment;
+        }
+      } else {
+        // Going right
+        if (on_far_left) {
+          distance += bias_increment;
+        }
+        if (on_right) {
+          distance -= bias_increment;
+        }
+      }
+    }
+
     glm::vec2 new_direction;
     float angle = abs(app_.rand().GetJittered(profile.angle(), profile.angle_jitter()));
     angle = glm::clamp(angle, 0.f, 45.f);

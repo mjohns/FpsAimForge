@@ -722,7 +722,8 @@ inline constexpr AngleStrafeProfile::Impl_::Impl_(
         speed_multiplier_{0},
         acceleration_multiplier_{0},
         speed_multiplier_jitter_{0},
-        acceleration_multiplier_jitter_{0} {}
+        acceleration_multiplier_jitter_{0},
+        center_bias_{0} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR AngleStrafeProfile::AngleStrafeProfile(::_pbi::ConstantInitialized)
@@ -1590,7 +1591,7 @@ const ::uint32_t
         1,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_._has_bits_),
-        13, // hasbit index offset
+        14, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_.info_),
         PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_.distance_),
         PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_.distance_jitter_),
@@ -1601,6 +1602,7 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_.speed_multiplier_jitter_),
         PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_.acceleration_multiplier_),
         PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_.acceleration_multiplier_jitter_),
+        PROTOBUF_FIELD_OFFSET(::aim::AngleStrafeProfile, _impl_.center_bias_),
         0,
         1,
         2,
@@ -1611,6 +1613,7 @@ const ::uint32_t
         8,
         7,
         9,
+        10,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::Bounds, _impl_._has_bits_),
         6, // hasbit index offset
@@ -1884,18 +1887,18 @@ static const ::_pbi::MigrationSchema
         {354, sizeof(::aim::ProfileInfo)},
         {365, sizeof(::aim::ProfileListInfo)},
         {372, sizeof(::aim::AngleStrafeProfile)},
-        {395, sizeof(::aim::Bounds)},
-        {404, sizeof(::aim::AngleStrafeScenarioDef)},
-        {421, sizeof(::aim::StrafeProfile)},
-        {456, sizeof(::aim::StrafeScenarioDef)},
-        {483, sizeof(::aim::BounceProfile)},
-        {518, sizeof(::aim::BounceScenarioDef)},
-        {547, sizeof(::aim::WallArcScenarioDef)},
-        {560, sizeof(::aim::WallWanderProfile)},
-        {573, sizeof(::aim::WallWanderScenarioDef)},
-        {582, sizeof(::aim::TargetDef)},
-        {603, sizeof(::aim::PillTargetDef)},
-        {608, sizeof(::aim::TargetProfile)},
+        {397, sizeof(::aim::Bounds)},
+        {406, sizeof(::aim::AngleStrafeScenarioDef)},
+        {423, sizeof(::aim::StrafeProfile)},
+        {458, sizeof(::aim::StrafeScenarioDef)},
+        {485, sizeof(::aim::BounceProfile)},
+        {520, sizeof(::aim::BounceScenarioDef)},
+        {549, sizeof(::aim::WallArcScenarioDef)},
+        {562, sizeof(::aim::WallWanderProfile)},
+        {575, sizeof(::aim::WallWanderScenarioDef)},
+        {584, sizeof(::aim::TargetDef)},
+        {605, sizeof(::aim::PillTargetDef)},
+        {610, sizeof(::aim::TargetProfile)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::aim::_SimpleRoom_default_instance_._instance,
@@ -2077,7 +2080,7 @@ const char descriptor_table_protodef_scenario_2eproto[] ABSL_ATTRIBUTE_SECTION_V
     "\n\013description\030\001 \001(\tB\005\252\001\002\010\002\022\016\n\006weight\030\002 \001"
     "(\002\022\024\n\014next_profile\030\003 \001(\005\022\031\n\021min_selectio"
     "n_gap\030\004 \001(\005\">\n\017ProfileListInfo\022\026\n\016explic"
-    "it_order\030\001 \003(\005\022\023\n\013start_order\030\002 \003(\005\"\320\002\n\022"
+    "it_order\030\001 \003(\005\022\023\n\013start_order\030\002 \003(\005\"\345\002\n\022"
     "AngleStrafeProfile\022\036\n\004info\030\001 \001(\0132\020.aim.P"
     "rofileInfo\022#\n\010distance\030\002 \001(\0132\021.aim.Regio"
     "nLength\022*\n\017distance_jitter\030\003 \001(\0132\021.aim.R"
@@ -2086,115 +2089,115 @@ const char descriptor_table_protodef_scenario_2eproto[] ABSL_ATTRIBUTE_SECTION_V
     "(\002\022\030\n\020speed_multiplier\030\r \001(\002\022\037\n\027speed_mu"
     "ltiplier_jitter\030\017 \001(\002\022\037\n\027acceleration_mu"
     "ltiplier\030\016 \001(\002\022&\n\036acceleration_multiplie"
-    "r_jitter\030\020 \001(\002\"o\n\006Bounds\022 \n\005width\030\001 \001(\0132"
-    "\021.aim.RegionLength\022!\n\006height\030\002 \001(\0132\021.aim"
-    ".RegionLength\022 \n\005depth\030\003 \001(\0132\021.aim.Regio"
-    "nLength\"\363\002\n\026AngleStrafeScenarioDef\022\033\n\006bo"
-    "unds\030\001 \001(\0132\013.aim.Bounds\022\?\n\031target_placem"
-    "ent_strategy\030\002 \001(\0132\034.aim.TargetPlacement"
-    "Strategy\022)\n\010profiles\030\004 \003(\0132\027.aim.AngleSt"
-    "rafeProfile\022+\n\rprofiles_info\030\005 \001(\0132\024.aim"
-    ".ProfileListInfo\0221\n\025forward_back_profile"
-    "s\030\006 \003(\0132\022.aim.StrafeProfile\0228\n\032forward_b"
-    "ack_profiles_info\030\007 \001(\0132\024.aim.ProfileLis"
-    "tInfo\0226\n\036forward_back_initial_direction\030"
-    "\010 \001(\0162\016.aim.Direction\"\361\003\n\rStrafeProfile\022"
-    "\036\n\004info\030\001 \001(\0132\020.aim.ProfileInfo\022\014\n\004time\030"
-    "\002 \001(\002\022\023\n\013time_jitter\030\003 \001(\002\022\023\n\013center_bia"
-    "s\030\004 \001(\002\022#\n\010distance\030\005 \001(\0132\021.aim.RegionLe"
-    "ngth\022*\n\017distance_jitter\030\006 \001(\0132\021.aim.Regi"
-    "onLength\022\030\n\020speed_multiplier\030\007 \001(\002\022\037\n\027sp"
-    "eed_multiplier_jitter\030\010 \001(\002\022\037\n\027accelerat"
-    "ion_multiplier\030\t \001(\002\022&\n\036acceleration_mul"
-    "tiplier_jitter\030\n \001(\002\022\022\n\npause_time\030\013 \001(\002"
-    "\022\031\n\021pause_time_jitter\030\014 \001(\002\022\034\n\024pause_cha"
-    "nce_percent\030\r \001(\002\022 \n\030target_radius_multi"
-    "plier\030\016 \001(\002\022\'\n\037target_radius_multiplier_"
-    "jitter\030\017 \001(\002\022\033\n\023start_speed_percent\030\020 \001("
-    "\002\"\361\004\n\021StrafeScenarioDef\022\033\n\006bounds\030\001 \001(\0132"
-    "\013.aim.Bounds\022$\n\017relative_bounds\030\002 \001(\0132\013."
-    "aim.Bounds\022\?\n\031target_placement_strategy\030"
-    "\004 \001(\0132\034.aim.TargetPlacementStrategy\022/\n\023l"
-    "eft_right_profiles\030\005 \003(\0132\022.aim.StrafePro"
-    "file\0226\n\030left_right_profiles_info\030\006 \001(\0132\024"
-    ".aim.ProfileListInfo\0221\n\025forward_back_pro"
-    "files\030\007 \003(\0132\022.aim.StrafeProfile\0228\n\032forwa"
-    "rd_back_profiles_info\030\010 \001(\0132\024.aim.Profil"
-    "eListInfo\022,\n\020up_down_profiles\030\t \003(\0132\022.ai"
-    "m.StrafeProfile\0223\n\025up_down_profiles_info"
-    "\030\n \001(\0132\024.aim.ProfileListInfo\0224\n\034left_rig"
-    "ht_initial_direction\030\r \001(\0162\016.aim.Directi"
-    "on\0221\n\031up_down_initial_direction\030\016 \001(\0162\016."
-    "aim.Direction\0226\n\036forward_back_initial_di"
-    "rection\030\017 \001(\0162\016.aim.Direction\"\240\004\n\rBounce"
-    "Profile\022\036\n\004info\030\001 \001(\0132\020.aim.ProfileInfo\022"
-    "!\n\006height\030\002 \001(\0132\021.aim.RegionLength\022(\n\rhe"
-    "ight_jitter\030\003 \001(\0132\021.aim.RegionLength\022\025\n\r"
-    "delay_seconds\030\004 \001(\002\022\034\n\024delay_seconds_jit"
-    "ter\030\005 \001(\002\022\"\n\023only_delay_on_floor\030\006 \001(\010B\005"
-    "\252\001\002\010\002\022\030\n\020speed_multiplier\030\007 \001(\002\022\037\n\027speed"
-    "_multiplier_jitter\030\010 \001(\002\022\037\n\027acceleration"
-    "_multiplier\030\t \001(\002\022&\n\036acceleration_multip"
-    "lier_jitter\030\n \001(\002\022\022\n\nfloat_time\030\013 \001(\002\022\031\n"
-    "\021float_time_jitter\030\014 \001(\002\022\035\n\025down_speed_m"
-    "ultiplier\030\r \001(\002\022$\n\034down_speed_multiplier"
-    "_jitter\030\016 \001(\002\022$\n\034down_acceleration_multi"
-    "plier\030\017 \001(\002\022+\n#down_acceleration_multipl"
-    "ier_jitter\030\020 \001(\002\"\204\005\n\021BounceScenarioDef\022\033"
-    "\n\006bounds\030\001 \001(\0132\013.aim.Bounds\022$\n\017relative_"
-    "bounds\030\002 \001(\0132\013.aim.Bounds\022+\n\017bounce_prof"
-    "iles\030\003 \003(\0132\022.aim.BounceProfile\0222\n\024bounce"
-    "_profiles_info\030\004 \001(\0132\024.aim.ProfileListIn"
-    "fo\022/\n\023left_right_profiles\030\005 \003(\0132\022.aim.St"
-    "rafeProfile\0226\n\030left_right_profiles_info\030"
-    "\006 \001(\0132\024.aim.ProfileListInfo\0221\n\025forward_b"
-    "ack_profiles\030\007 \003(\0132\022.aim.StrafeProfile\0228"
-    "\n\032forward_back_profiles_info\030\010 \001(\0132\024.aim"
-    ".ProfileListInfo\022\?\n\031target_placement_str"
-    "ategy\030\t \001(\0132\034.aim.TargetPlacementStrateg"
-    "y\0224\n\034left_right_initial_direction\030\013 \001(\0162"
-    "\016.aim.Direction\0226\n\036forward_back_initial_"
-    "direction\030\014 \001(\0162\016.aim.Direction\022\'\n\014floor"
-    "_height\030\r \001(\0132\021.aim.RegionLength\022\035\n\016star"
-    "t_on_floor\030\016 \001(\010B\005\252\001\002\010\002\"\273\001\n\022WallArcScena"
-    "rioDef\022 \n\005width\030\001 \001(\0132\021.aim.RegionLength"
-    "\022!\n\006height\030\002 \001(\0132\021.aim.RegionLength\022(\n\rh"
-    "eight_jitter\030\003 \001(\0132\021.aim.RegionLength\022\036\n"
-    "\017start_on_ground\030\006 \001(\010B\005\252\001\002\010\002\022\026\n\007reflect"
-    "\030\007 \001(\010B\005\252\001\002\010\002\"\215\001\n\021WallWanderProfile\022\036\n\004i"
-    "nfo\030\001 \001(\0132\020.aim.ProfileInfo\022\021\n\tturn_time"
-    "\030\002 \001(\002\022\030\n\020turn_time_jitter\030\003 \001(\002\022\021\n\tturn"
-    "_rate\030\004 \001(\002\022\030\n\020turn_rate_jitter\030\005 \001(\002\"\257\001"
-    "\n\025WallWanderScenarioDef\022\?\n\031target_placem"
-    "ent_strategy\030\001 \001(\0132\034.aim.TargetPlacement"
-    "Strategy\022(\n\010profiles\030\002 \003(\0132\026.aim.WallWan"
-    "derProfile\022+\n\rprofiles_info\030\003 \001(\0132\024.aim."
-    "ProfileListInfo\"\306\002\n\tTargetDef\022\023\n\013num_tar"
-    "gets\030\001 \001(\005\022$\n\010profiles\030\002 \003(\0132\022.aim.Targe"
-    "tProfile\022+\n\rprofiles_info\030\003 \001(\0132\024.aim.Pr"
-    "ofileListInfo\022%\n\026newest_target_is_ghost\030"
-    "\005 \001(\010B\005\252\001\002\010\002\022 \n\030new_target_delay_seconds"
-    "\030\006 \001(\002\022#\n\033remove_target_after_seconds\030\007 "
-    "\001(\002\022\'\n\037stagger_initial_targets_seconds\030\010"
-    " \001(\002\022\034\n\024delayed_target_times\030\t \003(\002\022\034\n\024gh"
-    "ost_border_percent\030\n \001(\002\"\037\n\rPillTargetDe"
-    "f\022\016\n\006height\030\001 \001(\002\"\213\003\n\rTargetProfile\022\036\n\004i"
-    "nfo\030\001 \001(\0132\020.aim.ProfileInfo\022\025\n\rtarget_ra"
-    "dius\030\002 \001(\002\022\034\n\024target_radius_jitter\030\003 \001(\002"
-    "\022\r\n\005speed\030\004 \001(\002\022\024\n\014speed_jitter\030\005 \001(\002\022\024\n"
-    "\014acceleration\030\006 \001(\002\022\033\n\023acceleration_jitt"
-    "er\030\007 \001(\002\022\035\n\025target_radius_at_kill\030\010 \001(\002\022"
-    ")\n!target_radius_growth_time_seconds\030\014 \001"
-    "(\002\022!\n\031target_radius_growth_size\030\r \001(\002\0224\n"
-    ",target_radius_growth_final_size_time_se"
-    "conds\030\016 \001(\002\022\"\n\004pill\030\n \001(\0132\022.aim.PillTarg"
-    "etDefH\000B\006\n\004type*e\n\017AccuracyPenalty\022\034\n\030AC"
-    "CURACY_PENALTY_UNKNOWN\020\000\022\031\n\025ACCURACY_PEN"
-    "ALTY_SQRT\020\001\022\031\n\025ACCURACY_PENALTY_NONE\020\002*v"
-    "\n\tDirection\022\024\n\020DIRECTION_RANDOM\020\000\022\026\n\022DIR"
-    "ECTION_POSITIVE\020\001\022\026\n\022DIRECTION_NEGATIVE\020"
-    "\002\022\020\n\014DIRECTION_IN\020\003\022\021\n\rDIRECTION_OUT\020\004b\010"
-    "editionsp\350\007"
+    "r_jitter\030\020 \001(\002\022\023\n\013center_bias\030\021 \001(\002\"o\n\006B"
+    "ounds\022 \n\005width\030\001 \001(\0132\021.aim.RegionLength\022"
+    "!\n\006height\030\002 \001(\0132\021.aim.RegionLength\022 \n\005de"
+    "pth\030\003 \001(\0132\021.aim.RegionLength\"\363\002\n\026AngleSt"
+    "rafeScenarioDef\022\033\n\006bounds\030\001 \001(\0132\013.aim.Bo"
+    "unds\022\?\n\031target_placement_strategy\030\002 \001(\0132"
+    "\034.aim.TargetPlacementStrategy\022)\n\010profile"
+    "s\030\004 \003(\0132\027.aim.AngleStrafeProfile\022+\n\rprof"
+    "iles_info\030\005 \001(\0132\024.aim.ProfileListInfo\0221\n"
+    "\025forward_back_profiles\030\006 \003(\0132\022.aim.Straf"
+    "eProfile\0228\n\032forward_back_profiles_info\030\007"
+    " \001(\0132\024.aim.ProfileListInfo\0226\n\036forward_ba"
+    "ck_initial_direction\030\010 \001(\0162\016.aim.Directi"
+    "on\"\361\003\n\rStrafeProfile\022\036\n\004info\030\001 \001(\0132\020.aim"
+    ".ProfileInfo\022\014\n\004time\030\002 \001(\002\022\023\n\013time_jitte"
+    "r\030\003 \001(\002\022\023\n\013center_bias\030\004 \001(\002\022#\n\010distance"
+    "\030\005 \001(\0132\021.aim.RegionLength\022*\n\017distance_ji"
+    "tter\030\006 \001(\0132\021.aim.RegionLength\022\030\n\020speed_m"
+    "ultiplier\030\007 \001(\002\022\037\n\027speed_multiplier_jitt"
+    "er\030\010 \001(\002\022\037\n\027acceleration_multiplier\030\t \001("
+    "\002\022&\n\036acceleration_multiplier_jitter\030\n \001("
+    "\002\022\022\n\npause_time\030\013 \001(\002\022\031\n\021pause_time_jitt"
+    "er\030\014 \001(\002\022\034\n\024pause_chance_percent\030\r \001(\002\022 "
+    "\n\030target_radius_multiplier\030\016 \001(\002\022\'\n\037targ"
+    "et_radius_multiplier_jitter\030\017 \001(\002\022\033\n\023sta"
+    "rt_speed_percent\030\020 \001(\002\"\361\004\n\021StrafeScenari"
+    "oDef\022\033\n\006bounds\030\001 \001(\0132\013.aim.Bounds\022$\n\017rel"
+    "ative_bounds\030\002 \001(\0132\013.aim.Bounds\022\?\n\031targe"
+    "t_placement_strategy\030\004 \001(\0132\034.aim.TargetP"
+    "lacementStrategy\022/\n\023left_right_profiles\030"
+    "\005 \003(\0132\022.aim.StrafeProfile\0226\n\030left_right_"
+    "profiles_info\030\006 \001(\0132\024.aim.ProfileListInf"
+    "o\0221\n\025forward_back_profiles\030\007 \003(\0132\022.aim.S"
+    "trafeProfile\0228\n\032forward_back_profiles_in"
+    "fo\030\010 \001(\0132\024.aim.ProfileListInfo\022,\n\020up_dow"
+    "n_profiles\030\t \003(\0132\022.aim.StrafeProfile\0223\n\025"
+    "up_down_profiles_info\030\n \001(\0132\024.aim.Profil"
+    "eListInfo\0224\n\034left_right_initial_directio"
+    "n\030\r \001(\0162\016.aim.Direction\0221\n\031up_down_initi"
+    "al_direction\030\016 \001(\0162\016.aim.Direction\0226\n\036fo"
+    "rward_back_initial_direction\030\017 \001(\0162\016.aim"
+    ".Direction\"\240\004\n\rBounceProfile\022\036\n\004info\030\001 \001"
+    "(\0132\020.aim.ProfileInfo\022!\n\006height\030\002 \001(\0132\021.a"
+    "im.RegionLength\022(\n\rheight_jitter\030\003 \001(\0132\021"
+    ".aim.RegionLength\022\025\n\rdelay_seconds\030\004 \001(\002"
+    "\022\034\n\024delay_seconds_jitter\030\005 \001(\002\022\"\n\023only_d"
+    "elay_on_floor\030\006 \001(\010B\005\252\001\002\010\002\022\030\n\020speed_mult"
+    "iplier\030\007 \001(\002\022\037\n\027speed_multiplier_jitter\030"
+    "\010 \001(\002\022\037\n\027acceleration_multiplier\030\t \001(\002\022&"
+    "\n\036acceleration_multiplier_jitter\030\n \001(\002\022\022"
+    "\n\nfloat_time\030\013 \001(\002\022\031\n\021float_time_jitter\030"
+    "\014 \001(\002\022\035\n\025down_speed_multiplier\030\r \001(\002\022$\n\034"
+    "down_speed_multiplier_jitter\030\016 \001(\002\022$\n\034do"
+    "wn_acceleration_multiplier\030\017 \001(\002\022+\n#down"
+    "_acceleration_multiplier_jitter\030\020 \001(\002\"\204\005"
+    "\n\021BounceScenarioDef\022\033\n\006bounds\030\001 \001(\0132\013.ai"
+    "m.Bounds\022$\n\017relative_bounds\030\002 \001(\0132\013.aim."
+    "Bounds\022+\n\017bounce_profiles\030\003 \003(\0132\022.aim.Bo"
+    "unceProfile\0222\n\024bounce_profiles_info\030\004 \001("
+    "\0132\024.aim.ProfileListInfo\022/\n\023left_right_pr"
+    "ofiles\030\005 \003(\0132\022.aim.StrafeProfile\0226\n\030left"
+    "_right_profiles_info\030\006 \001(\0132\024.aim.Profile"
+    "ListInfo\0221\n\025forward_back_profiles\030\007 \003(\0132"
+    "\022.aim.StrafeProfile\0228\n\032forward_back_prof"
+    "iles_info\030\010 \001(\0132\024.aim.ProfileListInfo\022\?\n"
+    "\031target_placement_strategy\030\t \001(\0132\034.aim.T"
+    "argetPlacementStrategy\0224\n\034left_right_ini"
+    "tial_direction\030\013 \001(\0162\016.aim.Direction\0226\n\036"
+    "forward_back_initial_direction\030\014 \001(\0162\016.a"
+    "im.Direction\022\'\n\014floor_height\030\r \001(\0132\021.aim"
+    ".RegionLength\022\035\n\016start_on_floor\030\016 \001(\010B\005\252"
+    "\001\002\010\002\"\273\001\n\022WallArcScenarioDef\022 \n\005width\030\001 \001"
+    "(\0132\021.aim.RegionLength\022!\n\006height\030\002 \001(\0132\021."
+    "aim.RegionLength\022(\n\rheight_jitter\030\003 \001(\0132"
+    "\021.aim.RegionLength\022\036\n\017start_on_ground\030\006 "
+    "\001(\010B\005\252\001\002\010\002\022\026\n\007reflect\030\007 \001(\010B\005\252\001\002\010\002\"\215\001\n\021W"
+    "allWanderProfile\022\036\n\004info\030\001 \001(\0132\020.aim.Pro"
+    "fileInfo\022\021\n\tturn_time\030\002 \001(\002\022\030\n\020turn_time"
+    "_jitter\030\003 \001(\002\022\021\n\tturn_rate\030\004 \001(\002\022\030\n\020turn"
+    "_rate_jitter\030\005 \001(\002\"\257\001\n\025WallWanderScenari"
+    "oDef\022\?\n\031target_placement_strategy\030\001 \001(\0132"
+    "\034.aim.TargetPlacementStrategy\022(\n\010profile"
+    "s\030\002 \003(\0132\026.aim.WallWanderProfile\022+\n\rprofi"
+    "les_info\030\003 \001(\0132\024.aim.ProfileListInfo\"\306\002\n"
+    "\tTargetDef\022\023\n\013num_targets\030\001 \001(\005\022$\n\010profi"
+    "les\030\002 \003(\0132\022.aim.TargetProfile\022+\n\rprofile"
+    "s_info\030\003 \001(\0132\024.aim.ProfileListInfo\022%\n\026ne"
+    "west_target_is_ghost\030\005 \001(\010B\005\252\001\002\010\002\022 \n\030new"
+    "_target_delay_seconds\030\006 \001(\002\022#\n\033remove_ta"
+    "rget_after_seconds\030\007 \001(\002\022\'\n\037stagger_init"
+    "ial_targets_seconds\030\010 \001(\002\022\034\n\024delayed_tar"
+    "get_times\030\t \003(\002\022\034\n\024ghost_border_percent\030"
+    "\n \001(\002\"\037\n\rPillTargetDef\022\016\n\006height\030\001 \001(\002\"\213"
+    "\003\n\rTargetProfile\022\036\n\004info\030\001 \001(\0132\020.aim.Pro"
+    "fileInfo\022\025\n\rtarget_radius\030\002 \001(\002\022\034\n\024targe"
+    "t_radius_jitter\030\003 \001(\002\022\r\n\005speed\030\004 \001(\002\022\024\n\014"
+    "speed_jitter\030\005 \001(\002\022\024\n\014acceleration\030\006 \001(\002"
+    "\022\033\n\023acceleration_jitter\030\007 \001(\002\022\035\n\025target_"
+    "radius_at_kill\030\010 \001(\002\022)\n!target_radius_gr"
+    "owth_time_seconds\030\014 \001(\002\022!\n\031target_radius"
+    "_growth_size\030\r \001(\002\0224\n,target_radius_grow"
+    "th_final_size_time_seconds\030\016 \001(\002\022\"\n\004pill"
+    "\030\n \001(\0132\022.aim.PillTargetDefH\000B\006\n\004type*e\n\017"
+    "AccuracyPenalty\022\034\n\030ACCURACY_PENALTY_UNKN"
+    "OWN\020\000\022\031\n\025ACCURACY_PENALTY_SQRT\020\001\022\031\n\025ACCU"
+    "RACY_PENALTY_NONE\020\002*v\n\tDirection\022\024\n\020DIRE"
+    "CTION_RANDOM\020\000\022\026\n\022DIRECTION_POSITIVE\020\001\022\026"
+    "\n\022DIRECTION_NEGATIVE\020\002\022\020\n\014DIRECTION_IN\020\003"
+    "\022\021\n\rDIRECTION_OUT\020\004b\010editionsp\350\007"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_scenario_2eproto_deps[1] = {
@@ -2204,7 +2207,7 @@ static ::absl::once_flag descriptor_table_scenario_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_scenario_2eproto = {
     false,
     false,
-    10171,
+    10192,
     descriptor_table_protodef_scenario_2eproto,
     "scenario.proto",
     &descriptor_table_scenario_2eproto_once,
@@ -13216,9 +13219,9 @@ AngleStrafeProfile::AngleStrafeProfile(
                offsetof(Impl_, angle_),
            reinterpret_cast<const char*>(&from._impl_) +
                offsetof(Impl_, angle_),
-           offsetof(Impl_, acceleration_multiplier_jitter_) -
+           offsetof(Impl_, center_bias_) -
                offsetof(Impl_, angle_) +
-               sizeof(Impl_::acceleration_multiplier_jitter_));
+               sizeof(Impl_::center_bias_));
 
   // @@protoc_insertion_point(copy_constructor:aim.AngleStrafeProfile)
 }
@@ -13232,9 +13235,9 @@ inline void AngleStrafeProfile::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, info_),
            0,
-           offsetof(Impl_, acceleration_multiplier_jitter_) -
+           offsetof(Impl_, center_bias_) -
                offsetof(Impl_, info_) +
-               sizeof(Impl_::acceleration_multiplier_jitter_));
+               sizeof(Impl_::center_bias_));
 }
 AngleStrafeProfile::~AngleStrafeProfile() {
   // @@protoc_insertion_point(destructor:aim.AngleStrafeProfile)
@@ -13296,16 +13299,16 @@ AngleStrafeProfile::GetClassData() const {
   return AngleStrafeProfile_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<4, 10, 3, 0, 2>
+const ::_pbi::TcParseTable<4, 11, 3, 0, 2>
 AngleStrafeProfile::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(AngleStrafeProfile, _impl_._has_bits_),
     0, // no _extensions_
-    16, 120,  // max_field_number, fast_idx_mask
+    17, 120,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294905400,  // skipmap
+    4294839864,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    10,  // num_field_entries
+    11,  // num_field_entries
     3,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     AngleStrafeProfile_class_data_.base(),
@@ -13384,6 +13387,8 @@ AngleStrafeProfile::_table_ = {
     {PROTOBUF_FIELD_OFFSET(AngleStrafeProfile, _impl_.speed_multiplier_jitter_), _Internal::kHasBitsOffset + 8, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // float acceleration_multiplier_jitter = 16;
     {PROTOBUF_FIELD_OFFSET(AngleStrafeProfile, _impl_.acceleration_multiplier_jitter_), _Internal::kHasBitsOffset + 9, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    // float center_bias = 17;
+    {PROTOBUF_FIELD_OFFSET(AngleStrafeProfile, _impl_.center_bias_), _Internal::kHasBitsOffset + 10, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::aim::ProfileInfo>()},
@@ -13420,10 +13425,10 @@ PROTOBUF_NOINLINE void AngleStrafeProfile::Clear() {
         reinterpret_cast<char*>(&_impl_.acceleration_multiplier_) -
         reinterpret_cast<char*>(&_impl_.angle_)) + sizeof(_impl_.acceleration_multiplier_));
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x00000300U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x00000700U)) {
     ::memset(&_impl_.speed_multiplier_jitter_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.acceleration_multiplier_jitter_) -
-        reinterpret_cast<char*>(&_impl_.speed_multiplier_jitter_)) + sizeof(_impl_.acceleration_multiplier_jitter_));
+        reinterpret_cast<char*>(&_impl_.center_bias_) -
+        reinterpret_cast<char*>(&_impl_.speed_multiplier_jitter_)) + sizeof(_impl_.center_bias_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -13518,6 +13523,13 @@ PROTOBUF_NOINLINE void AngleStrafeProfile::Clear() {
         16, this_._internal_acceleration_multiplier_jitter(), target);
   }
 
+  // float center_bias = 17;
+  if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        17, this_._internal_center_bias(), target);
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -13543,7 +13555,7 @@ PROTOBUF_NOINLINE void AngleStrafeProfile::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  total_size += static_cast<bool>(0x00000200U & cached_has_bits) * 6;
+  total_size += ::absl::popcount(0x00000600U & cached_has_bits) * 6;
   total_size += ::absl::popcount(0x000001f8U & cached_has_bits) * 5;
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
     // .aim.ProfileInfo info = 1;
@@ -13622,12 +13634,15 @@ void AngleStrafeProfile::MergeImpl(::google::protobuf::MessageLite& to_msg,
       _this->_impl_.acceleration_multiplier_ = from._impl_.acceleration_multiplier_;
     }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x00000300U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x00000700U)) {
     if (CheckHasBit(cached_has_bits, 0x00000100U)) {
       _this->_impl_.speed_multiplier_jitter_ = from._impl_.speed_multiplier_jitter_;
     }
     if (CheckHasBit(cached_has_bits, 0x00000200U)) {
       _this->_impl_.acceleration_multiplier_jitter_ = from._impl_.acceleration_multiplier_jitter_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+      _this->_impl_.center_bias_ = from._impl_.center_bias_;
     }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
@@ -13648,8 +13663,8 @@ void AngleStrafeProfile::InternalSwap(AngleStrafeProfile* PROTOBUF_RESTRICT PROT
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(AngleStrafeProfile, _impl_.acceleration_multiplier_jitter_)
-      + sizeof(AngleStrafeProfile::_impl_.acceleration_multiplier_jitter_)
+      PROTOBUF_FIELD_OFFSET(AngleStrafeProfile, _impl_.center_bias_)
+      + sizeof(AngleStrafeProfile::_impl_.center_bias_)
       - PROTOBUF_FIELD_OFFSET(AngleStrafeProfile, _impl_.info_)>(
           reinterpret_cast<char*>(&_impl_.info_),
           reinterpret_cast<char*>(&other->_impl_.info_));

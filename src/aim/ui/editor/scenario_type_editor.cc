@@ -687,6 +687,18 @@ void DrawAngleStrafeProfile(float char_x, AngleStrafeProfile* p) {
                                 .set_default(1)
                                 .set_width(char_x * 10),
                             PROTO_JITTERED_FIELD(AngleStrafeProfile, p, acceleration_multiplier));
+
+  ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Center bias")
+                        .set_is_optional()
+                        .set_step(0.1, 0.5)
+                        .set_min(0.1)
+                        .set_default(0.1)
+                        .set_width(char_x * 10),
+                    PROTO_FLOAT_FIELD(AngleStrafeProfile, p, center_bias));
+  ImGui::SameLine();
+  ImGui::HelpMarker(
+      "If close to the edge will shorten/lengthen the next strafe to encourage moving towards the "
+      "center. 0.10 means lengthen the strafe by 10%");
 }
 
 void DrawAngleStrafeEditor(AngleStrafeScenarioDef& w) {

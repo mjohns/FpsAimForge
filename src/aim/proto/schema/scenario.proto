@@ -383,6 +383,10 @@ message AngleStrafeProfile {
 
   float acceleration_multiplier = 14;
   float acceleration_multiplier_jitter = 16;
+
+  // Distance is updated by this value based on whether it is moving towards/away
+  // from the center to encourage the target to stay closer to center.
+  float center_bias = 17;
 }
 
 message Bounds {
