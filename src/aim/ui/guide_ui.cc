@@ -308,6 +308,11 @@ class GuidesComponentImpl : public GuidesComponent {
         opts.name = *result.edit_object_name;
         app_.PushNextScreen(CreateGuideEditorScreen(opts));
       }
+      if (result.copy_object_name) {
+        std::string new_guide_name = app_.guide_manager().QuickCopyGuide(*result.copy_object_name);
+        app_.bundle_manager().SaveDirtyBundles();
+        app_.guide_manager().SetCurrentGuide(new_guide_name);
+      }
 
       ImGui::EndChild();
 
@@ -337,6 +342,11 @@ class GuidesComponentImpl : public GuidesComponent {
               opts.name = guide->name;
               app_.PushNextScreen(CreateGuideEditorScreen(opts));
             }
+          }
+          if (ImGui::Selectable(std::format("{} Copy", icons::kContentCopy))) {
+            std::string new_guide_name = app_.guide_manager().QuickCopyGuide(guide->name);
+            app_.bundle_manager().SaveDirtyBundles();
+            app_.guide_manager().SetCurrentGuide(new_guide_name);
           }
           if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
             select_variation_dialog_.NotifyOpen(guide->name);

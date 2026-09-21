@@ -37,6 +37,8 @@ class GuideManager {
     return GetGuide(current_guide_name());
   }
 
+  virtual std::string QuickCopyGuide(const std::string& guide_name) = 0;
+
   virtual std::shared_ptr<std::vector<std::string>> guide_names() const = 0;
 
   virtual std::vector<std::string> GetAllRelativeNamesInBundle(const std::string& bundle_name) = 0;
