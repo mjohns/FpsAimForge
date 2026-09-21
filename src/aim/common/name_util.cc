@@ -19,41 +19,6 @@
 namespace aim {
 namespace {
 
-NameInfo GetNameInfo(const std::string& name, bool support_levels = true) {
-  NameInfo info;
-  if (name.empty()) {
-    return info;
-  }
-
-  std::vector<std::string_view> words =
-      absl::StrSplit(name, absl::ByAnyChar(" \t\n\r\f\v"), absl::SkipEmpty());
-
-  std::optional<std::string_view> last_dynamic_word;
-
-  for (std::string_view word : std::views::reverse(words)) {
-    bool is_dynamic_suffix = info.SetDynamicSuffixValue(word);
-    if (!is_dynamic_suffix) {
-      break;
-    }
-    last_dynamic_word = word;
-  }
-
-  if (!last_dynamic_word) {
-    info.base_name = name;
-    return info;
-  }
-
-  // Find the base name.
-  int start_of_dynamic = last_dynamic_word->data() - name.data();
-
-  int end_of_base = start_of_dynamic - 1;
-  if (end_of_base >= 0 && end_of_base < name.size()) {
-    info.base_name = name.substr(0, end_of_base);
-  }
-
-  return info;
-}
-
 std::vector<std::string> GetFullNames(const std::vector<NameInfo>& name_infos) {
   std::vector<std::string> result;
   for (const auto& info : name_infos) {
@@ -96,7 +61,38 @@ std::optional<float> GetLevelFromWord(const std::string_view& word) {
 }
 
 NameInfo GetNameInfo(const std::string& name) {
-  return GetNameInfo(name, true);
+  NameInfo info;
+  if (name.empty()) {
+    return info;
+  }
+
+  std::vector<std::string_view> words =
+      absl::StrSplit(name, absl::ByAnyChar(" \t\n\r\f\v"), absl::SkipEmpty());
+
+  std::optional<std::string_view> last_dynamic_word;
+
+  for (std::string_view word : std::views::reverse(words)) {
+    bool is_dynamic_suffix = info.SetDynamicSuffixValue(word);
+    if (!is_dynamic_suffix) {
+      break;
+    }
+    last_dynamic_word = word;
+  }
+
+  if (!last_dynamic_word) {
+    info.base_name = name;
+    return info;
+  }
+
+  // Find the base name.
+  int start_of_dynamic = last_dynamic_word->data() - name.data();
+
+  int end_of_base = start_of_dynamic - 1;
+  if (end_of_base >= 0 && end_of_base < name.size()) {
+    info.base_name = name.substr(0, end_of_base);
+  }
+
+  return info;
 }
 
 std::vector<std::string> GetSortedLevelNames(const NameInfo& name,
@@ -327,6 +323,11 @@ void NameInfo::MergeDynamicSuffixes(const NameInfo& other) {
   if (other.is_poke) {
     is_poke = true;
   }
+}
+
+void NormalizeName(std::string* name) {
+  NameInfo info = GetNameInfo(*name);
+  *name = info.GetFullName();
 }
 
 }  // namespace aim

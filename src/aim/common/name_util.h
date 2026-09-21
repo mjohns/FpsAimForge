@@ -52,4 +52,6 @@ std::vector<std::string> GetSortedCm360Names(const NameInfo& name,
 
 bool ParseFloatValueSuffix(std::string_view word, std::string_view* suffix, float* value);
 
+void NormalizeName(std::string* name);
+
 }  // namespace aim

@@ -95,11 +95,22 @@ class GuideManagerImpl : public GuideManager {
     return current_guide_name_;
   }
 
-  void UpdateGuide(const std::string& name, const GuideDef& def) override {
+  void UpdateGuide(const std::string& name, const GuideDef& raw_def) override {
     NameInfo info = GetNameInfo(name);
     if (info.HasDynamicSuffix()) {
       assert(false && "Trying to update guide with dynamic suffix");
       return;
+    }
+
+    // Normalize all dynamic names getting stored.
+    GuideDef def = raw_def;
+    for (auto& section : *def.mutable_sections()) {
+      for (int i = 0; i < section.guides_size(); ++i) {
+        NormalizeName(section.mutable_guides(i));
+      }
+      for (int i = 0; i < section.playlists_size(); ++i) {
+        NormalizeName(section.mutable_playlists(i));
+      }
     }
 
     auto& g = guide_map_[name];

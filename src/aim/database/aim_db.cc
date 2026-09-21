@@ -416,10 +416,11 @@ class AimDbImpl : public AimDb {
     return GetNameToIdMap(kGetAllPlaylistIdsSql);
   }
 
-  i64 GetId(const std::string& name,
+  i64 GetId(const std::string& raw_name,
             std::unordered_map<std::string, i64>& partial_id_map,
             const char* get_id_sql,
             const char* create_id_sql) {
+    std::string name = GetNameInfo(raw_name).GetFullName();
     auto it = partial_id_map.find(name);
     if (it != partial_id_map.end()) {
       return it->second;

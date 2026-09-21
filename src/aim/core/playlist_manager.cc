@@ -14,7 +14,6 @@
 #include "aim/common/resource_name.h"
 #include "aim/common/util.h"
 #include "aim/core/scenario_manager.h"
-#include "aim/core/stats_manager.h"
 
 namespace aim {
 namespace {
@@ -255,11 +254,23 @@ class PlaylistManagerImpl : public PlaylistManager {
     }
   }
 
-  void UpdatePlaylist(const std::string& name, const PlaylistDef& def) override {
+  void UpdatePlaylist(const std::string& name, const PlaylistDef& raw_def) override {
     NameInfo info = GetNameInfo(name);
     if (info.HasDynamicSuffix()) {
       assert(false && "Trying to update playlist with dynamic suffix");
       return;
+    }
+
+    // Normalize all dynamic names getting stored.
+    PlaylistDef def = raw_def;
+    if (!def.levels().base_scenario().empty()) {
+      NormalizeName(def.mutable_levels()->mutable_base_scenario());
+    }
+    for (int i = 0; i < def.items_size(); ++i) {
+      PlaylistItem* item = def.mutable_items(i);
+      if (!item->scenario().empty()) {
+        NormalizeName(item->mutable_scenario());
+      }
     }
 
     auto& p = playlist_map_[name];
@@ -447,42 +458,6 @@ class PlaylistManagerImpl : public PlaylistManager {
   void RegisterRenameListener(std::function<void(const std::string& old_name,
                                                  const std::string& new_name)> listener) override {
     rename_listeners_.push_back(std::move(listener));
-  }
-
-  std::optional<float> GetHighestCompleteLevel(const Playlist& playlist,
-                                               ScenarioManager& scenario_manager,
-                                               StatsManager& stats_manager) override {
-    if (!playlist.def().has_levels()) {
-      return {};
-    }
-    std::optional<float> highest_level;
-    for (const auto& item : playlist.items()) {
-      NameInfo name = GetNameInfo(item.scenario());
-      if (!name.level) {
-        continue;
-      }
-      float this_level = *name.level;
-      auto stats = stats_manager.GetAggregateStats(item.scenario());
-      if (stats.total_runs <= 0) {
-        continue;
-      }
-      auto scenario_def = scenario_manager.GetEvaluatedScenarioDef(item.scenario());
-      if (!scenario_def) {
-        continue;
-      }
-      float level = GetScenarioScoreLevel(stats.high_score_stats.score,
-                                          scenario_def->score_targets().target_score());
-      if (level < 5) {
-        continue;
-      }
-
-      if (!highest_level) {
-        highest_level = this_level;
-      } else if (this_level > *highest_level) {
-        highest_level = this_level;
-      }
-    }
-    return highest_level;
   }
 
  private:

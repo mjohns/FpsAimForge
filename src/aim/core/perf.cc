@@ -58,7 +58,7 @@ void DumpHistogram(const TimeHistogram& h) {
       ImGui::TextFmt("{:L}", value);
 
       ImGui::TableNextColumn();
-      ImGui::TextFmt("{:.1f}%", (100 * value) / (double)total);
+      ImGui::TextFmt("{:.2f}%", (100 * value) / (double)total);
     }
     prev_label = current_label;
     prev_fps_label = current_fps_label;
