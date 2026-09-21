@@ -102,6 +102,9 @@ class SettingsManagerImpl : public SettingsManager {
         if (!settings_.has_sounds()) {
           *settings_.mutable_sounds() = GetDefaultSoundSettings();
         } else {
+          // TODO: Remove after enough time has passed that users are unlikely in this situation
+          // anymore.
+
           // Check to see if most sounds are missing suggesing old version settings.
           auto& s = settings_.sounds();
           bool has_new_sounds = s.has_click_hit() || s.has_tracking_hit() || s.has_click_kill() ||
