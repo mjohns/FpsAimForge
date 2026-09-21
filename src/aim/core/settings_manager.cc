@@ -101,6 +101,15 @@ class SettingsManagerImpl : public SettingsManager {
       if (status.ok()) {
         if (!settings_.has_sounds()) {
           *settings_.mutable_sounds() = GetDefaultSoundSettings();
+        } else {
+          // Check to see if most sounds are missing suggesing old version settings.
+          auto& s = settings_.sounds();
+          bool has_new_sounds = s.has_click_hit() || s.has_tracking_hit() || s.has_click_kill() ||
+                                s.has_tracking_kill() || s.has_click_miss() ||
+                                s.has_tracking_miss();
+          if (!has_new_sounds) {
+            settings_.mutable_sounds()->MergeFrom(GetDefaultSoundSettings());
+          }
         }
       }
 

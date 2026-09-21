@@ -319,60 +319,14 @@ class GuidesComponentImpl : public GuidesComponent {
       ImGui::TableNextColumn();
       ImGui::BeginChild("GuideColumn");
 
-      std::optional<GuideItem> guide = app_.guide_manager().GetCurrentGuide();
-      if (guide) {
-        ImGui::Spacing();
-        if (guide_history_.size() > 1) {
-          ImGui::AlignTextToFramePadding();
-          if (ImGui::Button(icons::kArrowBack)) {
-            go_back = true;
-          }
-          ImGui::HelpTooltip("Back to last guide");
-          ImGui::SameLine();
-        }
-        ImGui::AlignTextToFramePadding();
-        ImGui::Text(guide->name);
-
-        const char* menu_id = "GuideMenu";
-        if (ImGui::BeginPopupContextItem(menu_id)) {
-          bool is_readonly = app_.bundle_manager().IsBundleReadonly(GetBundleName(guide->name));
-          if (!is_readonly) {
-            if (ImGui::Selectable(std::format("{} Edit", icons::kEdit))) {
-              GuideEditorOptions opts;
-              opts.name = guide->name;
-              app_.PushNextScreen(CreateGuideEditorScreen(opts));
-            }
-          }
-          if (ImGui::Selectable(std::format("{} Copy", icons::kContentCopy))) {
-            std::string new_guide_name = app_.guide_manager().QuickCopyGuide(guide->name);
-            app_.bundle_manager().SaveDirtyBundles();
-            app_.guide_manager().SetCurrentGuide(new_guide_name);
-          }
-          if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
-            select_variation_dialog_.NotifyOpen(guide->name);
-          }
-          ImGui::EndPopup();
-        }
-
-        ImGui::SameLine();
-        if (ImGui::MenuButton()) {
-          ImGui::OpenPopup(menu_id);
-        }
-
-        ImGui::SpacedSeparator();
-
-        GuideViewer::Result result;
-        viewer_.Draw(*guide, &result);
-        if (result.selected_guide) {
-          app_.guide_manager().SetCurrentGuide(*result.selected_guide);
-        }
-      }
+      DrawCurrentGuidePanel(&go_back);
 
       ImGui::EndChild();
 
       ImGui::TableNextColumn();
       ImGui::BeginChild("PlaylistColumn");
 
+      std::optional<GuideItem> guide = app_.guide_manager().GetCurrentGuide();
       if (guide) {
         auto playlist_run = GetPlaylistRunIfInGuide(guide->def);
         if (playlist_run) {
@@ -394,6 +348,58 @@ class GuidesComponentImpl : public GuidesComponent {
   }
 
  private:
+  void DrawCurrentGuidePanel(bool* go_back) {
+    std::optional<GuideItem> guide = app_.guide_manager().GetCurrentGuide();
+    if (!guide) {
+      return;
+    }
+    ImGui::Spacing();
+    if (guide_history_.size() > 1) {
+      ImGui::AlignTextToFramePadding();
+      if (ImGui::Button(icons::kArrowBack)) {
+        *go_back = true;
+      }
+      ImGui::HelpTooltip("Back to last guide");
+      ImGui::SameLine();
+    }
+    ImGui::AlignTextToFramePadding();
+    ImGui::Text(guide->name);
+
+    const char* menu_id = "GuideMenu";
+    if (ImGui::BeginPopupContextItem(menu_id)) {
+      bool is_readonly = app_.bundle_manager().IsBundleReadonly(GetBundleName(guide->name));
+      if (!is_readonly) {
+        if (ImGui::Selectable(std::format("{} Edit", icons::kEdit))) {
+          GuideEditorOptions opts;
+          opts.name = guide->name;
+          app_.PushNextScreen(CreateGuideEditorScreen(opts));
+        }
+      }
+      if (ImGui::Selectable(std::format("{} Copy", icons::kContentCopy))) {
+        std::string new_guide_name = app_.guide_manager().QuickCopyGuide(guide->name);
+        app_.bundle_manager().SaveDirtyBundles();
+        app_.guide_manager().SetCurrentGuide(new_guide_name);
+      }
+      if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
+        select_variation_dialog_.NotifyOpen(guide->name);
+      }
+      ImGui::EndPopup();
+    }
+
+    ImGui::SameLine();
+    if (ImGui::MenuButton()) {
+      ImGui::OpenPopup(menu_id);
+    }
+
+    ImGui::SpacedSeparator();
+
+    GuideViewer::Result result;
+    viewer_.Draw(*guide, &result);
+    if (result.selected_guide) {
+      app_.guide_manager().SetCurrentGuide(*result.selected_guide);
+    }
+  }
+
   std::shared_ptr<PlaylistRun> GetPlaylistRunIfInGuide(const GuideDef& guide) {
     auto current_run = app_.playlist_manager().GetCurrentRun();
     if (!current_run) {
