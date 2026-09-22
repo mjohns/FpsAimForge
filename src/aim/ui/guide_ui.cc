@@ -356,7 +356,7 @@ class GuidesComponentImpl : public GuidesComponent {
     ImGui::Spacing();
     if (guide_history_.size() > 1) {
       ImGui::AlignTextToFramePadding();
-      if (ImGui::Button(icons::kArrowBack)) {
+      if (ImGui::SelectableButton(icons::kArrowBack)) {
         *go_back = true;
       }
       ImGui::HelpTooltip("Back to last guide");

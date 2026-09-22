@@ -82,7 +82,7 @@ class ScenarioEditorScreen : public UiScreen {
       *name_.mutable_relative_name() = kDefaultNewScenarioName;
       is_new_scenario_ = true;
     } else {
-      // Stip any dynamic suffixes from the name displayed in the editor.
+      // Strip any dynamic suffixes from the name displayed in the editor.
       NameInfo name_info = GetNameInfo(opts.scenario_name);
       name_ = ResourceName::Parse(name_info.base_name);
       if (name_info.level.has_value()) {
