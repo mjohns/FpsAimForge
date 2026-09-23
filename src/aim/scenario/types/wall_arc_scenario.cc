@@ -20,7 +20,8 @@ class WallArcScenario : public BaseScenario {
     height_ = wall_.GetRegionLength(arc.height());
 
     float target_radius = GetNextTargetProfile().target_radius();
-    float start_height_mult = arc.start_on_ground() ? (wall_.height - target_radius) : height_;
+    float start_height_mult =
+        arc.start_on_ground() ? (wall_.height - (target_radius * 2)) : height_;
     if (arc.reflect()) {
       wall_start_.y = 0.5 * start_height_mult;
     } else {

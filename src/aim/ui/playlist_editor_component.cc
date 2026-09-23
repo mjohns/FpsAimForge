@@ -219,7 +219,11 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, count_width);
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, menu_width);
 
+    std::vector<PlaylistItem> add_scenarios;
+    int add_scenarios_at_i = -1;
+
     ListUpdater list_updater;
+    std::optional<float> last_cm_per_360;
     for (int i = 0; i < scenario_items_.size(); ++i) {
       ImGui::IdGuard lid("PlaylistItem", i);
       ImGui::TableNextRow();
@@ -233,6 +237,8 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       ImGui::SetNextItemWidth(-FLT_MIN);
       ImGui::InputText("##ScenarioItemEditor", item.mutable_scenario());
 
+      NameInfo info = GetNameInfo(scenario_name);
+
       const char* item_menu = "PlaylistItemMenu";
       if (ImGui::BeginPopupContextItem(item_menu)) {
         list_updater.DrawCopyMenuItem(i);
@@ -241,6 +247,23 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
           select_variation_dialog_.NotifyOpen(item.scenario());
         }
         list_updater.DrawMoveMenuItems(i);
+
+        if (info.cm_per_360) {
+          if (ImGui::Selectable(std::format("{} Add cm/360 variations", icons::kAdd))) {
+            float step = 5;
+            if (last_cm_per_360) {
+              step = *info.cm_per_360 - *last_cm_per_360;
+            }
+            add_scenarios_at_i = i;
+            NameInfo to_add = info;
+            for (int n = 0; n < 5; ++n) {
+              *to_add.cm_per_360 += step;
+              PlaylistItem add_item = item;
+              add_item.set_scenario(to_add.GetFullName());
+              add_scenarios.push_back(add_item);
+            }
+          }
+        }
         ImGui::SpacedSeparator();
         list_updater.DrawDeleteMenuItem(i);
         ImGui::EndPopup();
@@ -260,12 +283,18 @@ class PlaylistEditorComponentImpl : public PlaylistEditorComponent {
       }
 
       item.set_num_plays(num_plays);
+      last_cm_per_360 = info.cm_per_360;
     }
 
     ImGui::EndTable();
 
     list_updater.UpdateVector(&scenario_items_);
     drag_and_drop_.UpdateVector(&scenario_items_);
+    if (add_scenarios.size() > 0) {
+      for (int i = add_scenarios.size() - 1; i >= 0; --i) {
+        InsertAtIndex(&scenario_items_, add_scenarios[i], add_scenarios_at_i + 1);
+      }
+    }
 
     ImGui::Spacing();
     ImGui::Spacing();
