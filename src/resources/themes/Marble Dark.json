@@ -1,0 +1,67 @@
+{
+ "roofAppearance": {
+  "texture": {
+   "textureName": "Marble.png",
+   "scale": 1.3
+  },
+  "mixColor": {},
+  "mixPercent": 0.42
+ },
+ "sideAppearance": {
+  "texture": {
+   "textureName": "Marble.png",
+   "scale": 1.3
+  },
+  "mixColor": {},
+  "mixPercent": 0.530000031
+ },
+ "frontAppearance": {
+  "texture": {
+   "textureName": "Marble.png",
+   "scale": 1.3
+  },
+  "mixColor": {},
+  "mixPercent": 0.440000027
+ },
+ "floorAppearance": {
+  "texture": {
+   "textureName": "Marble.png",
+   "scale": 1.3
+  },
+  "mixColor": {},
+  "mixPercent": 0.49999997
+ },
+ "crosshair": {
+  "color": {
+   "hex": "#cbcbfd"
+  },
+  "outlineColor": {
+   "hex": "#000000"
+  }
+ },
+ "targetColor": {
+  "hex": "#000000"
+ },
+ "ghostTargetColor": {
+  "hex": "#565656"
+ },
+ "centerTargetColor": {
+  "r": 39,
+  "g": 38,
+  "b": 38
+ },
+ "healthBar": {
+  "healthColor": {
+   "r": 213,
+   "g": 211,
+   "b": 211
+  },
+  "backgroundColor": {
+   "r": 180,
+   "g": 180,
+   "b": 180
+  },
+  "backgroundAlpha": 0.6
+ }
+}
+

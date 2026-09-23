@@ -1413,6 +1413,87 @@
    }
   },
   {
+   "name": "Circle Clockwise",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 65
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+     },
+     "barrelRoom": {
+      "radius": 99
+     }
+    },
+    "levelOverrides": {
+     "speedMultiplier": 1.04
+    },
+    "circleDef": {
+     "radius": {
+      "xPercentValue": 0.44
+     },
+     "startDegrees": 0,
+     "rotateClockwise": true,
+     "depth": {
+      "depthPercentValue": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "Circle Counter Clockwise",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 65
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+     },
+     "barrelRoom": {
+      "radius": 99
+     }
+    },
+    "levelOverrides": {
+     "speedMultiplier": 1.04
+    },
+    "circleDef": {
+     "radius": {
+      "xPercentValue": 0.44
+     },
+     "startDegrees": 0,
+     "depth": {
+      "depthPercentValue": 0
+     }
+    }
+   }
+  },
+  {
    "name": "ClusterClick",
    "def": {
     "durationSeconds": 40,
@@ -3407,6 +3488,76 @@
    }
   },
   {
+   "name": "SmoothStrafe",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingInvincible": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 2.5,
+       "speed": 220,
+       "acceleration": 60,
+       "pill": {
+        "height": 11
+       }
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "cylinderRoom": {
+      "height": 90,
+      "radius": 200,
+      "widthDegrees": 250
+     }
+    },
+    "levelOverrides": {
+     "targetRadiusMultiplier": 0.96
+    },
+    "scoreTargets": {
+     "targetScore": 75
+    },
+    "strafeDef": {
+     "leftRightProfiles": [
+      {
+       "distance": {
+        "xPercentValue": 0.85
+       },
+       "distanceJitter": {
+        "xPercentValue": 0
+       },
+       "speedMultiplier": 1,
+       "speedMultiplierJitter": 0.05,
+       "accelerationMultiplier": 1,
+       "accelerationMultiplierJitter": 0.05,
+       "startSpeedPercent": 0.2
+      }
+     ],
+     "leftRightInitialDirection": "DIRECTION_POSITIVE",
+     "upDownInitialDirection": "DIRECTION_RANDOM",
+     "forwardBackInitialDirection": "DIRECTION_RANDOM"
+    }
+   }
+  },
+  {
+   "name": "SmoothStrafe Ladder",
+   "def": {
+    "overrides": {},
+    "referenceDef": {
+     "scenarioName": "AF SmoothStrafe",
+     "explicitTargetRadius": 5.5
+    }
+   }
+  },
+  {
    "name": "SmoothSwerve",
    "def": {
     "durationSeconds": 40,
@@ -4326,6 +4477,48 @@
    }
   },
   {
+   "name": "Wall Arc",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 117,
+       "acceleration": 160
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": -200,
+      "z": 0
+     },
+     "simpleRoom": {
+      "height": 130,
+      "width": 218
+     }
+    },
+    "levelOverrides": {
+     "speedMultiplier": 1.04
+    },
+    "wallArcDef": {
+     "width": {
+      "xPercentValue": 0.85
+     },
+     "height": {
+      "yPercentValue": 0.8
+     },
+     "startOnGround": true
+    }
+   }
+  },
+  {
    "name": "WanderClick",
    "def": {
     "durationSeconds": 40,
@@ -4865,6 +5058,182 @@
    }
   },
   {
+   "name": "Circle Clockwise",
+   "def": {
+    "description": "",
+    "items": [
+     {
+      "scenario": "AF Circle Clockwise",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 10cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 15cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 20cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 25cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 30cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 35cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 40cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 45cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 50cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 55cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 60cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 65cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 70cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 75cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 80cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 85cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 90cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 95cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Clockwise 100cm",
+      "numPlays": 1
+     }
+    ]
+   }
+  },
+  {
+   "name": "Circle Counter Clockwise",
+   "def": {
+    "description": "",
+    "items": [
+     {
+      "scenario": "AF Circle Counter Clockwise",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 10cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 15cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 20cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 25cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 30cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 35cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 40cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 45cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 50cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 55cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 60cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 65cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 70cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 75cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 80cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 85cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 90cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 95cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Circle Counter Clockwise 100cm",
+      "numPlays": 1
+     }
+    ]
+   }
+  },
+  {
    "name": "Clicking",
    "def": {
     "description": "",
@@ -5013,7 +5382,7 @@
    }
   },
   {
-   "name": "Horizontal Smoothness Fixed Sens",
+   "name": "Horizontal Smoothness Fixed",
    "def": {
     "description": "Target horizontal smoothness at a variety of fixed sensitivities.",
     "items": [
@@ -5109,6 +5478,17 @@
       "numPlays": 1
      }
     ]
+   }
+  },
+  {
+   "name": "SmoothStrafe Ladder",
+   "def": {
+    "description": "",
+    "levels": {
+     "baseScenario": "AF SmoothStrafe Ladder",
+     "maxLevel": 40,
+     "numPlaysPerLevel": 1
+    }
    }
   },
   {
@@ -5262,9 +5642,121 @@
      }
     ]
    }
+  },
+  {
+   "name": "Wall Arc",
+   "def": {
+    "description": "",
+    "items": [
+     {
+      "scenario": "AF Wall Arc",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 10cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 15cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 20cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 25cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 30cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 35cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 40cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 45cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 50cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 55cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 60cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 65cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 70cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 75cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 80cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 85cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 90cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 95cm",
+      "numPlays": 1
+     },
+     {
+      "scenario": "AF Wall Arc 100cm",
+      "numPlays": 1
+     }
+    ]
+   }
   }
  ],
  "guides": [
+  {
+   "name": "SmoothStrafe",
+   "def": {
+    "sections": [
+     {
+      "text": "",
+      "playlists": [
+       "AF SmoothStrafe Ladder",
+       "AF SmoothStrafe Ladder 10cm",
+       "AF SmoothStrafe Ladder 15cm",
+       "AF SmoothStrafe Ladder 20cm",
+       "AF SmoothStrafe Ladder 25cm",
+       "AF SmoothStrafe Ladder 30cm",
+       "AF SmoothStrafe Ladder 35cm",
+       "AF SmoothStrafe Ladder 40cm",
+       "AF SmoothStrafe Ladder 45cm",
+       "AF SmoothStrafe Ladder 50cm",
+       "AF SmoothStrafe Ladder 55cm",
+       "AF SmoothStrafe Ladder 60cm"
+      ]
+     }
+    ]
+   }
+  },
   {
    "name": "SmoothSwerve",
    "def": {
