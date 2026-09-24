@@ -14,6 +14,7 @@
 #include "absl/strings/numbers.h"
 #include "absl/strings/str_split.h"
 #include "absl/strings/string_view.h"
+#include "aim/common/resource_name.h"
 #include "aim/common/util.h"
 
 namespace aim {
@@ -328,6 +329,16 @@ void NameInfo::MergeDynamicSuffixes(const NameInfo& other) {
 void NormalizeName(std::string* name) {
   NameInfo info = GetNameInfo(*name);
   *name = info.GetFullName();
+}
+
+void NameInfo::SetBundleName(const std::string& new_bundle_name) {
+  ResourceName resource_name = ResourceName::Parse(base_name);
+  *resource_name.mutable_bundle_name() = new_bundle_name;
+  base_name = resource_name.full_name();
+}
+
+std::string NameInfo::GetBundleName() const {
+  return aim::GetBundleName(base_name);
 }
 
 }  // namespace aim

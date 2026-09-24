@@ -27,6 +27,8 @@ struct NameInfo {
   // Combines the base name and suffixes into the final name.
   std::string GetFullName() const;
 
+  std::string GetBundleName() const;
+
   bool HasDynamicSuffix() const {
     return cm_per_360 || level || duration || fov || radius_smaller || radius_larger || faster ||
            slower || wider || taller || is_poke || wall_smaller || wall_larger;
@@ -36,6 +38,8 @@ struct NameInfo {
   bool SetDynamicSuffixValue(std::string_view word);
 
   void MergeDynamicSuffixes(const NameInfo& to_merge_in);
+
+  void SetBundleName(const std::string& new_bundle_name);
 };
 
 NameInfo GetNameInfo(const std::string& name);

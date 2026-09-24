@@ -167,7 +167,7 @@ void NotificationPopup::NotifyOpen(const std::string& text) {
 
 bool NotificationPopup::Draw() {
   bool confirmed = false;
-  if (popup_.Begin()) {
+  if (popup_.BeginModal()) {
     ImGui::Text(text_);
 
     float button_width = ImGui::CalcTextSize("OK").x + ImGui::GetStyle().FramePadding.x * 2.0f;
@@ -543,18 +543,17 @@ bool Popup::BeginModal() {
 }
 
 bool Popup::BeginInternal(bool is_modal) {
-  if (do_open_) {
-    do_open_ = false;
-    ImGui::OpenPopup(id_.c_str());
-  }
   ImGui::SetNextWindowPos(
       ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
   auto flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |
                ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
-  if (is_modal) {
-    return ImGui::BeginPopupModal(id_.c_str(), nullptr, flags);
+  bool result = is_modal ? ImGui::BeginPopupModal(id_.c_str(), nullptr, flags)
+                         : ImGui::BeginPopup(id_.c_str(), flags);
+  if (do_open_) {
+    do_open_ = false;
+    ImGui::OpenPopup(id_.c_str());
   }
-  return ImGui::BeginPopup(id_.c_str(), flags);
+  return result;
 }
 
 void Popup::End() {
