@@ -2,8 +2,6 @@
 
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
-#include "aim/common/object_type.h"
-#include "aim/common/util.h"
 #include "aim/core/scenario_manager.h"
 #include "aim/graphics/textures.h"
 #include "aim/ui/crosshair_editor_screen.h"
@@ -14,7 +12,6 @@
 #include "aim/ui/theme_editor_screen.h"
 #include "aim/ui/ui_screen.h"
 #include "imgui.h"
-#include "imgui_internal.h"
 
 namespace aim {
 namespace {
@@ -101,13 +98,13 @@ class TopBarImpl : public TopBar {
 
     ImGui::SameLine();
 
+    bool open_settings = false;
     const char* menu_id = "top_bar_menu";
     if (ImGui::BeginPopup(menu_id)) {
       auto normal_font = app_.font_manager().UseDefault();
-      if (ImGui::Selectable(std::format("{} Settings", icons::kSettings).c_str())) {
-        std::string current_scenario_name = current_scenario ? current_scenario->name : "";
-        app_.PushNextScreen(CreateSettingsScreen(current_scenario_name));
-      }
+      // if (ImGui::Selectable(std::format("{} Settings", icons::kSettings).c_str())) {
+      //   open_settings = true;
+      // }
       if (ImGui::Selectable(std::format("{} Themes", icons::kPalette).c_str(), false)) {
         app_.PushNextScreen(CreateThemeEditorScreen());
       }
@@ -135,9 +132,22 @@ class TopBarImpl : public TopBar {
       normal_font.Pop();
       ImGui::EndPopup();
     }
-    ImGui::SetCursorAtRight(ImGui::GetMenuButtonWidth() * 1.2);
-    if (ImGui::MenuButton()) {
+    ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 4);
+    if (ImGui::SelectableButton(icons::kSettings)) {
+      open_settings = true;
+    }
+
+    // ImGui::SameLine();
+    // ImGui::Text(" ");
+
+    ImGui::SameLine();
+    if (ImGui::SelectableButton(icons::kMoreVert)) {
       ImGui::OpenPopup(menu_id);
+    }
+
+    if (open_settings) {
+      std::string current_scenario_name = current_scenario ? current_scenario->name : "";
+      app_.PushNextScreen(CreateSettingsScreen(current_scenario_name));
     }
 
     font.Pop();
