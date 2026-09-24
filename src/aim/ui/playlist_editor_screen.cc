@@ -85,9 +85,7 @@ class PlaylistEditorScreen : public BaseEditorScreen {
     }
 
     if (type == PlaylistType::DEFAULT) {
-      ImGui::BeginChild("PlaylistScrollableContent");
       DrawPlaylistScenariosEditor();
-      ImGui::EndChild();
     }
   }
 
@@ -157,7 +155,28 @@ class PlaylistEditorScreen : public BaseEditorScreen {
       }
     }
 
-    if (!ImGui::BeginTable("Playlists", 4, ImGui::kDefaultTableFlags)) {
+    ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchProp;
+    if (ImGui::BeginTable("PlaylistItemColumns", 2, flags)) {
+      ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
+      ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
+      ImGui::TableNextRow();
+
+      ImGui::TableNextColumn();
+      ImGui::BeginChild("PlaylistScrollableContent");
+      DrawPlaylistItemEditor();
+      ImGui::EndChild();
+
+      ImGui::TableNextColumn();
+      ImGui::BeginChild("ScenarioScrollableContent");
+      DrawAddScenarioInput();
+      ImGui::EndChild();
+
+      ImGui::EndTable();
+    }
+  }
+
+  void DrawPlaylistItemEditor() {
+    if (!ImGui::BeginTable("PlaylistItems", 4, ImGui::kDefaultTableFlags)) {
       return;
     }
 
@@ -245,42 +264,40 @@ class PlaylistEditorScreen : public BaseEditorScreen {
         InsertAtIndex(updated_playlist_.mutable_items(), add_scenarios[i], add_scenarios_at_i + 1);
       }
     }
+  }
 
-    ImGui::Spacing();
-    ImGui::Spacing();
+  void DrawAddScenarioInput() {
     ImGui::Text("Add scenario");
     ImGui::SameLine();
-    ImGui::SetNextItemWidth(char_x_ * 18);
+    ImGui::SetNextItemWidth(char_x_ * 24);
     ImGui::InputText("###AddScenarioInput", &scenario_search_text_);
     ImGui::SameLine();
     if (ImGui::ClearButton()) {
       scenario_search_text_ = "";
     }
-    if (scenario_search_text_.size() > 0) {
-      ImGui::Indent();
-      auto scenario_names = app_.scenario_manager().scenario_names();
-      SearchSelectorOptions options;
-      options.additional_predicate = [&](const std::string& scenario_name) {
-        bool already_in_playlist =
-            std::any_of(updated_playlist_.mutable_items()->begin(),
-                        updated_playlist_.mutable_items()->end(),
-                        [=](const auto& item) { return item.scenario() == scenario_name; });
-        return !already_in_playlist;
-      };
-
-      std::optional<std::string> selected_scenario =
-          SearchSelector(scenario_search_text_, *scenario_names, options);
-      if (selected_scenario) {
-        PlaylistItem item;
-        item.set_scenario(*selected_scenario);
-        item.set_num_plays(1);
-        *updated_playlist_.add_items() = item;
-      }
-      ImGui::Unindent();
+    if (scenario_search_text_.size() <= 0) {
+      return;
     }
-    ImGui::Spacing();
-    ImGui::Spacing();
-    ImGui::Spacing();
+    ImGui::Indent();
+    auto scenario_names = app_.scenario_manager().scenario_names();
+    SearchSelectorOptions options;
+    options.additional_predicate = [&](const std::string& scenario_name) {
+      bool already_in_playlist =
+          std::any_of(updated_playlist_.mutable_items()->begin(),
+                      updated_playlist_.mutable_items()->end(),
+                      [=](const auto& item) { return item.scenario() == scenario_name; });
+      return !already_in_playlist;
+    };
+
+    std::optional<std::string> selected_scenario =
+        SearchSelector(scenario_search_text_, *scenario_names, options);
+    if (selected_scenario) {
+      PlaylistItem item;
+      item.set_scenario(*selected_scenario);
+      item.set_num_plays(1);
+      *updated_playlist_.add_items() = item;
+    }
+    ImGui::Unindent();
   }
 
   DragAndDrop drag_and_drop_;
