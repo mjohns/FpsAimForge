@@ -43,64 +43,6 @@ static bool SortCacheItems(const HighestLevelCacheItem* lhs, const HighestLevelC
   return lhs->update_time_micros < rhs->update_time_micros;
 }
 
-class AddGuideDialog {
- public:
-  explicit AddGuideDialog(const std::string& id) : id_(id) {}
-
-  void NotifyOpen() {
-    open_ = true;
-  }
-
-  bool Draw(Application& app, std::string* guide_name) {
-    ImGui::IdGuard cid("AddGuideDialogContent");
-    bool did_add = false;
-    if (is_open_) {
-      if (ImGui::BeginDefaultPopupModal(id_.c_str(), &is_open_)) {
-        ImGui::SimpleDropdown("BundlePicker",
-                              name_.mutable_bundle_name(),
-                              bundle_names_,
-                              ImGui::GetFrameHeight() * 9);
-        ImGui::SameLine();
-        ImGui::InputText("##RelativeNameInput", name_.mutable_relative_name());
-
-        ImGui::Spacing();
-        if (ImGui::Button("Add")) {
-          auto taken_names = app.guide_manager().GetAllRelativeNamesInBundle(name_.bundle_name());
-          *name_.mutable_relative_name() = MakeUniqueName(name_.relative_name(), taken_names);
-          app.guide_manager().UpdateGuide(name_.full_name(), GuideDef());
-          app.history_manager().UpdateRecentView(ObjectType::GUIDE, name_.full_name());
-          *guide_name = name_.full_name();
-          did_add = true;
-          ImGui::CloseCurrentPopup();
-          is_open_ = false;
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Cancel")) {
-          is_open_ = false;
-          ImGui::CloseCurrentPopup();
-        }
-        ImGui::EndPopup();
-      }
-    }
-    if (open_) {
-      ImGui::OpenPopup(id_.c_str());
-      open_ = false;
-      is_open_ = true;
-      bundle_names_ = app.bundle_manager().GetWritableBundleNames();
-      name_.set(kUserBundleName, "New guide");
-    }
-    return did_add;
-  }
-
- private:
-  bool open_ = false;
-  bool is_open_ = false;
-
-  ResourceName name_;
-  std::vector<std::string> bundle_names_;
-  std::string id_;
-};
-
 class GuideViewer {
  public:
   struct Result {
@@ -256,16 +198,6 @@ class GuidesComponentImpl : public GuidesComponent {
   void Show() override {
     bool go_back = false;
     ImGui::IdGuard cid("Guides");
-    std::string added_guide_name;
-    if (add_dialog_.Draw(app_, &added_guide_name)) {
-      app_.bundle_manager().SaveDirtyBundles();
-
-      app_.guide_manager().SetCurrentGuide(added_guide_name);
-
-      GuideEditorOptions opts;
-      opts.name = added_guide_name;
-      app_.PushNextScreen(CreateGuideEditorScreen(opts));
-    }
 
     std::string updated_guide_variation_name;
     if (select_variation_dialog_.Draw(&updated_guide_variation_name)) {
@@ -292,7 +224,10 @@ class GuidesComponentImpl : public GuidesComponent {
       ImGui::BeginChild("GuideBrowserColumn");
       ImGui::Spacing();
       if (ImGui::Button(std::format("{} Guide", icons::kAdd))) {
-        add_dialog_.NotifyOpen();
+        GuideEditorOptions opts;
+        opts.name = "";
+        opts.is_new_guide = true;
+        app_.PushNextScreen(CreateGuideEditorScreen(opts));
       }
 
       ImGui::SpacedSeparator();
@@ -419,7 +354,6 @@ class GuidesComponentImpl : public GuidesComponent {
 
   std::unique_ptr<ObjectBrowser> browser_ = CreateObjectBrowser(ObjectType::GUIDE);
   std::unique_ptr<PlaylistComponent> playlist_component_ = CreatePlaylistComponent();
-  AddGuideDialog add_dialog_{"AddGuideDialog"};
   GuideViewer viewer_;
   std::deque<std::string> guide_history_;
   SelectVariationDialog select_variation_dialog_{"CurrentGuideVariation"};

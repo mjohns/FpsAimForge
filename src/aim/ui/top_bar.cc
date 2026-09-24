@@ -137,9 +137,6 @@ class TopBarImpl : public TopBar {
       open_settings = true;
     }
 
-    // ImGui::SameLine();
-    // ImGui::Text(" ");
-
     ImGui::SameLine();
     if (ImGui::SelectableButton(icons::kMoreVert)) {
       ImGui::OpenPopup(menu_id);

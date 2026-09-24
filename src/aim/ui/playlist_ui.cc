@@ -16,6 +16,7 @@
 #include "aim/ui/editor/scenario_editor_screen.h"
 #include "aim/ui/object_browser.h"
 #include "aim/ui/playlist_editor_component.h"
+#include "aim/ui/playlist_editor_screen.h"
 #include "aim/ui/select_variation_dialog.h"
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
@@ -149,7 +150,10 @@ class PlaylistComponentImpl : public PlaylistComponent {
       bool is_readonly = app_.bundle_manager().IsBundleReadonly(GetBundleName(run->playlist.name));
       if (!is_readonly) {
         if (ImGui::Selectable(std::format("{} Edit", icons::kEdit))) {
-          showing_editor_ = true;
+          // showing_editor_ = true;
+          PlaylistEditorOptions opts;
+          opts.name = run->playlist.name;
+          app_.PushNextScreen(CreatePlaylistEditorScreen(opts));
         }
       }
 
