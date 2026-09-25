@@ -525,7 +525,8 @@ class SettingsScreen : public UiScreen {
         PROTO_FIELD(ScenarioSettingsStoreType, ScenarioSettingsConfig, &config, auto_hold_tracking),
         /*default_global=*/true);
     draw_item("Health bar",
-              PROTO_FIELD(ScenarioSettingsStoreType, ScenarioSettingsConfig, &config, health_bar));
+              PROTO_FIELD(ScenarioSettingsStoreType, ScenarioSettingsConfig, &config, health_bar),
+              /*default_global=*/true);
     draw_item(
         "Enable metronome",
         PROTO_FIELD(ScenarioSettingsStoreType, ScenarioSettingsConfig, &config, enable_metronome));

@@ -398,7 +398,7 @@ class SettingsManagerImpl : public SettingsManager {
     if (should_set_default_global(config.auto_hold_tracking())) {
       settings_.set_auto_hold_tracking(scenario_settings.auto_hold_tracking());
     }
-    if (scenario_settings.has_health_bar() && should_set(config.health_bar())) {
+    if (scenario_settings.has_health_bar() && should_set_default_global(config.health_bar())) {
       *settings_.mutable_health_bar() = scenario_settings.health_bar();
     }
 
