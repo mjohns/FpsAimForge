@@ -1360,6 +1360,232 @@
    }
   },
   {
+   "name": "Centering Always Left",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 43
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": -40
+     },
+     "cylinderRoom": {
+      "height": 130,
+      "radius": 200,
+      "width": 500000
+     }
+    },
+    "overrides": {},
+    "levelOverrides": {
+     "speedMultiplier": 1.04
+    },
+    "centeringDef": {
+     "wallPoints": [
+      {
+       "x": {
+        "value": 0
+       },
+       "y": {
+        "value": -40
+       }
+      },
+      {
+       "x": {
+        "xPercentValue": -1
+       },
+       "y": {
+        "value": -40
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "Centering Always Left Angle 20",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 49
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "cylinderRoom": {
+      "height": 80,
+      "radius": 200,
+      "width": 500000
+     }
+    },
+    "overrides": {},
+    "levelOverrides": {
+     "speedMultiplier": 1.04
+    },
+    "linearDef": {
+     "angle": 20,
+     "targetPlacementStrategy": {
+      "regions": [
+       {
+        "rectangle": {
+         "xLength": {
+          "value": 1
+         },
+         "yLength": {
+          "value": 1
+         }
+        }
+       }
+      ]
+     },
+     "leftRightInitialDirection": "DIRECTION_NEGATIVE",
+     "upDownInitialDirection": "DIRECTION_RANDOM"
+    }
+   }
+  },
+  {
+   "name": "Centering Always Right",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 43
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": -40
+     },
+     "cylinderRoom": {
+      "height": 130,
+      "radius": 200,
+      "width": 500000
+     }
+    },
+    "overrides": {},
+    "levelOverrides": {
+     "speedMultiplier": 1.04
+    },
+    "centeringDef": {
+     "wallPoints": [
+      {
+       "x": {
+        "value": 0
+       },
+       "y": {
+        "value": -40
+       }
+      },
+      {
+       "x": {
+        "xPercentValue": 1
+       },
+       "y": {
+        "value": -40
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "Centering Always Right Angle 20",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 49
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "cylinderRoom": {
+      "height": 80,
+      "radius": 200,
+      "width": 500000
+     }
+    },
+    "overrides": {},
+    "levelOverrides": {
+     "speedMultiplier": 1.04
+    },
+    "linearDef": {
+     "angle": 20,
+     "targetPlacementStrategy": {
+      "regions": [
+       {
+        "xOffset": {
+         "value": 3
+        },
+        "yOffset": {
+         "value": 0
+        },
+        "depth": {
+         "value": 0
+        },
+        "depthJitter": {
+         "value": 0
+        },
+        "rectangle": {
+         "xLength": {
+          "value": 1
+         },
+         "yLength": {
+          "value": 1
+         }
+        }
+       }
+      ]
+     },
+     "leftRightInitialDirection": "DIRECTION_POSITIVE",
+     "upDownInitialDirection": "DIRECTION_RANDOM"
+    }
+   }
+  },
+  {
    "name": "Centering Vertical",
    "def": {
     "durationSeconds": 60,
