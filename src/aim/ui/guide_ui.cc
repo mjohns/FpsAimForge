@@ -33,6 +33,16 @@ namespace {
 
 constexpr int kMaxHistorySize = 100;
 
+void CopyGuide(const std::string guide_name, Application& app) {
+  std::string bundle_name = GetBundleName(guide_name);
+  if (app.bundle_manager().IsBundleReadonly(bundle_name)) {
+    bundle_name = app.bundle_manager().GetDefaultWritableBundleName();
+  }
+  std::string new_guide_name = app.guide_manager().QuickCopyGuide(guide_name, bundle_name);
+  app.bundle_manager().SaveDirtyBundles();
+  app.guide_manager().SetCurrentGuide(new_guide_name);
+}
+
 struct HighestLevelCacheItem {
   std::string playlist_name;
   std::optional<float> highest_level{};
@@ -244,9 +254,7 @@ class GuidesComponentImpl : public GuidesComponent {
         app_.PushNextScreen(CreateGuideEditorScreen(opts));
       }
       if (result.copy_object_name) {
-        std::string new_guide_name = app_.guide_manager().QuickCopyGuide(*result.copy_object_name);
-        app_.bundle_manager().SaveDirtyBundles();
-        app_.guide_manager().SetCurrentGuide(new_guide_name);
+        CopyGuide(*result.copy_object_name, app_);
       }
 
       ImGui::EndChild();
@@ -311,9 +319,7 @@ class GuidesComponentImpl : public GuidesComponent {
         }
       }
       if (ImGui::Selectable(std::format("{} Copy", icons::kContentCopy))) {
-        std::string new_guide_name = app_.guide_manager().QuickCopyGuide(guide->name);
-        app_.bundle_manager().SaveDirtyBundles();
-        app_.guide_manager().SetCurrentGuide(new_guide_name);
+        CopyGuide(guide->name, app_);
       }
       if (ImGui::Selectable(std::format("{} Select variation", icons::kTune))) {
         select_variation_dialog_.NotifyOpen(guide->name);

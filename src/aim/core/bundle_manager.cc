@@ -244,6 +244,7 @@ class BundleManagerImpl : public BundleManager {
     absl::c_sort(names);
     return names;
   }
+
   std::vector<std::string> GetWritableBundleNames() override {
     std::vector<std::string> names;
     for (auto& entry : bundle_info_map_) {
@@ -256,6 +257,11 @@ class BundleManagerImpl : public BundleManager {
     }
     absl::c_sort(names);
     return names;
+  }
+
+  std::string GetDefaultWritableBundleName() override {
+    auto bundles = GetWritableBundleNames();
+    return bundles.size() > 0 ? bundles[0] : kUserBundleName;
   }
 
   void UpdateBundleInfo(const BundleInfo& info) override {

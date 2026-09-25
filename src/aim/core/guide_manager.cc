@@ -61,13 +61,14 @@ class GuideManagerImpl : public GuideManager {
     return {};
   }
 
-  std::string QuickCopyGuide(const std::string& guide_name) override {
+  std::string QuickCopyGuide(const std::string& guide_name, const std::string& bundle_name) override {
     auto guide = GetGuide(guide_name);
     if (!guide) {
       return "";
     }
 
     ResourceName name = ResourceName::Parse(guide_name + " Copy");
+    *name.mutable_bundle_name() = bundle_name;
     auto taken_names = GetAllRelativeNamesInBundle(name.bundle_name());
     *name.mutable_relative_name() = MakeUniqueName(name.relative_name(), taken_names);
 

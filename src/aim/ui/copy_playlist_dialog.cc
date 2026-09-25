@@ -98,6 +98,9 @@ bool CopyPlaylistDialog::Draw(Application& app) {
     deep_copy_ = false;
     bundle_names_ = app.bundle_manager().GetWritableBundleNames();
     new_name_ = ResourceName::Parse(source_->name);
+    if (app.bundle_manager().IsBundleReadonly(new_name_.bundle_name())) {
+      *new_name_.mutable_bundle_name() = app.bundle_manager().GetDefaultWritableBundleName();
+    }
     *new_name_.mutable_relative_name() += " Copy";
   }
   return did_copy;
