@@ -6,6 +6,7 @@
 #include "absl/algorithm/container.h"
 #include "absl/container/linked_hash_map.h"
 #include "aim/common/imgui_ext.h"
+#include "aim/common/lazy_cache.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/object_type.h"
 #include "aim/common/times.h"
@@ -42,16 +43,6 @@ void CopyGuide(const std::string guide_name, Application& app) {
   app.guide_manager().SetCurrentGuide(new_guide_name);
 }
 
-struct HighestLevelCacheItem {
-  std::string playlist_name;
-  std::optional<float> highest_level{};
-  i64 update_time_micros = -1;
-};
-
-static bool SortCacheItems(const HighestLevelCacheItem* lhs, const HighestLevelCacheItem* rhs) {
-  return lhs->update_time_micros < rhs->update_time_micros;
-}
-
 class GuideViewer {
  public:
   struct Result {
@@ -63,7 +54,7 @@ class GuideViewer {
     if (guide_item.name != guide_name_) {
       guide_name_ = guide_item.name;
       guide_name_info_ = GetNameInfo(guide_name_);
-      highest_level_cache_.clear();
+      highest_level_cache_.Clear();
     }
     const GuideDef& guide = guide_item.def;
     ImGui::LoopId loop_id;
@@ -97,7 +88,12 @@ class GuideViewer {
     float level_width = ImGui::CalcTextSize("L22.5_").x;
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, level_width);
 
-    LoadSomeHighestLevelPlaylistItems(1);
+    LazyCacheOptions cache_opts;
+    cache_opts.num_to_load = 1;
+    cache_opts.cache_stale_time_micros = cache_refresh_time_micros_;
+    highest_level_cache_.LoadSomeItems(
+        cache_opts, std::bind_front(&GuideViewer::GetHighestLevelForPlaylist, this));
+
     ImGui::LoopId loop_id;
     for (const std::string& unmerged_playlist : section.playlists()) {
       NameInfo playlist_name_info = GetNameInfo(unmerged_playlist);
@@ -115,14 +111,11 @@ class GuideViewer {
         app_.playlist_manager().SetCurrentPlaylist(playlist);
       }
 
-      HighestLevelCacheItem& highest_level_item = highest_level_cache_[playlist];
-      if (highest_level_item.playlist_name.size() == 0) {
-        highest_level_item.playlist_name = playlist;
-      }
-      if (highest_level_item.highest_level) {
+      std::optional<float> highest_level = highest_level_cache_.Get(playlist);
+      if (highest_level) {
         ImGui::TableNextColumn();
-        std::string text = std::format(
-            "L{}{}", MaybeIntToString(*highest_level_item.highest_level, 1), icons::kVerified);
+        std::string text =
+            std::format("L{}{}", MaybeIntToString(*highest_level, 1), icons::kVerified);
         ImGui::TextAligned(1.0f, -FLT_MIN, "%s", text.c_str());
       }
     }
@@ -155,52 +148,35 @@ class GuideViewer {
     ImGui::EndTable();
   }
 
-  void LoadSomeHighestLevelPlaylistItems(int num_to_load) {
-    std::vector<HighestLevelCacheItem*> items;
-    items.reserve(highest_level_cache_.size());
-    for (auto& entry : highest_level_cache_) {
-      items.push_back(&entry.second);
+  std::optional<float> GetHighestLevelForPlaylist(const std::string& playlist_name) {
+    auto maybe_playlist = app_.playlist_manager().GetPlaylist(playlist_name);
+    if (!maybe_playlist) {
+      return {};
     }
-    absl::c_stable_sort(items, &SortCacheItems);
-
-    i64 now_micros = GetNowEpochMicros();
-    for (int i = 0; i < num_to_load && i < items.size(); ++i) {
-      HighestLevelCacheItem* item = items[i];
-      bool needs_refresh = now_micros - item->update_time_micros > cache_refresh_time_micros_;
-      if (!needs_refresh) {
-        continue;
-      }
-      item->update_time_micros = now_micros;
-      item->highest_level = {};
-      auto maybe_playlist = app_.playlist_manager().GetPlaylist(item->playlist_name);
-      if (!maybe_playlist) {
-        continue;
-      }
-      auto& playlist = *maybe_playlist;
-      if (!playlist.def().has_levels()) {
-        continue;
-      }
-      NameInfo playlist_name_info = GetNameInfo(item->playlist_name);
-      NameInfo scenario_name_info = GetNameInfo(playlist.def().levels().base_scenario());
-      scenario_name_info.level = {};
-      scenario_name_info.MergeDynamicSuffixes(playlist_name_info);
-      std::string base_name = scenario_name_info.GetFullName();
-      auto maybe_scenario = app_.scenario_manager().GetEvaluatedScenarioDef(base_name);
-      if (!maybe_scenario) {
-        continue;
-      }
-      float target_score = maybe_scenario->score_targets().target_score();
-      if (target_score > 0) {
-        item->highest_level =
-            app_.stats_manager().GetHighestCompleteScenarioLevel(base_name, target_score);
-      }
+    auto& playlist = *maybe_playlist;
+    if (!playlist.def().has_levels()) {
+      return {};
     }
+    NameInfo playlist_name_info = GetNameInfo(playlist_name);
+    NameInfo scenario_name_info = GetNameInfo(playlist.def().levels().base_scenario());
+    scenario_name_info.level = {};
+    scenario_name_info.MergeDynamicSuffixes(playlist_name_info);
+    std::string base_name = scenario_name_info.GetFullName();
+    auto maybe_scenario = app_.scenario_manager().GetEvaluatedScenarioDef(base_name);
+    if (!maybe_scenario) {
+      return {};
+    }
+    float target_score = maybe_scenario->score_targets().target_score();
+    if (target_score > 0) {
+      return app_.stats_manager().GetHighestCompleteScenarioLevel(base_name, target_score);
+    }
+    return {};
   }
 
  private:
   Application& app_ = GetUiApp();
 
-  absl::linked_hash_map<std::string, HighestLevelCacheItem> highest_level_cache_;
+  LazyCache<float> highest_level_cache_;
   i64 cache_refresh_time_micros_ = SecondsToMicros(0.6);
   std::string guide_name_;
   NameInfo guide_name_info_;

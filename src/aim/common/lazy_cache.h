@@ -39,7 +39,7 @@ class LazyCache {
   }
 
   void LoadSomeItems(LazyCacheOptions options,
-                     std::function<T(const std::string& key)> item_loader) {
+                     std::function<std::optional<T>(const std::string& key)> item_loader) {
     std::vector<CacheItem*> items;
     items.reserve(cache_.size());
     for (auto& entry : cache_) {
