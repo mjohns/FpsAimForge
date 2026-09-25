@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "aim/common/lazy_cache.h"
 #include "aim/common/name_util.h"
 #include "aim/common/random.h"
 #include "aim/proto/bundle.pb.h"
@@ -64,6 +65,12 @@ struct PlaylistRun {
 
   int current_index = -1;
   std::vector<PlaylistItemProgress> progress_list;
+
+  struct ItemHighScore {
+    float high_score;
+    i64 epoch_seconds;
+  };
+  LazyCache<ItemHighScore> high_score_cache;
 };
 
 class PlaylistManager {

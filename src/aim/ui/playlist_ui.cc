@@ -117,17 +117,6 @@ class PlaylistComponentImpl : public PlaylistComponent {
       ImGui::OpenPopup(menu_id);
     }
 
-    // auto highest_complete_level = app_.playlist_manager().GetHighestCompleteLevel(
-    //     run->playlist, app_.scenario_manager(), app_.stats_manager());
-    //
-    // if (highest_complete_level) {
-    //   std::string text = std::format("L{}", MaybeIntToString(*highest_complete_level, 2));
-    //   ImGui::SameLine();
-    //   // ImGui::SetButtonCursorAtRight(text);
-    //   ImGui::Button(std::format("L{}", MaybeIntToString(*highest_complete_level, 2)));
-    //   ImGui::HelpTooltip("Highest completed level");
-    // }
-
     const PlaylistDef& def = run->playlist.def();
 
     bool hide_description = app_.local_store().GetBool(kHideDescriptionsKey);
@@ -290,23 +279,44 @@ void PlaylistRunComponent(const std::string& id, std::shared_ptr<PlaylistRun> ru
   std::vector<float> scores;
   std::vector<std::string> scores_help;
   bool has_score_level = false;
-  for (const auto& item : progress_items) {
-    auto stats = app.stats_manager().GetAggregateStats(item.item.scenario());
+
+  auto load_high_score = [&](const std::string& scenario_name) {
+    auto stats = app.stats_manager().GetAggregateStats(scenario_name);
     float level = 0;
     if (stats.total_runs > 0) {
+      PlaylistRun::ItemHighScore high_score;
+      high_score.high_score = stats.high_score_stats.score;
+      high_score.epoch_seconds = stats.high_score_stats.epoch_seconds;
+      return std::optional<PlaylistRun::ItemHighScore>(high_score);
+    }
+    return std::optional<PlaylistRun::ItemHighScore>();
+  };
+
+  LazyCacheOptions cache_opts;
+  cache_opts.num_to_load = 5;
+  run->high_score_cache.LoadSomeItems(cache_opts, load_high_score);
+
+  for (const auto& item : progress_items) {
+    float level = 0;
+    float high_score = 0;
+    std::string high_score_time;
+    auto maybe_high_score = run->high_score_cache.Get(item.item.scenario());
+    if (maybe_high_score) {
+      high_score = maybe_high_score->high_score;
+      high_score_time = GetHowLongAgoStringFromEpochMicros(
+          maybe_high_score->epoch_seconds * 1000 * 1000, now_micros);
+
       auto scenario_def = app.scenario_manager().GetEvaluatedScenarioDef(item.item.scenario());
       if (scenario_def) {
-        level = GetScenarioScoreLevel(stats.high_score_stats.score,
-                                      scenario_def->score_targets().target_score());
+        level = GetScenarioScoreLevel(high_score, scenario_def->score_targets().target_score());
         if (level > 0) {
           has_score_level = true;
         }
       }
     }
     score_levels.push_back(level);
-    scores.push_back(stats.high_score_stats.score);
-    scores_help.push_back(GetHowLongAgoStringFromEpochMicros(
-        stats.high_score_stats.epoch_seconds * 1000 * 1000, now_micros));
+    scores.push_back(high_score);
+    scores_help.push_back(high_score_time);
   }
 
   ImGuiTableFlags flags =

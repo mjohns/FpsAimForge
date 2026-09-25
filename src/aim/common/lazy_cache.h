@@ -38,7 +38,7 @@ class LazyCache {
     return item.value;
   }
 
-  void LoadSomeItems(LazyCacheOptions options,
+  void LoadSomeItems(const LazyCacheOptions& options,
                      std::function<std::optional<T>(const std::string& key)> item_loader) {
     std::vector<CacheItem*> items;
     items.reserve(cache_.size());
