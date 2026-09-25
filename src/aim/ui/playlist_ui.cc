@@ -15,7 +15,6 @@
 #include "aim/ui/copy_playlist_dialog.h"
 #include "aim/ui/editor/scenario_editor_screen.h"
 #include "aim/ui/object_browser.h"
-#include "aim/ui/playlist_editor_component.h"
 #include "aim/ui/playlist_editor_screen.h"
 #include "aim/ui/select_variation_dialog.h"
 #include "aim/ui/ui_app.h"
@@ -27,75 +26,12 @@ namespace {
 
 constexpr const char* kHideDescriptionsKey = "HidePlaylistDescriptions";
 
-class AddPlaylistDialog {
- public:
-  explicit AddPlaylistDialog(const std::string& id) : id_(id) {}
-
-  void NotifyOpen() {
-    open_ = true;
-  }
-
-  bool Draw(Application& app) {
-    ImGui::IdGuard cid("AddPlaylistDialogContent");
-    bool did_add = false;
-    if (is_open_) {
-      if (ImGui::BeginDefaultPopupModal(id_.c_str(), &is_open_)) {
-        ImGui::SimpleDropdown("BundlePicker",
-                              name_.mutable_bundle_name(),
-                              bundle_names_,
-                              ImGui::GetFrameHeight() * 9);
-        ImGui::SameLine();
-        ImGui::InputText("##RelativeNameInput", name_.mutable_relative_name());
-
-        ImGui::Spacing();
-        if (ImGui::Button("Add")) {
-          auto taken_names =
-              app.playlist_manager().GetAllRelativeNamesInBundle(name_.bundle_name());
-          *name_.mutable_relative_name() = MakeUniqueName(name_.relative_name(), taken_names);
-          app.playlist_manager().UpdatePlaylist(name_.full_name(), PlaylistDef());
-          app.playlist_manager().SetCurrentPlaylist(name_.full_name());
-          app.history_manager().UpdateRecentView(ObjectType::PLAYLIST, name_.full_name());
-          did_add = true;
-          ImGui::CloseCurrentPopup();
-          is_open_ = false;
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Cancel")) {
-          is_open_ = false;
-          ImGui::CloseCurrentPopup();
-        }
-        ImGui::EndPopup();
-      }
-    }
-    if (open_) {
-      ImGui::OpenPopup(id_.c_str());
-      open_ = false;
-      is_open_ = true;
-      bundle_names_ = app.bundle_manager().GetWritableBundleNames();
-      name_.set(kUserBundleName, "New playlist");
-    }
-    return did_add;
-  }
-
- private:
-  bool open_ = false;
-  bool is_open_ = false;
-
-  ResourceName name_;
-  std::vector<std::string> bundle_names_;
-  std::string id_;
-};
-
 class PlaylistComponentImpl : public PlaylistComponent {
  public:
   explicit PlaylistComponentImpl() : app_(GetUiApp()) {}
 
   void Show(std::shared_ptr<PlaylistRun> run, Options options) override {
     ImGui::IdGuard cid("PlaylistComponent");
-    if (options.open_editing) {
-      editor_component_ = {};
-      showing_editor_ = true;
-    }
 
     const std::string& playlist_name = run->playlist.name;
 
@@ -111,28 +47,9 @@ class PlaylistComponentImpl : public PlaylistComponent {
       }
     }
 
-    if (playlist_name != current_playlist_name_) {
-      current_playlist_name_ = playlist_name;
-      ResetForNewCurrentPlaylist(options.open_editing);
-    }
-
-    if (showing_editor_) {
-      if (!editor_component_) {
-        std::string base_playlist_name = GetNameInfo(playlist_name).base_name;
-        editor_component_ = CreatePlaylistEditorComponent(base_playlist_name);
-      }
-      EditorResult editor_result;
-      editor_component_->Draw(&editor_result);
-      if (editor_result.editor_closed) {
-        editor_component_ = {};
-        showing_editor_ = false;
-      }
-      return;
-    }
-
     std::string updated_playlist_variation_name;
     if (select_variation_dialog_.Draw(&updated_playlist_variation_name)) {
-      if (updated_playlist_variation_name != current_playlist_name_) {
+      if (updated_playlist_variation_name != playlist_name) {
         app_.playlist_manager().SetCurrentPlaylist(updated_playlist_variation_name);
         app_.history_manager().UpdateRecentView(ObjectType::PLAYLIST,
                                                 updated_playlist_variation_name);
@@ -143,14 +60,13 @@ class PlaylistComponentImpl : public PlaylistComponent {
     }
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text(current_playlist_name_);
+    ImGui::Text(playlist_name);
 
     const char* menu_id = "CurrentPlaylistMenu";
     if (ImGui::BeginPopupContextItem(menu_id)) {
       bool is_readonly = app_.bundle_manager().IsBundleReadonly(GetBundleName(run->playlist.name));
       if (!is_readonly) {
         if (ImGui::Selectable(std::format("{} Edit", icons::kEdit))) {
-          // showing_editor_ = true;
           PlaylistEditorOptions opts;
           opts.name = run->playlist.name;
           app_.PushNextScreen(CreatePlaylistEditorScreen(opts));
@@ -239,15 +155,6 @@ class PlaylistComponentImpl : public PlaylistComponent {
   }
 
  private:
-  void ResetForNewCurrentPlaylist(bool force_open_editor) {
-    editor_component_ = {};
-    showing_editor_ = force_open_editor;
-  }
-
-  bool showing_editor_ = false;
-  std::unique_ptr<PlaylistEditorComponent> editor_component_;
-  std::string current_playlist_name_;
-  NameInfo current_playlist_name_info_;
   SelectVariationDialog select_variation_dialog_{"PlaylistVariation"};
   Application& app_;
 
@@ -263,15 +170,15 @@ class PlaylistListComponentImpl : public PlaylistListComponent {
     if (copy_dialog_.Draw(app_)) {
       app_.bundle_manager().SaveDirtyBundles();
     }
-    if (add_dialog_.Draw(app_)) {
-      app_.bundle_manager().SaveDirtyBundles();
-    }
 
     ImVec2 char_size = ImGui::CalcTextSize("A");
 
     ImGui::Spacing();
     if (ImGui::Button(std::format("{} Playlist", icons::kAdd))) {
-      add_dialog_.NotifyOpen();
+      PlaylistEditorOptions opts;
+      opts.name = "";
+      opts.is_new_playlist = true;
+      app_.PushNextScreen(CreatePlaylistEditorScreen(opts));
     }
 
     ImGui::SpacedSeparator();
@@ -290,13 +197,16 @@ class PlaylistListComponentImpl : public PlaylistListComponent {
       result->open_playlist =
           app_.playlist_manager().GetPlaylist(*browser_result.selected_object_name);
     }
-    result->edit_playlist = browser_result.edit_object_name;
+    if (browser_result.edit_object_name) {
+      PlaylistEditorOptions opts;
+      opts.name = *browser_result.edit_object_name;
+      app_.PushNextScreen(CreatePlaylistEditorScreen(opts));
+    }
   }
 
  private:
   Application& app_ = GetUiApp();
   CopyPlaylistDialog copy_dialog_{"CopyPlaylistDialog"};
-  AddPlaylistDialog add_dialog_{"AddPlaylistDialog"};
   std::unique_ptr<ObjectBrowser> browser_ = CreateObjectBrowser(ObjectType::PLAYLIST);
 };
 

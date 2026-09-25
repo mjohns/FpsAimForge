@@ -164,6 +164,10 @@ class PlaylistEditorScreen : public BaseEditorScreen {
       ImGui::TableNextColumn();
       ImGui::BeginChild("PlaylistScrollableContent");
       DrawPlaylistItemEditor();
+      if (ImGui::Button(icons::kAdd)) {
+        updated_playlist_.add_items()->set_num_plays(1);
+      }
+      ImGui::HelpTooltip("Add a new playlist item");
       ImGui::EndChild();
 
       ImGui::TableNextColumn();
@@ -184,14 +188,15 @@ class PlaylistEditorScreen : public BaseEditorScreen {
     float count_width = char_x_ * 8;
     float menu_width = ImGui::GetIconButtonWidth(icons::kMoreVert);
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, drag_width);
-    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
-    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, count_width);
+    ImGui::TableSetupColumn("Scenario", ImGuiTableColumnFlags_WidthStretch);
+    ImGui::TableSetupColumn("Play count", ImGuiTableColumnFlags_WidthFixed, count_width);
     ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, menu_width);
 
     std::vector<PlaylistItem> add_scenarios;
     int add_scenarios_at_i = -1;
 
     ListUpdater list_updater;
+    ImGui::TableHeadersRow();
     std::optional<float> last_cm_per_360;
     for (int i = 0; i < updated_playlist_.items_size(); ++i) {
       ImGui::IdGuard lid("PlaylistItem", i);

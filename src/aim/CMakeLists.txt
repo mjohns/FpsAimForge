@@ -190,8 +190,6 @@ set(SRCS
     "ui/object_browser.h"
     "ui/play_time_screen.cc"
     "ui/play_time_screen.h"
-    "ui/playlist_editor_component.cc"
-    "ui/playlist_editor_component.h"
     "ui/playlist_ui.cc"
     "ui/playlist_ui.h"
     "ui/quick_settings_screen.cc"
