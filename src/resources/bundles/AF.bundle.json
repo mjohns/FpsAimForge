@@ -2622,6 +2622,46 @@
    }
   },
   {
+   "name": "Sine Wave",
+   "def": {
+    "durationSeconds": 45,
+    "shotType": {
+     "trackingProximity": true
+    },
+    "targetDef": {
+     "numTargets": 1,
+     "profiles": [
+      {
+       "targetRadius": 5,
+       "speed": 80
+      }
+     ]
+    },
+    "room": {
+     "cameraPosition": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+     },
+     "cylinderRoom": {
+      "height": 130,
+      "radius": 200,
+      "sideAngleDegrees": 48,
+      "widthDegrees": 115
+     }
+    },
+    "levelOverrides": {},
+    "sineDef": {
+     "height": {
+      "yPercentValue": 0.42
+     },
+     "width": {
+      "xPercentValue": 0.33
+     }
+    }
+   }
+  },
+  {
    "name": "SkyTs Wide",
    "def": {
     "durationSeconds": 40,
