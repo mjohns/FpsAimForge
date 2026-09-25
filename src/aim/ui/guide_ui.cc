@@ -57,6 +57,7 @@ class GuideViewer {
  public:
   struct Result {
     std::optional<std::string> selected_guide;
+    bool current_playlist_selected = false;
   };
 
   void Draw(const GuideItem& guide_item, Result* result) {
@@ -78,14 +79,14 @@ class GuideViewer {
       ImGui::TextWrapped(section.text());
     }
     if (section.playlists_size() > 0) {
-      DrawPlaylists(section);
+      DrawPlaylists(section, result);
     }
     if (section.guides_size() > 0) {
       DrawGuides(section, result);
     }
   }
 
-  void DrawPlaylists(const GuideSection& section) {
+  void DrawPlaylists(const GuideSection& section, Result* result) {
     ImGuiTableFlags flags =
         ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersV | ImGuiTableFlags_Borders;
     if (!ImGui::BeginTable("Playlists", 2, flags)) {
@@ -108,6 +109,9 @@ class GuideViewer {
       auto lid = loop_id.Get("Playlist");
       ImGui::TableNextColumn();
       bool is_selected = playlist == app_.playlist_manager().current_playlist_name();
+      if (is_selected) {
+        result->current_playlist_selected = true;
+      }
       if (ImGui::Selectable(std::format("{} {}", icons::kList, playlist), is_selected)) {
         app_.playlist_manager().SetCurrentPlaylist(playlist);
       }
@@ -262,16 +266,16 @@ class GuidesComponentImpl : public GuidesComponent {
       ImGui::TableNextColumn();
       ImGui::BeginChild("GuideColumn");
 
-      DrawCurrentGuidePanel(&go_back);
+      bool current_playlist_selected = false;
+      DrawCurrentGuidePanel(&go_back, &current_playlist_selected);
 
       ImGui::EndChild();
 
       ImGui::TableNextColumn();
       ImGui::BeginChild("PlaylistColumn");
 
-      std::optional<GuideItem> guide = app_.guide_manager().GetCurrentGuide();
-      if (guide) {
-        auto playlist_run = GetPlaylistRunIfInGuide(guide->def);
+      if (current_playlist_selected) {
+        auto playlist_run = app_.playlist_manager().GetCurrentRun();
         if (playlist_run) {
           PlaylistComponent::Options options;
           options.is_playlist_screen = false;
@@ -291,7 +295,7 @@ class GuidesComponentImpl : public GuidesComponent {
   }
 
  private:
-  void DrawCurrentGuidePanel(bool* go_back) {
+  void DrawCurrentGuidePanel(bool* go_back, bool* current_playlist_selected) {
     std::optional<GuideItem> guide = app_.guide_manager().GetCurrentGuide();
     if (!guide) {
       return;
@@ -339,21 +343,7 @@ class GuidesComponentImpl : public GuidesComponent {
     if (result.selected_guide) {
       app_.guide_manager().SetCurrentGuide(*result.selected_guide);
     }
-  }
-
-  std::shared_ptr<PlaylistRun> GetPlaylistRunIfInGuide(const GuideDef& guide) {
-    auto current_run = app_.playlist_manager().GetCurrentRun();
-    if (!current_run) {
-      return {};
-    }
-    for (const auto& section : guide.sections()) {
-      for (const std::string& playlist : section.playlists()) {
-        if (playlist == current_run->playlist.name) {
-          return current_run;
-        }
-      }
-    }
-    return {};
+    *current_playlist_selected = result.current_playlist_selected;
   }
 
   Application& app_ = GetUiApp();
