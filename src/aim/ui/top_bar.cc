@@ -82,6 +82,10 @@ class TopBarImpl : public TopBar {
         app_.GetCurrentScreen()->ReturnHome();
       }
       ImGui::PopStyleVar();
+      {
+        auto normal_font = app_.font_manager().UseDefault();
+        ImGui::HelpTooltip("Start scenario", 0.5);
+      }
 
       ImGui::SameLine();
       ImGui::Text(current_scenario->name + "  ");
@@ -92,7 +96,7 @@ class TopBarImpl : public TopBar {
       }
       {
         auto normal_font = app_.font_manager().UseDefault();
-        ImGui::HelpTooltip("Select scenario variation");
+        ImGui::HelpTooltip("Select scenario variation", 0.5);
       }
     }
 
