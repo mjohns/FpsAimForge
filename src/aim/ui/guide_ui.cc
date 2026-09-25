@@ -8,7 +8,6 @@
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/object_type.h"
-#include "aim/common/resource_name.h"
 #include "aim/common/times.h"
 #include "aim/common/util.h"
 #include "aim/core/application.h"

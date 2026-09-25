@@ -12,6 +12,7 @@ set(SRCS
     "common/field.h"
     "common/files.cc"
     "common/files.h"
+    "common/lazy_cache.h"
     "common/geometry.cc"
     "common/geometry.h"
     "common/imgui_ext.cc"

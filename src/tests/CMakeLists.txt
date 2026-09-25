@@ -5,6 +5,7 @@ set(TEST_SOURCES
   "backup_test.cc"
   "bundle_functional_test.cc"
   "geometry_test.cc"
+  "lazy_cache_test.cc"
   "name_util_test.cc"
   "playlist_manager_test.cc"
   "guide_manager_test.cc"
