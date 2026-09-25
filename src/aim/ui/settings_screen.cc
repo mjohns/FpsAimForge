@@ -10,10 +10,10 @@
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/search.h"
+#include "aim/common/system.h"
 #include "aim/core/application.h"
 #include "aim/core/displays.h"
 #include "aim/core/settings_manager.h"
-#include "aim/core/version.h"
 #include "aim/proto/common.pb.h"
 #include "aim/ui/crosshair_editor_screen.h"
 #include "aim/ui/theme_editor_screen.h"
@@ -394,6 +394,12 @@ class SettingsScreen : public UiScreen {
       ImGui::EndTabItem();
     }
 
+    if (ImGui::BeginTabItem("Contact")) {
+      ImGui::Spacing();
+      DrawContactSettings();
+      ImGui::EndTabItem();
+    }
+
     ImGui::EndTabBar();
   }
 
@@ -432,6 +438,41 @@ class SettingsScreen : public UiScreen {
       OpenFolderInExplorer(folder);
     }
     ImGui::HelpTooltip(std::format("Open \"{}\"", folder.string()));
+  }
+
+  void DrawContactSettings() {
+    ImGui::IdGuard cid("ContactSettings");
+
+    std::vector<std::pair<std::string, std::string>> items{
+        {"Github", "https://github.com/mjohns/FpsAimForge"},
+        {"Reddit", "https://www.reddit.com/r/FpsAimForge/"},
+        {"Youtube", "https://www.youtube.com/@FpsAimForge"},
+        {"Discord", "https://discord.gg/CbUt6rWYQ"},
+    };
+
+    if (ImGui::BeginTable("ContactTable", 2)) {
+      ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, char_x_ * 8);
+      ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
+
+      ImGui::LoopId loop_id;
+      for (auto& entry : items) {
+        auto lid = loop_id.Get();
+        ImGui::TableNextRow();
+
+        ImGui::TableNextColumn();
+        std::string url = entry.second;
+        if (ImGui::Button(entry.first)) {
+          OpenUrlInBrowser(url);
+        }
+        ImGui::HelpTooltip("Open url in browser. Browser may not be auto focused based on OS.",
+                           0.4);
+
+        ImGui::TableNextColumn();
+        ImGui::InputText("##UrlInput", &url);
+      }
+
+      ImGui::EndTable();
+    }
   }
 
   void DrawKeybinds() {

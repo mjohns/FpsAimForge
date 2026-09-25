@@ -2,8 +2,9 @@
 
 FpsAimForge is an open source aim trainer focused on simplicity and self improvement.
 
+* Play on [Steam](https://store.steampowered.com/app/5165380/FpsAimForge/)
 * [All releases](https://github.com/mjohns/FpsAimForge/releases)
-* [Download latest](https://github.com/mjohns/FpsAimForge/releases/download/v0.5.2/FpsAimForge-v0.5.2.zip)
+* [Reddit](https://www.reddit.com/r/FpsAimForge/)
 
 Major goals:
 * Creating and editing scenarios is actually simple.

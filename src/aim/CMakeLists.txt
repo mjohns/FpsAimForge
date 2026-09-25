@@ -15,6 +15,8 @@ set(SRCS
     "common/lazy_cache.h"
     "common/geometry.cc"
     "common/geometry.h"
+    "common/system.cc"
+    "common/system.h"
     "common/imgui_ext.cc"
     "common/imgui_ext.h"
     "common/implot_ext.cc"
