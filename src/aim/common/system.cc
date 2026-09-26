@@ -11,6 +11,21 @@ extern char** environ;
 #endif
 
 namespace aim {
+namespace {
+
+#ifdef _WIN32
+std::wstring Utf8ToWString(const std::string& str) {
+  if (str.empty()) return std::wstring();
+  int size_needed =
+      MultiByteToWideChar(CP_UTF8, 0, str.c_str(), static_cast<int>(str.length()), NULL, 0);
+  std::wstring wstrTo(size_needed, 0);
+  MultiByteToWideChar(
+      CP_UTF8, 0, str.c_str(), static_cast<int>(str.length()), &wstrTo[0], size_needed);
+  return wstrTo;
+}
+#endif
+
+}  // namespace
 
 bool RunPosixSystemCommand(const std::string& command, const std::vector<std::string>& args) {
 #ifndef _WIN32
@@ -48,7 +63,11 @@ bool RunPosixSystemCommand(const std::string& command, const std::vector<std::st
 
 bool OpenUrlInBrowser(const std::string& url) {
 #ifdef _WIN32
-  ShellExecuteW(NULL, L"open", fs_path.c_str(), NULL, NULL, SW_SHOWNORMAL);
+  std::wstring wUrl = Utf8ToWString(url);
+  HINSTANCE result = ShellExecuteW(NULL, L"open", wUrl.c_str(), NULL, NULL, SW_SHOWNORMAL);
+
+  // ShellExecute returns a value greater than 32 if it succeeds
+  return reinterpret_cast<INT_PTR>(result) > 32;
 #elif __APPLE__
   return RunPosixSystemCommand("open", {url});
 #else
