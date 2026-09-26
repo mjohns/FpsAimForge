@@ -172,10 +172,13 @@ bool BaseEditorScreen::Save() {
     switch (type_) {
       case ObjectType::GUIDE:
         app_.guide_manager().RenameGuide(original_name_->full_name(), name_.full_name());
+        break;
       case ObjectType::PLAYLIST:
         app_.playlist_manager().RenamePlaylist(original_name_->full_name(), name_.full_name());
+        break;
       case ObjectType::SCENARIO:
         app_.scenario_manager().RenameScenario(original_name_->full_name(), name_.full_name());
+        break;
       default:
         break;
     }
@@ -184,10 +187,13 @@ bool BaseEditorScreen::Save() {
   switch (type_) {
     case ObjectType::GUIDE:
       app_.guide_manager().UpdateGuide(name_.full_name(), updated_guide_);
+      break;
     case ObjectType::PLAYLIST:
       app_.playlist_manager().UpdatePlaylist(name_.full_name(), updated_playlist_);
+      break;
     case ObjectType::SCENARIO:
       app_.scenario_manager().UpdateScenario(name_.full_name(), updated_scenario_);
+      break;
     default:
       break;
   }
@@ -206,10 +212,13 @@ bool BaseEditorScreen::Save() {
     switch (type_) {
       case ObjectType::GUIDE:
         app_.guide_manager().SetCurrentGuide(final_name);
+        break;
       case ObjectType::PLAYLIST:
         app_.playlist_manager().SetCurrentPlaylist(final_name);
+        break;
       case ObjectType::SCENARIO:
         app_.scenario_manager().SetCurrentScenario(final_name);
+        break;
       default:
         break;
     }
