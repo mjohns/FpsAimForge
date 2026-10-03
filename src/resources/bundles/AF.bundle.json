@@ -478,7 +478,7 @@
          "xPercentValue": 0
         },
         "yOffset": {
-         "yPercentValue": 0.45
+         "yPercentValue": 0.43
         },
         "rectangle": {
          "xLength": {
@@ -494,7 +494,7 @@
          "xPercentValue": 0
         },
         "yOffset": {
-         "yPercentValue": -0.45
+         "yPercentValue": -0.43
         },
         "rectangle": {
          "xLength": {
@@ -5705,6 +5705,9 @@
     "overrides": {},
     "levelOverrides": {
      "targetRadiusMultiplier": 0.96
+    },
+    "scoreTargets": {
+     "targetScore": 60
     },
     "referenceDef": {
      "scenarioName": "AF UfoTrack1",
