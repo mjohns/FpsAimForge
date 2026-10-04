@@ -120,7 +120,7 @@ class PlaylistEditorScreen : public BaseEditorScreen {
     ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Max level")
                           .set_step(1, 2)
                           .set_min(2)
-                          .set_default(10)
+                          .set_default(40)
                           .set_width(char_x_ * 10),
                       PROTO_FLOAT_FIELD(LevelsPlaylistDef, &levels, max_level));
     ImGui::InputInt(ImGui::InputIntParams::WithLabelAsId("Plays per level")

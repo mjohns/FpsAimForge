@@ -53,7 +53,7 @@ class CreateLevelsPlaylistDialog {
           PlaylistDef def;
           auto* levels = def.mutable_levels();
           levels->set_base_scenario(scenario_name_);
-          levels->set_max_level(30);
+          levels->set_max_level(40);
           app.playlist_manager().UpdatePlaylist(name_.full_name(), def);
           bool saved = app.bundle_manager().SaveDirtyBundles();
           if (saved) {
