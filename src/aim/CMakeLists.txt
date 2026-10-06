@@ -226,6 +226,9 @@ set(SRCS
 
 add_library(${NAME} ${SRCS})
 
+# find_package(CURL REQUIRED)
+# CURL::libcurl
+
 target_link_libraries(
     ${NAME}
     PUBLIC

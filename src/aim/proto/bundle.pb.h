@@ -72,6 +72,18 @@ class BundleInfoFile;
 struct BundleInfoFileDefaultTypeInternal;
 extern BundleInfoFileDefaultTypeInternal _BundleInfoFile_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull BundleInfoFile_class_data_;
+class BundlePack;
+struct BundlePackDefaultTypeInternal;
+extern BundlePackDefaultTypeInternal _BundlePack_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull BundlePack_class_data_;
+class BundlePackInfo;
+struct BundlePackInfoDefaultTypeInternal;
+extern BundlePackInfoDefaultTypeInternal _BundlePackInfo_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull BundlePackInfo_class_data_;
+class BundlePackItem;
+struct BundlePackItemDefaultTypeInternal;
+extern BundlePackItemDefaultTypeInternal _BundlePackItem_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull BundlePackItem_class_data_;
 class BundlePlaylist;
 struct BundlePlaylistDefaultTypeInternal;
 extern BundlePlaylistDefaultTypeInternal _BundlePlaylist_default_instance_;
@@ -91,6 +103,262 @@ namespace aim {
 // ===================================================================
 
 
+// -------------------------------------------------------------------
+
+class BundlePackInfo final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:aim.BundlePackInfo) */ {
+ public:
+  inline BundlePackInfo() : BundlePackInfo(nullptr) {}
+  ~BundlePackInfo() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(BundlePackInfo* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(BundlePackInfo));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR BundlePackInfo(::google::protobuf::internal::ConstantInitialized);
+
+  inline BundlePackInfo(const BundlePackInfo& from) : BundlePackInfo(nullptr, from) {}
+  inline BundlePackInfo(BundlePackInfo&& from) noexcept
+      : BundlePackInfo(nullptr, ::std::move(from)) {}
+  inline BundlePackInfo& operator=(const BundlePackInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BundlePackInfo& operator=(BundlePackInfo&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BundlePackInfo& default_instance() {
+    return *reinterpret_cast<const BundlePackInfo*>(
+        &_BundlePackInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 7;
+  friend void swap(BundlePackInfo& a, BundlePackInfo& b) { a.Swap(&b); }
+  inline void Swap(BundlePackInfo* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BundlePackInfo* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  BundlePackInfo* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<BundlePackInfo>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const BundlePackInfo& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const BundlePackInfo& from) { BundlePackInfo::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(BundlePackInfo* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "aim.BundlePackInfo"; }
+
+  explicit BundlePackInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  BundlePackInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const BundlePackInfo& from);
+  BundlePackInfo(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, BundlePackInfo&& from) noexcept
+      : BundlePackInfo(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kBundleNamesFieldNumber = 2,
+    kBundlePackNameFieldNumber = 1,
+    kSourceUrlFieldNumber = 3,
+    kEtagFieldNumber = 4,
+  };
+  // repeated string bundle_names = 2;
+  int bundle_names_size() const;
+  private:
+  int _internal_bundle_names_size() const;
+
+  public:
+  void clear_bundle_names() ;
+  const ::std::string& bundle_names(int index) const;
+  ::std::string* PROTOBUF_NONNULL mutable_bundle_names(int index);
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_bundle_names(int index, Arg_&& value, Args_... args);
+  ::std::string* PROTOBUF_NONNULL add_bundle_names();
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void add_bundle_names(Arg_&& value, Args_... args);
+  const ::google::protobuf::RepeatedPtrField<::std::string>& bundle_names() const;
+  ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL mutable_bundle_names();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::std::string>& _internal_bundle_names() const;
+  ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL _internal_mutable_bundle_names();
+
+  public:
+  // string bundle_pack_name = 1;
+  bool has_bundle_pack_name() const;
+  void clear_bundle_pack_name() ;
+  const ::std::string& bundle_pack_name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_bundle_pack_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_bundle_pack_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_bundle_pack_name();
+  void set_allocated_bundle_pack_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_bundle_pack_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_bundle_pack_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_bundle_pack_name();
+
+  public:
+  // string source_url = 3;
+  bool has_source_url() const;
+  void clear_source_url() ;
+  const ::std::string& source_url() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_source_url(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_source_url();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_source_url();
+  void set_allocated_source_url(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_source_url() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_source_url(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_source_url();
+
+  public:
+  // string etag = 4;
+  bool has_etag() const;
+  void clear_etag() ;
+  const ::std::string& etag() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_etag(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_etag();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_etag();
+  void set_allocated_etag(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_etag() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_etag(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_etag();
+
+  public:
+  // @@protoc_insertion_point(class_scope:aim.BundlePackInfo)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<2, 4,
+                                   0, 69,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const BundlePackInfo& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::RepeatedPtrField<::std::string> bundle_names_;
+    ::google::protobuf::internal::ArenaStringPtr bundle_pack_name_;
+    ::google::protobuf::internal::ArenaStringPtr source_url_;
+    ::google::protobuf::internal::ArenaStringPtr etag_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_bundle_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull BundlePackInfo_class_data_;
 // -------------------------------------------------------------------
 
 class BundleInfo final : public ::google::protobuf::Message
@@ -148,7 +416,7 @@ class BundleInfo final : public ::google::protobuf::Message
     return *reinterpret_cast<const BundleInfo*>(
         &_BundleInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 4;
+  static constexpr int kIndexInFileMessages = 6;
   friend void swap(BundleInfo& a, BundleInfo& b) { a.Swap(&b); }
   inline void Swap(BundleInfo* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -236,6 +504,7 @@ class BundleInfo final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kBundleNameFieldNumber = 1,
+    kBundlePackNameFieldNumber = 4,
     kReadonlyFieldNumber = 2,
     kArchivedFieldNumber = 3,
   };
@@ -253,6 +522,22 @@ class BundleInfo final : public ::google::protobuf::Message
   const ::std::string& _internal_bundle_name() const;
   PROTOBUF_ALWAYS_INLINE void _internal_set_bundle_name(const ::std::string& value);
   ::std::string* PROTOBUF_NONNULL _internal_mutable_bundle_name();
+
+  public:
+  // string bundle_pack_name = 4;
+  bool has_bundle_pack_name() const;
+  void clear_bundle_pack_name() ;
+  const ::std::string& bundle_pack_name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_bundle_pack_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_bundle_pack_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_bundle_pack_name();
+  void set_allocated_bundle_pack_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_bundle_pack_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_bundle_pack_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_bundle_pack_name();
 
   public:
   // bool readonly = 2;
@@ -281,8 +566,8 @@ class BundleInfo final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 3,
-                                   0, 34,
+  static const ::google::protobuf::internal::TcParseTable<2, 4,
+                                   0, 50,
                                    2>
       _table_;
 
@@ -304,6 +589,7 @@ class BundleInfo final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr bundle_name_;
+    ::google::protobuf::internal::ArenaStringPtr bundle_pack_name_;
     bool readonly_;
     bool archived_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -370,7 +656,7 @@ class BundleInfoFile final : public ::google::protobuf::Message
     return *reinterpret_cast<const BundleInfoFile*>(
         &_BundleInfoFile_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 5;
+  static constexpr int kIndexInFileMessages = 8;
   friend void swap(BundleInfoFile& a, BundleInfoFile& b) { a.Swap(&b); }
   inline void Swap(BundleInfoFile* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -458,6 +744,7 @@ class BundleInfoFile final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kBundlesFieldNumber = 1,
+    kBundlePacksFieldNumber = 2,
   };
   // repeated .aim.BundleInfo bundles = 1;
   int bundles_size() const;
@@ -476,12 +763,29 @@ class BundleInfoFile final : public ::google::protobuf::Message
   const ::aim::BundleInfo& bundles(int index) const;
   ::aim::BundleInfo* PROTOBUF_NONNULL add_bundles();
   const ::google::protobuf::RepeatedPtrField<::aim::BundleInfo>& bundles() const;
+  // repeated .aim.BundlePackInfo bundle_packs = 2;
+  int bundle_packs_size() const;
+  private:
+  int _internal_bundle_packs_size() const;
+
+  public:
+  void clear_bundle_packs() ;
+  ::aim::BundlePackInfo* PROTOBUF_NONNULL mutable_bundle_packs(int index);
+  ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>* PROTOBUF_NONNULL mutable_bundle_packs();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>& _internal_bundle_packs() const;
+  ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>* PROTOBUF_NONNULL _internal_mutable_bundle_packs();
+  public:
+  const ::aim::BundlePackInfo& bundle_packs(int index) const;
+  ::aim::BundlePackInfo* PROTOBUF_NONNULL add_bundle_packs();
+  const ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>& bundle_packs() const;
   // @@protoc_insertion_point(class_scope:aim.BundleInfoFile)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 1,
-                                   1, 0,
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   2, 0,
                                    2>
       _table_;
 
@@ -503,6 +807,7 @@ class BundleInfoFile final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::RepeatedPtrField< ::aim::BundleInfo > bundles_;
+    ::google::protobuf::RepeatedPtrField< ::aim::BundlePackInfo > bundle_packs_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1384,6 +1689,416 @@ class BundleFile final : public ::google::protobuf::Message
 };
 
 extern const ::google::protobuf::internal::ClassDataFull BundleFile_class_data_;
+// -------------------------------------------------------------------
+
+class BundlePackItem final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:aim.BundlePackItem) */ {
+ public:
+  inline BundlePackItem() : BundlePackItem(nullptr) {}
+  ~BundlePackItem() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(BundlePackItem* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(BundlePackItem));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR BundlePackItem(::google::protobuf::internal::ConstantInitialized);
+
+  inline BundlePackItem(const BundlePackItem& from) : BundlePackItem(nullptr, from) {}
+  inline BundlePackItem(BundlePackItem&& from) noexcept
+      : BundlePackItem(nullptr, ::std::move(from)) {}
+  inline BundlePackItem& operator=(const BundlePackItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BundlePackItem& operator=(BundlePackItem&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BundlePackItem& default_instance() {
+    return *reinterpret_cast<const BundlePackItem*>(
+        &_BundlePackItem_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 4;
+  friend void swap(BundlePackItem& a, BundlePackItem& b) { a.Swap(&b); }
+  inline void Swap(BundlePackItem* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BundlePackItem* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  BundlePackItem* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<BundlePackItem>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const BundlePackItem& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const BundlePackItem& from) { BundlePackItem::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(BundlePackItem* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "aim.BundlePackItem"; }
+
+  explicit BundlePackItem(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  BundlePackItem(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const BundlePackItem& from);
+  BundlePackItem(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, BundlePackItem&& from) noexcept
+      : BundlePackItem(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kNameFieldNumber = 1,
+    kFileFieldNumber = 2,
+  };
+  // string name = 1;
+  bool has_name() const;
+  void clear_name() ;
+  const ::std::string& name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
+  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
+
+  public:
+  // .aim.BundleFile file = 2;
+  bool has_file() const;
+  void clear_file() ;
+  const ::aim::BundleFile& file() const;
+  [[nodiscard]] ::aim::BundleFile* PROTOBUF_NULLABLE release_file();
+  ::aim::BundleFile* PROTOBUF_NONNULL mutable_file();
+  void set_allocated_file(::aim::BundleFile* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_file(::aim::BundleFile* PROTOBUF_NULLABLE value);
+  ::aim::BundleFile* PROTOBUF_NULLABLE unsafe_arena_release_file();
+
+  private:
+  const ::aim::BundleFile& _internal_file() const;
+  ::aim::BundleFile* PROTOBUF_NONNULL _internal_mutable_file();
+
+  public:
+  // @@protoc_insertion_point(class_scope:aim.BundlePackItem)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   1, 31,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const BundlePackItem& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr name_;
+    ::aim::BundleFile* PROTOBUF_NULLABLE file_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_bundle_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull BundlePackItem_class_data_;
+// -------------------------------------------------------------------
+
+class BundlePack final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:aim.BundlePack) */ {
+ public:
+  inline BundlePack() : BundlePack(nullptr) {}
+  ~BundlePack() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(BundlePack* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(BundlePack));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR BundlePack(::google::protobuf::internal::ConstantInitialized);
+
+  inline BundlePack(const BundlePack& from) : BundlePack(nullptr, from) {}
+  inline BundlePack(BundlePack&& from) noexcept
+      : BundlePack(nullptr, ::std::move(from)) {}
+  inline BundlePack& operator=(const BundlePack& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BundlePack& operator=(BundlePack&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BundlePack& default_instance() {
+    return *reinterpret_cast<const BundlePack*>(
+        &_BundlePack_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 5;
+  friend void swap(BundlePack& a, BundlePack& b) { a.Swap(&b); }
+  inline void Swap(BundlePack* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BundlePack* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  BundlePack* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<BundlePack>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const BundlePack& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const BundlePack& from) { BundlePack::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(BundlePack* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "aim.BundlePack"; }
+
+  explicit BundlePack(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  BundlePack(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const BundlePack& from);
+  BundlePack(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, BundlePack&& from) noexcept
+      : BundlePack(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kItemsFieldNumber = 1,
+  };
+  // repeated .aim.BundlePackItem items = 1;
+  int items_size() const;
+  private:
+  int _internal_items_size() const;
+
+  public:
+  void clear_items() ;
+  ::aim::BundlePackItem* PROTOBUF_NONNULL mutable_items(int index);
+  ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>* PROTOBUF_NONNULL mutable_items();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>& _internal_items() const;
+  ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>* PROTOBUF_NONNULL _internal_mutable_items();
+  public:
+  const ::aim::BundlePackItem& items(int index) const;
+  ::aim::BundlePackItem* PROTOBUF_NONNULL add_items();
+  const ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>& items() const;
+  // @@protoc_insertion_point(class_scope:aim.BundlePack)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const BundlePack& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::RepeatedPtrField< ::aim::BundlePackItem > items_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_bundle_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull BundlePack_class_data_;
 
 // ===================================================================
 
@@ -2069,6 +2784,238 @@ BundleFile::_internal_mutable_guides() {
 
 // -------------------------------------------------------------------
 
+// BundlePackItem
+
+// string name = 1;
+inline bool BundlePackItem::has_name() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  return value;
+}
+inline void BundlePackItem::clear_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline const ::std::string& BundlePackItem::name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePackItem.name)
+  return _internal_name();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void BundlePackItem::set_name(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:aim.BundlePackItem.name)
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackItem::mutable_name()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:aim.BundlePackItem.name)
+  return _s;
+}
+inline const ::std::string& BundlePackItem::_internal_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.name_.Get();
+}
+inline void BundlePackItem::_internal_set_name(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackItem::_internal_mutable_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.name_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE BundlePackItem::release_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.BundlePackItem.name)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  auto* released = _impl_.name_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.name_.Set("", GetArena());
+  }
+  return released;
+}
+inline void BundlePackItem::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  _impl_.name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.name_.IsDefault()) {
+    _impl_.name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:aim.BundlePackItem.name)
+}
+
+// .aim.BundleFile file = 2;
+inline bool BundlePackItem::has_file() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.file_ != nullptr);
+  return value;
+}
+inline void BundlePackItem::clear_file() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.file_ != nullptr) _impl_.file_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline const ::aim::BundleFile& BundlePackItem::_internal_file() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::aim::BundleFile* p = _impl_.file_;
+  return p != nullptr ? *p : reinterpret_cast<const ::aim::BundleFile&>(::aim::_BundleFile_default_instance_);
+}
+inline const ::aim::BundleFile& BundlePackItem::file() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePackItem.file)
+  return _internal_file();
+}
+inline void BundlePackItem::unsafe_arena_set_allocated_file(
+    ::aim::BundleFile* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.file_);
+  }
+  _impl_.file_ = reinterpret_cast<::aim::BundleFile*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:aim.BundlePackItem.file)
+}
+inline ::aim::BundleFile* PROTOBUF_NULLABLE BundlePackItem::release_file() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::aim::BundleFile* released = _impl_.file_;
+  _impl_.file_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::aim::BundleFile* PROTOBUF_NULLABLE BundlePackItem::unsafe_arena_release_file() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.BundlePackItem.file)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::aim::BundleFile* temp = _impl_.file_;
+  _impl_.file_ = nullptr;
+  return temp;
+}
+inline ::aim::BundleFile* PROTOBUF_NONNULL BundlePackItem::_internal_mutable_file() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.file_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::aim::BundleFile>(GetArena());
+    _impl_.file_ = reinterpret_cast<::aim::BundleFile*>(p);
+  }
+  return _impl_.file_;
+}
+inline ::aim::BundleFile* PROTOBUF_NONNULL BundlePackItem::mutable_file()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::aim::BundleFile* _msg = _internal_mutable_file();
+  // @@protoc_insertion_point(field_mutable:aim.BundlePackItem.file)
+  return _msg;
+}
+inline void BundlePackItem::set_allocated_file(::aim::BundleFile* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.file_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = value->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.file_ = reinterpret_cast<::aim::BundleFile*>(value);
+  // @@protoc_insertion_point(field_set_allocated:aim.BundlePackItem.file)
+}
+
+// -------------------------------------------------------------------
+
+// BundlePack
+
+// repeated .aim.BundlePackItem items = 1;
+inline int BundlePack::_internal_items_size() const {
+  return _internal_items().size();
+}
+inline int BundlePack::items_size() const {
+  return _internal_items_size();
+}
+inline void BundlePack::clear_items() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.items_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline ::aim::BundlePackItem* PROTOBUF_NONNULL BundlePack::mutable_items(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:aim.BundlePack.items)
+  return _internal_mutable_items()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>* PROTOBUF_NONNULL BundlePack::mutable_items()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_mutable_list:aim.BundlePack.items)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_items();
+}
+inline const ::aim::BundlePackItem& BundlePack::items(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePack.items)
+  return _internal_items().Get(index);
+}
+inline ::aim::BundlePackItem* PROTOBUF_NONNULL BundlePack::add_items()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::aim::BundlePackItem* _add =
+      _internal_mutable_items()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add:aim.BundlePack.items)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>& BundlePack::items() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:aim.BundlePack.items)
+  return _internal_items();
+}
+inline const ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>&
+BundlePack::_internal_items() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.items_;
+}
+inline ::google::protobuf::RepeatedPtrField<::aim::BundlePackItem>* PROTOBUF_NONNULL
+BundlePack::_internal_mutable_items() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.items_;
+}
+
+// -------------------------------------------------------------------
+
 // BundleInfo
 
 // string bundle_name = 1;
@@ -2142,14 +3089,14 @@ inline void BundleInfo::set_allocated_bundle_name(::std::string* PROTOBUF_NULLAB
 
 // bool readonly = 2;
 inline bool BundleInfo::has_readonly() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   return value;
 }
 inline void BundleInfo::clear_readonly() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.readonly_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000002U);
+                  0x00000004U);
 }
 inline bool BundleInfo::readonly() const {
   // @@protoc_insertion_point(field_get:aim.BundleInfo.readonly)
@@ -2157,7 +3104,7 @@ inline bool BundleInfo::readonly() const {
 }
 inline void BundleInfo::set_readonly(bool value) {
   _internal_set_readonly(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   // @@protoc_insertion_point(field_set:aim.BundleInfo.readonly)
 }
 inline bool BundleInfo::_internal_readonly() const {
@@ -2171,14 +3118,14 @@ inline void BundleInfo::_internal_set_readonly(bool value) {
 
 // bool archived = 3;
 inline bool BundleInfo::has_archived() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   return value;
 }
 inline void BundleInfo::clear_archived() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.archived_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
+                  0x00000008U);
 }
 inline bool BundleInfo::archived() const {
   // @@protoc_insertion_point(field_get:aim.BundleInfo.archived)
@@ -2186,7 +3133,7 @@ inline bool BundleInfo::archived() const {
 }
 inline void BundleInfo::set_archived(bool value) {
   _internal_set_archived(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   // @@protoc_insertion_point(field_set:aim.BundleInfo.archived)
 }
 inline bool BundleInfo::_internal_archived() const {
@@ -2196,6 +3143,358 @@ inline bool BundleInfo::_internal_archived() const {
 inline void BundleInfo::_internal_set_archived(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.archived_ = value;
+}
+
+// string bundle_pack_name = 4;
+inline bool BundleInfo::has_bundle_pack_name() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  return value;
+}
+inline void BundleInfo::clear_bundle_pack_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.bundle_pack_name_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline const ::std::string& BundleInfo::bundle_pack_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundleInfo.bundle_pack_name)
+  return _internal_bundle_pack_name();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void BundleInfo::set_bundle_pack_name(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  _impl_.bundle_pack_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:aim.BundleInfo.bundle_pack_name)
+}
+inline ::std::string* PROTOBUF_NONNULL BundleInfo::mutable_bundle_pack_name()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::std::string* _s = _internal_mutable_bundle_pack_name();
+  // @@protoc_insertion_point(field_mutable:aim.BundleInfo.bundle_pack_name)
+  return _s;
+}
+inline const ::std::string& BundleInfo::_internal_bundle_pack_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.bundle_pack_name_.Get();
+}
+inline void BundleInfo::_internal_set_bundle_pack_name(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.bundle_pack_name_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL BundleInfo::_internal_mutable_bundle_pack_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.bundle_pack_name_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE BundleInfo::release_bundle_pack_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.BundleInfo.bundle_pack_name)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  auto* released = _impl_.bundle_pack_name_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.bundle_pack_name_.Set("", GetArena());
+  }
+  return released;
+}
+inline void BundleInfo::set_allocated_bundle_pack_name(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  _impl_.bundle_pack_name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.bundle_pack_name_.IsDefault()) {
+    _impl_.bundle_pack_name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:aim.BundleInfo.bundle_pack_name)
+}
+
+// -------------------------------------------------------------------
+
+// BundlePackInfo
+
+// string bundle_pack_name = 1;
+inline bool BundlePackInfo::has_bundle_pack_name() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  return value;
+}
+inline void BundlePackInfo::clear_bundle_pack_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.bundle_pack_name_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline const ::std::string& BundlePackInfo::bundle_pack_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePackInfo.bundle_pack_name)
+  return _internal_bundle_pack_name();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void BundlePackInfo::set_bundle_pack_name(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  _impl_.bundle_pack_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:aim.BundlePackInfo.bundle_pack_name)
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::mutable_bundle_pack_name()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::std::string* _s = _internal_mutable_bundle_pack_name();
+  // @@protoc_insertion_point(field_mutable:aim.BundlePackInfo.bundle_pack_name)
+  return _s;
+}
+inline const ::std::string& BundlePackInfo::_internal_bundle_pack_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.bundle_pack_name_.Get();
+}
+inline void BundlePackInfo::_internal_set_bundle_pack_name(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.bundle_pack_name_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::_internal_mutable_bundle_pack_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.bundle_pack_name_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE BundlePackInfo::release_bundle_pack_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.BundlePackInfo.bundle_pack_name)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  auto* released = _impl_.bundle_pack_name_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.bundle_pack_name_.Set("", GetArena());
+  }
+  return released;
+}
+inline void BundlePackInfo::set_allocated_bundle_pack_name(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  _impl_.bundle_pack_name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.bundle_pack_name_.IsDefault()) {
+    _impl_.bundle_pack_name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:aim.BundlePackInfo.bundle_pack_name)
+}
+
+// repeated string bundle_names = 2;
+inline int BundlePackInfo::_internal_bundle_names_size() const {
+  return _internal_bundle_names().size();
+}
+inline int BundlePackInfo::bundle_names_size() const {
+  return _internal_bundle_names_size();
+}
+inline void BundlePackInfo::clear_bundle_names() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.bundle_names_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::add_bundle_names()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::std::string* _s =
+      _internal_mutable_bundle_names()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add_mutable:aim.BundlePackInfo.bundle_names)
+  return _s;
+}
+inline const ::std::string& BundlePackInfo::bundle_names(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePackInfo.bundle_names)
+  return _internal_bundle_names().Get(index);
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::mutable_bundle_names(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:aim.BundlePackInfo.bundle_names)
+  return _internal_mutable_bundle_names()->Mutable(index);
+}
+template <typename Arg_, typename... Args_>
+inline void BundlePackInfo::set_bundle_names(int index, Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::AssignToString(*_internal_mutable_bundle_names()->Mutable(index), ::std::forward<Arg_>(value),
+                        args... );
+  // @@protoc_insertion_point(field_set:aim.BundlePackInfo.bundle_names)
+}
+template <typename Arg_, typename... Args_>
+inline void BundlePackInfo::add_bundle_names(Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::google::protobuf::internal::AddToRepeatedPtrField(
+      ::google::protobuf::MessageLite::internal_visibility(), GetArena(),
+      *_internal_mutable_bundle_names(), ::std::forward<Arg_>(value),
+      args... );
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add:aim.BundlePackInfo.bundle_names)
+}
+inline const ::google::protobuf::RepeatedPtrField<::std::string>& BundlePackInfo::bundle_names()
+    const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:aim.BundlePackInfo.bundle_names)
+  return _internal_bundle_names();
+}
+inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
+BundlePackInfo::mutable_bundle_names() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_mutable_list:aim.BundlePackInfo.bundle_names)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_bundle_names();
+}
+inline const ::google::protobuf::RepeatedPtrField<::std::string>&
+BundlePackInfo::_internal_bundle_names() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.bundle_names_;
+}
+inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
+BundlePackInfo::_internal_mutable_bundle_names() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.bundle_names_;
+}
+
+// string source_url = 3;
+inline bool BundlePackInfo::has_source_url() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  return value;
+}
+inline void BundlePackInfo::clear_source_url() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.source_url_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline const ::std::string& BundlePackInfo::source_url() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePackInfo.source_url)
+  return _internal_source_url();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void BundlePackInfo::set_source_url(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  _impl_.source_url_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:aim.BundlePackInfo.source_url)
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::mutable_source_url()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::std::string* _s = _internal_mutable_source_url();
+  // @@protoc_insertion_point(field_mutable:aim.BundlePackInfo.source_url)
+  return _s;
+}
+inline const ::std::string& BundlePackInfo::_internal_source_url() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.source_url_.Get();
+}
+inline void BundlePackInfo::_internal_set_source_url(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.source_url_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::_internal_mutable_source_url() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.source_url_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE BundlePackInfo::release_source_url() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.BundlePackInfo.source_url)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  auto* released = _impl_.source_url_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.source_url_.Set("", GetArena());
+  }
+  return released;
+}
+inline void BundlePackInfo::set_allocated_source_url(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  _impl_.source_url_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.source_url_.IsDefault()) {
+    _impl_.source_url_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:aim.BundlePackInfo.source_url)
+}
+
+// string etag = 4;
+inline bool BundlePackInfo::has_etag() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
+  return value;
+}
+inline void BundlePackInfo::clear_etag() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.etag_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000008U);
+}
+inline const ::std::string& BundlePackInfo::etag() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePackInfo.etag)
+  return _internal_etag();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void BundlePackInfo::set_etag(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  _impl_.etag_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:aim.BundlePackInfo.etag)
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::mutable_etag()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ::std::string* _s = _internal_mutable_etag();
+  // @@protoc_insertion_point(field_mutable:aim.BundlePackInfo.etag)
+  return _s;
+}
+inline const ::std::string& BundlePackInfo::_internal_etag() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.etag_.Get();
+}
+inline void BundlePackInfo::_internal_set_etag(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.etag_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::_internal_mutable_etag() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.etag_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE BundlePackInfo::release_etag() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.BundlePackInfo.etag)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000008U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  auto* released = _impl_.etag_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.etag_.Set("", GetArena());
+  }
+  return released;
+}
+inline void BundlePackInfo::set_allocated_etag(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  }
+  _impl_.etag_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.etag_.IsDefault()) {
+    _impl_.etag_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:aim.BundlePackInfo.etag)
 }
 
 // -------------------------------------------------------------------
@@ -2256,6 +3555,62 @@ inline ::google::protobuf::RepeatedPtrField<::aim::BundleInfo>* PROTOBUF_NONNULL
 BundleInfoFile::_internal_mutable_bundles() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.bundles_;
+}
+
+// repeated .aim.BundlePackInfo bundle_packs = 2;
+inline int BundleInfoFile::_internal_bundle_packs_size() const {
+  return _internal_bundle_packs().size();
+}
+inline int BundleInfoFile::bundle_packs_size() const {
+  return _internal_bundle_packs_size();
+}
+inline void BundleInfoFile::clear_bundle_packs() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.bundle_packs_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline ::aim::BundlePackInfo* PROTOBUF_NONNULL BundleInfoFile::mutable_bundle_packs(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:aim.BundleInfoFile.bundle_packs)
+  return _internal_mutable_bundle_packs()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>* PROTOBUF_NONNULL BundleInfoFile::mutable_bundle_packs()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_mutable_list:aim.BundleInfoFile.bundle_packs)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_bundle_packs();
+}
+inline const ::aim::BundlePackInfo& BundleInfoFile::bundle_packs(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundleInfoFile.bundle_packs)
+  return _internal_bundle_packs().Get(index);
+}
+inline ::aim::BundlePackInfo* PROTOBUF_NONNULL BundleInfoFile::add_bundle_packs()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::aim::BundlePackInfo* _add =
+      _internal_mutable_bundle_packs()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_add:aim.BundleInfoFile.bundle_packs)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>& BundleInfoFile::bundle_packs() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:aim.BundleInfoFile.bundle_packs)
+  return _internal_bundle_packs();
+}
+inline const ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>&
+BundleInfoFile::_internal_bundle_packs() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.bundle_packs_;
+}
+inline ::google::protobuf::RepeatedPtrField<::aim::BundlePackInfo>* PROTOBUF_NONNULL
+BundleInfoFile::_internal_mutable_bundle_packs() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.bundle_packs_;
 }
 
 #ifdef __GNUC__
