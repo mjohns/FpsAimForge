@@ -3,6 +3,7 @@
 #include <random>
 #include <string>
 
+#include "absl/strings/strip.h"
 #include "aim/common/files.h"
 #include "aim/common/log.h"
 #include "aim/common/resource_name.h"
@@ -15,10 +16,10 @@
 #include "gmock/gmock.h"
 #include "google/protobuf/message.h"
 #include "gtest/gtest.h"
+#include "miniz.h"
 #include "protobuf-matchers/protocol-buffer-matchers.h"
 
 using namespace aim;
-using ::google::protobuf::Message;
 using ::protobuf_matchers::EqualsProto;
 using ::testing::AllOf;
 using ::testing::ElementsAre;
@@ -26,11 +27,74 @@ using ::testing::Eq;
 using ::testing::Field;
 using ::testing::IsEmpty;
 using ::testing::Optional;
-using ::testing::ResultOf;
 using ::testing::StrEq;
 using ::testing::UnorderedElementsAre;
 
 namespace {
+
+std::optional<BundlePack> ConvertZipToBundlePack(const std::string& zip_content) {
+  mz_zip_archive zip_archive;
+  memset(&zip_archive, 0, sizeof(zip_archive));
+
+  if (!mz_zip_reader_init_mem(&zip_archive, zip_content.data(), zip_content.size(), 0)) {
+    printf("Failed to initialize zip reader from memory buffer.\n");
+    return {};
+  }
+
+  mz_uint num_files = mz_zip_reader_get_num_files(&zip_archive);
+
+  std::unordered_set<std::string> added_bundles;
+  BundlePack pack;
+  for (mz_uint i = 0; i < num_files; ++i) {
+    mz_zip_archive_file_stat file_stat;
+    if (!mz_zip_reader_file_stat(&zip_archive, i, &file_stat)) {
+      continue;
+    }
+
+    // Skip directories
+    if (mz_zip_reader_is_file_a_directory(&zip_archive, i)) {
+      printf("Item %u: [Directory] %s\n", i, file_stat.m_filename);
+      continue;
+    }
+
+    std::string filename = file_stat.m_filename;
+    if (!filename.ends_with(".bundle.json")) {
+      continue;
+    }
+    // Strip off path portion
+    filename = std::filesystem::path(filename).filename().string();
+    std::string bundle_name(absl::StripSuffix(filename, ".bundle.json"));
+    bool inserted = added_bundles.insert(bundle_name).second;
+    if (!inserted) {
+      // Skip dup.
+      continue;
+    }
+
+    size_t uncompressed_size = 0;
+    void* buffer = mz_zip_reader_extract_to_heap(&zip_archive, i, &uncompressed_size, 0);
+
+    if (!buffer) {
+      printf("Failed to extract file index %u (%s)\n", i, file_stat.m_filename);
+      continue;
+    }
+
+    std::string content((const char*)buffer, uncompressed_size);
+    mz_free(buffer);
+
+    auto* item = pack.add_items();
+    item->set_name(bundle_name);
+    if (!JsonToMessage(content, item->mutable_file())) {
+      pack.mutable_items()->RemoveLast();
+      continue;
+    }
+
+    printf("Extracted: %s (%zu bytes in memory)\n", file_stat.m_filename, uncompressed_size);
+  }
+
+  mz_zip_reader_end(&zip_archive);
+
+  return pack;
+}
 
 auto EqualsScenario(const ScenarioItem& expected) {
   return AllOf(Field(&ScenarioItem::name, StrEq(expected.name)),
@@ -45,6 +109,19 @@ auto EqualsResourceName(const ResourceName& expected) {
 auto EqualsPlaylist(const Playlist& expected) {
   return AllOf(Property(&Playlist::def, EqualsProto(expected.def())),
                Field(&Playlist::name, StrEq(expected.name)));
+}
+
+BundleFile MakeBundleFile(const std::string& playlist_name) {
+  BundleFile bundle;
+  bundle.add_playlists()->set_name(playlist_name);
+  return bundle;
+}
+
+BundlePackItem MakePackItem(const std::string& name, const std::string& playlist_name) {
+  BundlePackItem item;
+  item.set_name(name);
+  *item.mutable_file() = MakeBundleFile(playlist_name);
+  return item;
 }
 
 }  // namespace
@@ -101,6 +178,14 @@ class BundleFunctionalTest : public ::testing::Test {
       }
     }
     return result;
+  }
+
+  std::filesystem::path BaseBundlePackPath(const std::string& pack_name) {
+    return base_bundle_path_ / (pack_name + ".bundle.pack");
+  }
+
+  std::filesystem::path UserBundlePackPath(const std::string& pack_name) {
+    return user_bundle_path_ / (pack_name + ".bundle.pack");
   }
 
   std::filesystem::path BaseBundlePath(const std::string& bundle_name) {
@@ -414,7 +499,6 @@ TEST_F(BundleFunctionalTest, LoadInitialBundles) {
 
   BundleInfo user_info;
   user_info.set_bundle_name("USER");
-  user_info.set_readonly(true);
 
   EXPECT_THAT(bundle_manager_->GetBundleNames(), ElementsAre("AF", "OTHER", "USER"));
   EXPECT_THAT(bundle_manager_->GetBundleInfos(),
@@ -448,6 +532,75 @@ TEST_F(BundleFunctionalTest, LoadInitialBundles) {
   EXPECT_THAT(bundle_manager_->GetBundleNames(), ElementsAre("AF", "NEW", "OTHER", "USER"));
 }
 
+TEST_F(BundleFunctionalTest, LoadInitialBundles_JustDefaultPack) {
+  BundlePack default_pack;
+  *default_pack.add_items() = MakePackItem("B1", "pack_bundle1");
+  *default_pack.add_items() = MakePackItem("B2", "pack_bundle2");
+  ASSERT_TRUE(WriteBinaryMessageToFile(BaseBundlePackPath("Default"), default_pack));
+
+  EXPECT_THAT(bundle_manager_->LoadBundlesFromDisk(), IsEmpty());
+
+  BundleInfo info1;
+  info1.set_bundle_name("B1");
+  info1.set_readonly(true);
+
+  BundleInfo info2;
+  info2.set_bundle_name("B2");
+  info2.set_readonly(true);
+
+  EXPECT_THAT(bundle_manager_->GetBundleNames(), ElementsAre("B1", "B2"));
+  EXPECT_THAT(bundle_manager_->GetWritableBundleNames(), ElementsAre("USER"));
+  EXPECT_THAT(*playlist_manager_->playlist_names(),
+              ElementsAre("B1 pack_bundle1", "B2 pack_bundle2"));
+
+  EXPECT_THAT(bundle_manager_->GetBundleInfos(),
+              ElementsAre(EqualsProto(info1), EqualsProto(info2)));
+
+  EXPECT_THAT(bundle_manager_->LoadBundlesFromDisk(), IsEmpty());
+  EXPECT_THAT(*playlist_manager_->playlist_names(),
+              ElementsAre("B1 pack_bundle1", "B2 pack_bundle2"));
+}
+
+TEST_F(BundleFunctionalTest, LoadInitialBundles_BundleOverridesFromPack) {
+  BundlePack default_pack;
+  *default_pack.add_items() = MakePackItem("B1", "pack_bundle1");
+  *default_pack.add_items() = MakePackItem("B2", "pack_bundle2");
+  *default_pack.add_items() = MakePackItem("B3", "pack_bundle3");
+  ASSERT_TRUE(WriteBinaryMessageToFile(BaseBundlePackPath("Default"), default_pack));
+
+  ASSERT_TRUE(WriteJsonMessageToFile(BaseBundlePath("AF"), MakeBundleFile("af_bundle")));
+  ASSERT_TRUE(WriteJsonMessageToFile(UserBundlePath("B1"), MakeBundleFile("explicit_bundle1")));
+
+  EXPECT_THAT(bundle_manager_->LoadBundlesFromDisk(), IsEmpty());
+
+  BundleInfo info1;
+  info1.set_bundle_name("B1");
+  info1.set_readonly(true);
+
+  BundleInfo info2;
+  info2.set_bundle_name("B2");
+  info2.set_readonly(true);
+
+  BundleInfo info3;
+  info3.set_bundle_name("B3");
+  info3.set_readonly(true);
+
+  BundleInfo af_info;
+  af_info.set_bundle_name("AF");
+  af_info.set_readonly(true);
+
+  EXPECT_THAT(bundle_manager_->GetBundleNames(), ElementsAre("AF", "B1", "B2", "B3"));
+  EXPECT_THAT(bundle_manager_->GetWritableBundleNames(), ElementsAre("USER"));
+  EXPECT_THAT(
+      *playlist_manager_->playlist_names(),
+      ElementsAre("AF af_bundle", "B1 explicit_bundle1", "B2 pack_bundle2", "B3 pack_bundle3"));
+
+  EXPECT_THAT(
+      bundle_manager_->GetBundleInfos(),
+      ElementsAre(
+          EqualsProto(af_info), EqualsProto(info1), EqualsProto(info2), EqualsProto(info3)));
+}
+
 TEST_F(BundleFunctionalTest, TestUpdateBundleInfo) {
   BundleFile af_bundle;
   af_bundle.add_playlists()->set_name("Playlist1");
@@ -465,13 +618,12 @@ TEST_F(BundleFunctionalTest, TestUpdateBundleInfo) {
 
   BundleInfo user_info;
   user_info.set_bundle_name("USER");
-  user_info.set_readonly(true);
 
   EXPECT_THAT(bundle_manager_->GetBundleInfos(),
               ElementsAre(EqualsProto(af_info), EqualsProto(user_info)));
 
-  user_info.set_readonly(false);
-  bundle_manager_->UpdateBundleInfo(user_info);
+  af_info.set_readonly(false);
+  bundle_manager_->UpdateBundleInfo(af_info);
 
   EXPECT_THAT(bundle_manager_->GetBundleInfos(),
               ElementsAre(EqualsProto(af_info), EqualsProto(user_info)));
@@ -479,6 +631,13 @@ TEST_F(BundleFunctionalTest, TestUpdateBundleInfo) {
   EXPECT_THAT(bundle_manager_->LoadBundlesFromDisk(), IsEmpty());
   EXPECT_THAT(bundle_manager_->GetBundleInfos(),
               ElementsAre(EqualsProto(af_info), EqualsProto(user_info)));
+
+  // Can't make USER readonly.
+  user_info.set_readonly(true);
+  bundle_manager_->UpdateBundleInfo(user_info);
+
+  user_info.clear_readonly();
+  EXPECT_THAT(bundle_manager_->GetBundleInfo("USER"), Optional(EqualsProto(user_info)));
 }
 
 TEST_F(BundleFunctionalTest, TestDeleteBundle) {
@@ -498,7 +657,6 @@ TEST_F(BundleFunctionalTest, TestDeleteBundle) {
 
   BundleInfo user_info;
   user_info.set_bundle_name("USER");
-  user_info.set_readonly(true);
 
   EXPECT_THAT(bundle_manager_->GetBundleInfos(),
               ElementsAre(EqualsProto(af_info), EqualsProto(user_info)));
@@ -517,4 +675,19 @@ TEST_F(BundleFunctionalTest, TestDeleteBundle) {
 
   EXPECT_THAT(bundle_manager_->LoadBundlesFromDisk(), IsEmpty());
   EXPECT_THAT(bundle_manager_->GetBundleInfos(), ElementsAre(EqualsProto(af_info)));
+}
+
+TEST_F(BundleFunctionalTest, TestZipToBundlePack) {
+  std::filesystem::path test_data_dir = TEST_DATA_DIR;
+  std::optional<std::string> zip_content =
+      ReadFileContentAsString(test_data_dir / "github_bundles.zip");
+  ASSERT_TRUE(zip_content.has_value());
+
+  auto maybe_pack = ConvertZipToBundlePack(*zip_content);
+  ASSERT_TRUE(maybe_pack.has_value());
+
+  BundlePack pack = *maybe_pack;
+  EXPECT_THAT(pack.items_size(), Eq(5));
+
+  EXPECT_THAT(pack.items_size(), Eq(5));
 }

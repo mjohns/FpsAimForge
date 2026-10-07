@@ -26,6 +26,11 @@ target_link_libraries(
     GTest::gmock
     protobuf-matchers
     aim
+    miniz
+)
+
+target_compile_definitions(${NAME} PRIVATE
+    TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/testdata"
 )
 
 if(MSVC)
