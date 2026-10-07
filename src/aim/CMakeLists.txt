@@ -12,6 +12,7 @@ set(SRCS
     "common/field.h"
     "common/files.cc"
     "common/files.h"
+    "common/http.h"
     "common/lazy_cache.h"
     "common/geometry.cc"
     "common/geometry.h"
@@ -224,10 +225,19 @@ set(SRCS
     "ui/ui_screen.h"
 )
 
-add_library(${NAME} ${SRCS})
+if(WIN32)
+  list(
+    APPEND SRCS
+    "common/http_windows.cc"
+  )
+else()
+  list(
+    APPEND SRCS
+    "common/http_curl.cc"
+  )
+endif()
 
-# find_package(CURL REQUIRED)
-# CURL::libcurl
+add_library(${NAME} ${SRCS})
 
 target_link_libraries(
     ${NAME}
@@ -243,6 +253,12 @@ target_link_libraries(
     sqlite3
     protobuf::libprotobuf
     spdlog)
+
+if(WIN32)
+else()
+find_package(CURL REQUIRED)
+target_link_libraries(${NAME} PRIVATE CURL::libcurl)
+endif()
 
 include(warnings.cmake)
 target_compile_options(${NAME} PRIVATE ${PROJECT_WARNING_FLAGS})

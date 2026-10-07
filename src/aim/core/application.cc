@@ -13,6 +13,7 @@
 #include "absl/log/log_sink_registry.h"
 #include "aim/common/backup.h"
 #include "aim/common/files.h"
+#include "aim/common/http.h"
 #include "aim/common/log.h"
 #include "aim/common/times.h"
 #include "aim/core/bundle_manager.h"
@@ -229,6 +230,10 @@ class ApplicationImpl : public Application {
 
     MIX_Quit();
     SDL_Quit();
+
+    if (http_initialized_) {
+      GlobalCleanupHttp();
+    }
 
     Logger::getInstance().ResetToDefault();
     if (logger_) {
@@ -676,6 +681,9 @@ class ApplicationImpl : public Application {
 
     MaybeBackupAimDb(settings_manager_->GetCurrentSettings().db_backups());
 
+    GlobalInitializeHttp();
+    http_initialized_ = true;
+
     return {};
   }
 
@@ -867,6 +875,7 @@ class ApplicationImpl : public Application {
   bool should_restart_ = false;
   i64 application_start_time_micros_ = 0;
   bool imgui_initialized_ = false;
+  bool http_initialized_ = false;
   std::filesystem::path settings_path_;
 };
 
@@ -909,6 +918,23 @@ std::unique_ptr<Application> CreateNewApplication() {
   application->Initialize();
   application->logger()->flush();
   application->state().initialization_times.total.end = stopwatch.GetElapsedMicros();
+
+  // Stopwatch s;
+  // s.Start();
+  // FileDownload download;
+  // std::string etag = "cda71abb56c6ce7850c58c73f4aacc2614788e1ac47e2b9b274b9a5d24734e38";
+  // if (!DownloadFile("https://github.com/mjohns/FpsAimForgeBundles/archive/refs/heads/main.zip",
+  //                   etag,
+  //                   &download)) {
+  //   std::cout << "Failed to download url" << std::endl;
+  // }
+  //
+  // std::cout << std::format("Downloaded {}, {}s, etag={}",
+  //                          download.content.size(),
+  //                          s.GetElapsedSeconds(),
+  //                          download.etag)
+  //           << std::endl;
+
   return application;
 }
 

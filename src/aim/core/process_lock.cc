@@ -17,7 +17,6 @@
 #include <filesystem>
 #include <optional>
 
-#include "absl/status/statusor.h"
 #include "absl/strings/numbers.h"
 #include "aim/common/files.h"
 #include "aim/common/simple_types.h"
