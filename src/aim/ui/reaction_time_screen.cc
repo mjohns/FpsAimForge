@@ -120,12 +120,12 @@ class SingleReactionTimeScreen : public Screen {
         if (options_.is_audio) {
           app_.sound_manager().PlayLoadedSound(settings_.sounds().click_kill());
         } else {
+          react_start_time_ = stopwatch_.GetElapsedMicros();
           ImGui::NewSdlFrame();
           app_.BeginFullscreenWindow();
           DrawSquare(IM_COL32(0, 255, 0, 255));
           ImGui::End();
           app_.renderer().RenderImGui(ImColor(0.0f, 0.0f, 0.0f, 1.0f));
-          react_start_time_ = stopwatch_.GetElapsedMicros();
         }
       }
     }
