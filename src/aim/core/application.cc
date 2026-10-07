@@ -733,6 +733,7 @@ class ApplicationImpl : public Application {
     sound_manager_->LoadSounds(settings_manager_->GetCurrentSettings());
 
     state_->initialization_times.load_bundles.start = stopwatch.GetElapsedMicros();
+    // TODO: Show error messages in dialog.
     bundle_manager_->LoadBundlesFromDisk();
     state_->initialization_times.load_bundles.end = stopwatch.GetElapsedMicros();
 
@@ -761,8 +762,6 @@ class ApplicationImpl : public Application {
       history_manager_->UpdateRecentView(ObjectType::PLAYLIST, "AF Clicking");
       history_manager_->UpdateRecentView(ObjectType::SCENARIO, "AF Static3");
     }
-
-    // bundle_manager_->SaveDirtyBundles();
   }
 
   std::string GetDebugInfoString() override {

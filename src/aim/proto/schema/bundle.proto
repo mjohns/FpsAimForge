@@ -46,11 +46,10 @@ message BundleInfo {
 
 message BundlePackInfo {
   string bundle_pack_name = 1;
-  // Names of bundles contained in the pack.
-  repeated string bundle_names = 2;
-
-  string source_url = 3;
-  string etag = 4;
+  string source_url = 2;
+  string etag = 3;
+  bool archived = 4;
+  repeated string exclude_bundles = 5;
 }
 
 // Structure for bundles.json file.

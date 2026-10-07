@@ -40,6 +40,7 @@ add_subdirectory(spdlog)
 add_subdirectory(protobuf)
 add_subdirectory(googletest)
 add_subdirectory(protobuf-matchers)
+add_subdirectory(miniz)
 include(${CMAKE_CURRENT_SOURCE_DIR}/protobuf/cmake/protobuf-generate.cmake)
 
 # version 3.4.14
