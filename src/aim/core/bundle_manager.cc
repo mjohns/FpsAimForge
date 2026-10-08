@@ -12,12 +12,13 @@
 #include "aim/core/guide_manager.h"
 #include "aim/core/playlist_manager.h"
 #include "aim/core/scenario_manager.h"
+#include "miniz.h"
 
 namespace aim {
 namespace {
 
 constexpr const char* kBundleFileNameSuffix = ".bundle.json";
-constexpr const char* kBundlePackFileNameSuffix = ".bundle.pack";
+constexpr const char* kBundlePackFileNameSuffix = ".pack.bin";
 
 bool IsValidBundleNameChar(char c) {
   return std::isalnum(static_cast<unsigned char>(c)) || c == '_';
@@ -169,6 +170,8 @@ class BundleManagerImpl : public BundleManager {
         bundle_info_file_path_(fs->GetUserDataPath("bundles/bundles.json")) {}
 
   std::vector<std::string> LoadBundlesFromDisk() override {
+    // Stopwatch s;
+    // s.Start();
     bundle_info_map_.clear();
     bundle_pack_info_map_.clear();
 
@@ -222,6 +225,8 @@ class BundleManagerImpl : public BundleManager {
       }
     }
 
+    // std::cout << std::format("Loading bundles from disk took {}ms", s.GetElapsedMicros() / 1000) << std::endl;
+
     scenario_manager_->StartReload();
     playlist_manager_->StartReload();
     guide_manager_->StartReload();
@@ -248,6 +253,7 @@ class BundleManagerImpl : public BundleManager {
     playlist_manager_->FinishReload();
     guide_manager_->FinishReload();
 
+    // std::cout << std::format("Loading bundles took {}ms", s.GetElapsedMicros() / 1000) << std::endl;
     return error_messages;
   }
 
@@ -480,6 +486,70 @@ bool IsValidBundleName(const std::string& bundle_name) {
     }
   }
   return true;
+}
+
+std::shared_ptr<BundlePack> ConvertZipToBundlePack(const std::string& zip_content) {
+  mz_zip_archive zip_archive;
+  memset(&zip_archive, 0, sizeof(zip_archive));
+
+  if (!mz_zip_reader_init_mem(&zip_archive, zip_content.data(), zip_content.size(), 0)) {
+    Logger::get()->warn("Failed to initialize zip reader from memory buffer.");
+    return {};
+  }
+
+  mz_uint num_files = mz_zip_reader_get_num_files(&zip_archive);
+
+  std::unordered_set<std::string> added_bundles;
+
+
+  std::shared_ptr<BundlePack> pack = std::make_shared<BundlePack>();
+  for (mz_uint i = 0; i < num_files; ++i) {
+    mz_zip_archive_file_stat file_stat;
+    if (!mz_zip_reader_file_stat(&zip_archive, i, &file_stat)) {
+      continue;
+    }
+
+    if (mz_zip_reader_is_file_a_directory(&zip_archive, i)) {
+      continue;
+    }
+
+    std::string filename = file_stat.m_filename;
+    if (!filename.ends_with(kBundleFileNameSuffix)) {
+      continue;
+    }
+    // Strip off path portion
+    filename = std::filesystem::path(filename).filename().string();
+    std::string bundle_name(absl::StripSuffix(filename, kBundleFileNameSuffix));
+    bool inserted = added_bundles.insert(bundle_name).second;
+    if (!inserted) {
+      // Skip duplicates.
+      continue;
+    }
+
+    size_t uncompressed_size = 0;
+    void* buffer = mz_zip_reader_extract_to_heap(&zip_archive, i, &uncompressed_size, 0);
+
+    if (!buffer) {
+      // Failed to extract the file.
+      added_bundles.erase(bundle_name);
+      continue;
+    }
+
+    std::string content((const char*)buffer, uncompressed_size);
+    mz_free(buffer);
+
+    auto* item = pack->add_items();
+    item->set_name(bundle_name);
+    if (!JsonToMessage(content, item->mutable_file())) {
+      added_bundles.erase(bundle_name);
+      pack->mutable_items()->RemoveLast();
+      continue;
+    }
+  }
+
+  mz_zip_reader_end(&zip_archive);
+
+  return pack;
 }
 
 }  // namespace aim

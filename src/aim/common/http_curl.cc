@@ -1,6 +1,7 @@
 #include <curl/curl.h>
 
 #include <string>
+#include <iostream>
 
 #include "absl/cleanup/cleanup.h"
 #include "absl/strings/ascii.h"
@@ -40,6 +41,19 @@ size_t HeaderCallback(char* buffer, size_t size, size_t nitems, void* userdata) 
   return total_size;
 }
 
+std::string EscapeEtag(const std::string& etag) {
+  if (etag.starts_with("W\"")) {
+    return etag;
+  }
+  if (etag.starts_with("w\"")) {
+    return etag;
+  }
+  if (etag.starts_with("\"")) {
+    return etag;
+  }
+  return std::format("\"{}\"", etag);
+}
+
 }  // namespace
 
 bool DownloadFile(const std::string& url, const std::string& etag, FileDownload* download) {
@@ -53,7 +67,7 @@ bool DownloadFile(const std::string& url, const std::string& etag, FileDownload*
 
   // Send If-None-Match header if we already have a stored ETag
   if (!etag.empty()) {
-    std::string etag_header = std::format("If-None-Match: \"{}\"", etag);
+    std::string etag_header = std::format("If-None-Match: {}", EscapeEtag(etag));
     headers = curl_slist_append(headers, etag_header.c_str());
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   }
@@ -66,6 +80,8 @@ bool DownloadFile(const std::string& url, const std::string& etag, FileDownload*
   curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, HeaderCallback);
   curl_easy_setopt(curl, CURLOPT_HEADERDATA, &new_etag);
 
+  // Accept compressed encodings in the response.
+  curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
   curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
   CURLcode res = curl_easy_perform(curl);

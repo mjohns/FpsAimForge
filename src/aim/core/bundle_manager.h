@@ -45,4 +45,6 @@ std::unique_ptr<BundleManager> CreateBundleManager(FileSystem* fs,
 
 bool IsValidBundleName(const std::string& bundle_name);
 
+std::shared_ptr<BundlePack> ConvertZipToBundlePack(const std::string& zip_content);
+
 }  // namespace aim

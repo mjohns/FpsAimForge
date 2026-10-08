@@ -13,6 +13,7 @@ set(SRCS
     "common/files.cc"
     "common/files.h"
     "common/http.h"
+    "common/http.cc"
     "common/lazy_cache.h"
     "common/geometry.cc"
     "common/geometry.h"
@@ -251,6 +252,7 @@ target_link_libraries(
     imgui
     implot
     sqlite3
+    miniz
     protobuf::libprotobuf
     spdlog)
 
