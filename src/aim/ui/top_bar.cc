@@ -18,7 +18,7 @@ namespace {
 
 class TopBarImpl : public TopBar {
  public:
-  void Draw() override {
+  void DrawEx(bool update_available, Result* result) override {
     ImGui::IdGuard cid("TopBar");
 
     std::string selected_scenario_name;
@@ -136,7 +136,20 @@ class TopBarImpl : public TopBar {
       normal_font.Pop();
       ImGui::EndPopup();
     }
-    ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 4);
+    if (update_available) {
+      ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 8);
+      if (ImGui::SelectableButton(icons::kDownload)) {
+        result->do_update_clicked = true;
+      }
+      {
+        auto normal_font = app_.font_manager().UseDefault();
+        ImGui::HelpTooltip("Default bundle pack update avaiable. Do update now.");
+      }
+      ImGui::SameLine();
+    } else {
+      ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 4);
+    }
+
     if (ImGui::SelectableButton(icons::kSettings)) {
       open_settings = true;
     }

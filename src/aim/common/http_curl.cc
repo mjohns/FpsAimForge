@@ -1,17 +1,14 @@
 #include <curl/curl.h>
 
 #include <string>
-#include <iostream>
 
 #include "absl/cleanup/cleanup.h"
-#include "absl/strings/ascii.h"
 #include "aim/common/http.h"
 #include "aim/common/log.h"
 
 namespace aim {
 namespace {
 
-// Callback to accumulate incoming body chunks into a std::string
 size_t WriteStringCallback(void* contents, size_t size, size_t nmemb, void* userp) {
   size_t total_size = size * nmemb;
   std::string* str = static_cast<std::string*>(userp);
@@ -19,39 +16,16 @@ size_t WriteStringCallback(void* contents, size_t size, size_t nmemb, void* user
   return total_size;
 }
 
-// Callback to parse incoming headers and extract the server's ETag
 size_t HeaderCallback(char* buffer, size_t size, size_t nitems, void* userdata) {
   size_t total_size = size * nitems;
   std::string header(buffer, total_size);
   std::string* etag_out = static_cast<std::string*>(userdata);
 
-  // Case-insensitive check for ETag header line
-  std::string prefix = "etag: ";
-  std::string lower_header = absl::AsciiStrToLower(header);
-
-  if (lower_header.find(prefix) == 0) {
-    // Extract value and trim trailing \r\n
-    std::string value = header.substr(6);
-    while (!value.empty() &&
-           (value.back() == '\r' || value.back() == '\n' || value.back() == ' ')) {
-      value.pop_back();
-    }
-    *etag_out = value;
+  std::optional<std::string> maybe_etag = ParseEtagFromHeader(header);
+  if (maybe_etag) {
+    *etag_out = *maybe_etag;
   }
   return total_size;
-}
-
-std::string EscapeEtag(const std::string& etag) {
-  if (etag.starts_with("W\"")) {
-    return etag;
-  }
-  if (etag.starts_with("w\"")) {
-    return etag;
-  }
-  if (etag.starts_with("\"")) {
-    return etag;
-  }
-  return std::format("\"{}\"", etag);
 }
 
 }  // namespace
@@ -63,14 +37,15 @@ bool DownloadFile(const std::string& url, const std::string& etag, FileDownload*
   }
   auto curl_cleanup = absl::MakeCleanup([=]() { curl_easy_cleanup(curl); });
 
-  struct curl_slist* headers = nullptr;
+  struct curl_slist* headers = curl_slist_append(nullptr, "User-Agent: FpsAimForge");
+  auto headers_cleanup = absl::MakeCleanup([=]() { curl_slist_free_all(headers); });
 
-  // Send If-None-Match header if we already have a stored ETag
   if (!etag.empty()) {
-    std::string etag_header = std::format("If-None-Match: {}", EscapeEtag(etag));
+    std::string etag_header = MakeEtagHeader(etag);
     headers = curl_slist_append(headers, etag_header.c_str());
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   }
+
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteStringCallback);
@@ -88,11 +63,6 @@ bool DownloadFile(const std::string& url, const std::string& etag, FileDownload*
 
   long http_code = 0;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-
-  // Clean up libcurl resources
-  if (headers) {
-    curl_slist_free_all(headers);
-  }
 
   if (res != CURLE_OK) {
     Logger::get()->warn(

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <future>
+#include <optional>
 #include <string>
 
 namespace aim {
@@ -22,5 +23,8 @@ std::future<FileDownloadResult> DownloadFileAsync(const std::string& url, const 
 
 void GlobalInitializeHttp();
 void GlobalCleanupHttp();
+
+std::optional<std::string> ParseEtagFromHeader(const std::string& header);
+std::string MakeEtagHeader(const std::string& etag);
 
 }  // namespace aim

@@ -24,6 +24,7 @@ set(SRCS
     "common/implot_ext.cc"
     "common/implot_ext.h"
     "common/log.h"
+    "common/json.h"
     "common/mat_icons.h"
     "common/name_util.cc"
     "common/name_util.h"

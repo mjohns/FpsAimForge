@@ -45,6 +45,35 @@
 namespace aim {
 namespace {
 
+const char* kDefaultBundlePackEtagKey = "DefaultBundlePackEtag";
+
+struct BundlePackAndEtag {
+  std::shared_ptr<BundlePack> pack;
+  std::string etag;
+};
+
+BundlePackAndEtag DownloadBundlePackOnBackgroundThread(const std::string& url,
+                                                       const std::string& etag) {
+  BundlePackAndEtag result;
+  FileDownload download;
+  if (!DownloadFile(url, etag, &download)) {
+    return result;
+  }
+  if (download.content_unchanged) {
+    return result;
+  }
+
+  std::shared_ptr<BundlePack> pack = ConvertZipToBundlePack(download.content);
+  if (!pack) {
+    Logger::get()->warn("Failed to convert bundle pack zip file. {}", url);
+    return result;
+  }
+
+  result.pack = pack;
+  result.etag = download.etag;
+  return result;
+}
+
 void InitializeImGui(const std::string& imgui_ini_filename,
                      SDL_Window* sdl_window,
                      SDL_GPUDevice* gpu_device,
@@ -153,6 +182,7 @@ class ApplicationImpl : public Application {
     application_start_time_micros_ = GetNowEpochMicros();
     state_ = std::make_unique<ApplicationState>();
     file_system_ = std::make_unique<FileSystem>();
+    local_store_ = std::make_unique<LocalStore>(file_system_.get());
     scenario_manager_ = CreateScenarioManager();
     playlist_manager_ = CreatePlaylistManager();
     guide_manager_ = CreateGuideManager();
@@ -480,6 +510,11 @@ class ApplicationImpl : public Application {
     // ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings);
   }
 
+  void StartHttpDownloads() {
+    GlobalInitializeHttp();
+    http_initialized_ = true;
+  }
+
   std::optional<std::string> InitializeWindow(const Stopwatch& stopwatch) {
     auto& trace = state_->initialization_times.window_trace;
 
@@ -627,7 +662,6 @@ class ApplicationImpl : public Application {
     if (maybe_error) {
       return maybe_error;
     }
-    local_store_ = std::make_unique<LocalStore>(file_system_.get());
     replay_manager_ = CreateReplayManager();
 
     play_time_manager_ = std::make_unique<PlayTimeManager>(db_.get());
@@ -680,9 +714,6 @@ class ApplicationImpl : public Application {
     }
 
     MaybeBackupAimDb(settings_manager_->GetCurrentSettings().db_backups());
-
-    GlobalInitializeHttp();
-    http_initialized_ = true;
 
     return {};
   }
@@ -899,6 +930,8 @@ std::unique_ptr<Application> CreateNewApplication() {
   auto application = std::unique_ptr<ApplicationImpl>(new ApplicationImpl());
   application->state().initialization_times.total.start = stopwatch.GetElapsedMicros();
 
+  application->StartHttpDownloads();
+
   auto maybe_error = application->InitializeWindow(stopwatch);
   if (maybe_error) {
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
@@ -919,13 +952,17 @@ std::unique_ptr<Application> CreateNewApplication() {
   application->logger()->flush();
   application->state().initialization_times.total.end = stopwatch.GetElapsedMicros();
 
+  std::cout << std::format("Initialization took {}s", stopwatch.GetElapsedSeconds()) << std::endl;
+
   // Stopwatch s;
   // s.Start();
   // FileDownload download;
-  // std::string etag = "cda71abb56c6ce7850c58c73f4aacc2614788e1ac47e2b9b274b9a5d24734e38";
-  // if (!DownloadFile("https://github.com/mjohns/FpsAimForgeBundles/archive/refs/heads/main.zip",
-  //                   etag,
-  //                   &download)) {
+  // std::string etag = "W/\"ea2288d04437e5f6c22ca45c738a1985\"";
+  // etag = "";
+  // std::string url = "https://api.github.com/repos/mjohns/FpsAimForgeBundles/branches/main";
+  // // "https://github.com/mjohns/FpsAimForgeBundles/blob/1cee5121188c439c756920b19934f99544ac354a/"
+  // // "AF.bundle.json";
+  // if (!DownloadFile(url, etag, &download)) {
   //   std::cout << "Failed to download url" << std::endl;
   // }
   //
@@ -934,6 +971,7 @@ std::unique_ptr<Application> CreateNewApplication() {
   //                          s.GetElapsedSeconds(),
   //                          download.etag)
   //           << std::endl;
+  // std::cout << std::format("Downloaded {}", download.content) << std::endl;
 
   return application;
 }

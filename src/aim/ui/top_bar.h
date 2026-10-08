@@ -8,7 +8,14 @@ class TopBar {
  public:
   virtual ~TopBar() {}
 
-  virtual void Draw() = 0;
+  struct Result {
+    bool do_update_clicked = false;
+  };
+  virtual void DrawEx(bool update_available, Result* result) = 0;
+
+  void Draw() {
+    DrawEx(false, nullptr);
+  }
 };
 
 std::unique_ptr<TopBar> CreateTopBar();

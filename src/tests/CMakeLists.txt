@@ -14,6 +14,7 @@ set(TEST_SOURCES
   "times_test.cc"
   "util_test.cc"
   "collections_test.cc"
+  "http_test.cc"
 )
 
 # Add the test executable
@@ -26,7 +27,6 @@ target_link_libraries(
     GTest::gmock
     protobuf-matchers
     aim
-    miniz
 )
 
 target_compile_definitions(${NAME} PRIVATE
