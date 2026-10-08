@@ -20,8 +20,8 @@ class LocalStore {
   void Remove(const std::string& key);
   std::string Get(const std::string& key);
 
-  void PutInt(const std::string& key, int value);
-  std::optional<int> GetInt(const std::string& key);
+  void PutInt(const std::string& key, i64 value);
+  std::optional<i64> GetInt(const std::string& key);
 
   void PutBool(const std::string& key, bool value);
   std::optional<bool> GetOptionalBool(const std::string& key);

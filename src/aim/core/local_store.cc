@@ -31,13 +31,13 @@ std::string LocalStore::Get(const std::string& key) {
   return value;
 }
 
-void LocalStore::PutInt(const std::string& key, int value) {
+void LocalStore::PutInt(const std::string& key, i64 value) {
   Put(key, std::format("{}", value));
 }
 
-std::optional<int> LocalStore::GetInt(const std::string& key) {
+std::optional<i64> LocalStore::GetInt(const std::string& key) {
   std::string value = Get(key);
-  int result = 0;
+  i64 result = 0;
   if (absl::SimpleAtoi(value, &result)) {
     return result;
   }
