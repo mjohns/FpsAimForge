@@ -37,6 +37,9 @@ class WallTargetPlacerWaypointSupplier : public WallWaypointSupplier {
 };
 
 std::shared_ptr<MovementController> CreateWallWaypointMovementController(
-    float speed, float acceleration, std::unique_ptr<WallWaypointSupplier> waypoint_supplier);
+    float speed,
+    float acceleration,
+    const Wall& wall,
+    std::unique_ptr<WallWaypointSupplier> waypoint_supplier);
 
 }  // namespace aim

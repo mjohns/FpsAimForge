@@ -14,10 +14,12 @@ class WallWaypointMovementController : public WallDepthMovementController {
  public:
   WallWaypointMovementController(float speed,
                                  float acceleration,
+                                 const Wall& wall,
                                  std::unique_ptr<WallWaypointSupplier> waypoint_supplier)
       : WallDepthMovementController(speed),
         waypoint_supplier_(std::move(waypoint_supplier)),
-        acceleration_(acceleration) {}
+        acceleration_(acceleration),
+        wall_(wall) {}
 
  protected:
   void UpdateDirectionAndSpeed(Target& t, float delta_seconds) override {
@@ -33,6 +35,17 @@ class WallWaypointMovementController : public WallDepthMovementController {
     if (distance_left <= 0 || (is_stopping_ && speed_ <= 0)) {
       StartMovingToNextWaypoint(pos);
       return;
+    }
+
+    if (current_distance_to_travel_ > 0) {
+      float distance_traveled_percent = distance_traveled / current_distance_to_travel_;
+      if (distance_traveled_percent > 0.5f &&
+          !wall_.IsPointInBounds(glm::vec2(pos.x, pos.y), t.radius)) {
+        // Target is close to end of travel and is out of bounds. Turn around but make sure to not
+        // repeatedly trigger while out of bounds (distance_left_percent) check.
+        StartMovingToNextWaypoint(pos);
+        return;
+      }
     }
 
     if (acceleration_ <= 0) {
@@ -86,14 +99,18 @@ class WallWaypointMovementController : public WallDepthMovementController {
   bool initialized_ = false;
   float acceleration_;
   bool is_stopping_ = false;
+  Wall wall_;
 };
 
 }  // namespace
 
 std::shared_ptr<MovementController> CreateWallWaypointMovementController(
-    float speed, float acceleration, std::unique_ptr<WallWaypointSupplier> waypoint_supplier) {
+    float speed,
+    float acceleration,
+    const Wall& wall,
+    std::unique_ptr<WallWaypointSupplier> waypoint_supplier) {
   return std::make_shared<WallWaypointMovementController>(
-      speed, acceleration, std::move(waypoint_supplier));
+      speed, acceleration, wall, std::move(waypoint_supplier));
 }
 
 }  // namespace aim
