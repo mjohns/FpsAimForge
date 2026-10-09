@@ -38,9 +38,7 @@ class WallWaypointMovementController : public WallDepthMovementController {
     }
 
     if (current_distance_to_travel_ > 0) {
-      float distance_traveled_percent = distance_traveled / current_distance_to_travel_;
-      if (distance_traveled_percent > 0.5f &&
-          !wall_.IsPointInBounds(glm::vec2(pos.x, pos.y), t.radius)) {
+      if (distance_left < t.radius && !wall_.IsPointInBounds(glm::vec2(pos.x, pos.y), t.radius)) {
         // Target is close to end of travel and is out of bounds. Turn around but make sure to not
         // repeatedly trigger while out of bounds (distance_left_percent) check.
         StartMovingToNextWaypoint(pos);
