@@ -1,6 +1,7 @@
 #include "object_browser.h"
 
 #include "absl/cleanup/cleanup.h"
+#include "absl/strings/ascii.h"
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
 #include "aim/common/object_type.h"
@@ -115,21 +116,52 @@ class ObjectBrowserImpl : public ObjectBrowser {
       app_.local_store().PutInt(GetViewTypeKey(type_), (int)view_type_);
     }
 
-    ImGui::AlignTextToFramePadding();
-    ImGui::Text("Bundle");
-    ImGui::SameLine();
-    ImGui::SimpleDropdown(
-        "BundlePicker", &bundle_name_filter_, bundle_names_.value(), ImGui::GetFrameHeight() * 7);
-    if (!bundle_name_filter_.empty()) {
+    if (num_matches_ > 0) {
       ImGui::SameLine();
-      if (ImGui::ClearButton("ClearBundle")) {
-        bundle_name_filter_ = "";
+      std::string maybe_s = num_matches_ == 1 ? "" : "s";
+      ImGui::TextDisabled(std::format(
+          "   {} {}{}", num_matches_, absl::AsciiStrToLower(ObjectTypeToString(type_)), maybe_s));
+    }
+
+    float spacing = ImGui::GetStyle().ItemSpacing.x;
+    float search_icon_right_size = spacing + ImGui::GetDefaultCharSizeX() * 2;
+
+    if (ImGui::TreeNode("Advanced filters")) {
+      ImGui::AlignTextToFramePadding();
+      ImGui::Text("Bundle");
+      ImGui::SameLine();
+      ImGui::SimpleDropdown(
+          "BundlePicker", &bundle_name_filter_, bundle_names_.value(), ImGui::GetFrameHeight() * 7);
+      if (!bundle_name_filter_.empty()) {
+        ImGui::SameLine();
+        if (ImGui::ClearButton("ClearBundle")) {
+          bundle_name_filter_ = "";
+        }
       }
+
+      ImGui::AlignTextToFramePadding();
+      ImGui::Text("%s", icons::kRemove);
+      ImGui::SameLine();
+      float available_width = ImGui::GetContentRegionAvail().x;
+      ImGui::SetNextItemWidth(available_width - search_icon_right_size);
+      ImGui::InputTextWithHint("##ExcludeSearchInput", "Exclude matches", &exclude_search_text_);
+
+      ImGui::SameLine();
+      if (exclude_search_text_.size() > 0) {
+        if (ImGui::ClearButton("ClearExcludeSearchText")) {
+          exclude_search_text_ = "";
+        }
+      } else {
+        ImGui::HelpMarker("Filter out results that match the search text entered.");
+      }
+
+      ImGui::TreePop();
+    } else {
+      ClearAdvancedFilters();
     }
 
     float available_width = ImGui::GetContentRegionAvail().x;
-    float spacing = ImGui::GetStyle().ItemSpacing.x;
-    ImGui::SetNextItemWidth(available_width - spacing - ImGui::GetDefaultCharSizeX() * 2);
+    ImGui::SetNextItemWidth(available_width - search_icon_right_size);
     ImGui::InputTextWithHint("##SearchInput", icons::kSearch, &search_text_);
     ImGui::SameLine();
     if (search_text_.size() > 0) {
@@ -156,7 +188,8 @@ class ObjectBrowserImpl : public ObjectBrowser {
       all_names_ = new_names;
       UpdateFilteredNames();
     } else if (search_text_ != handled_search_text_ ||
-               bundle_name_filter_ != handled_bundle_name_filter_) {
+               bundle_name_filter_ != handled_bundle_name_filter_ ||
+               exclude_search_text_ != handled_exclude_search_text_) {
       UpdateFilteredNames();
     }
 
@@ -352,16 +385,28 @@ class ObjectBrowserImpl : public ObjectBrowser {
     return nullptr;
   }
 
+  bool HasAdvancedFilters() {
+    return !bundle_name_filter_.empty() || !exclude_search_text_.empty();
+  }
+
+  void ClearAdvancedFilters() {
+    bundle_name_filter_ = "";
+    exclude_search_text_ = "";
+  }
+
   void UpdateFilteredNames() {
     handled_search_text_ = search_text_;
+    handled_exclude_search_text_ = exclude_search_text_;
     handled_bundle_name_filter_ = bundle_name_filter_;
-    if (search_text_.empty() && bundle_name_filter_.empty()) {
+    if (search_text_.empty() && !HasAdvancedFilters()) {
       // All match. Clear the filter.
       filtered_names_indices_ = {};
+      num_matches_ = all_names_->size();
       return;
     }
 
     auto search_words = GetSearchWords(search_text_);
+    auto exclude_search_words = GetSearchWords(exclude_search_text_);
     if (!filtered_names_indices_) {
       filtered_names_indices_ = std::vector<int>{};
     }
@@ -370,20 +415,29 @@ class ObjectBrowserImpl : public ObjectBrowser {
     indices.reserve(all_names_->size());
 
     for (int i = 0; i < all_names_->size(); ++i) {
-      if (!search_text_.empty() && !StringMatchesSearch((*all_names_)[i], search_words)) {
+      const std::string& name = (*all_names_)[i];
+      if (!search_text_.empty() && !StringMatchesSearch(name, search_words)) {
         continue;
       }
-      if (!bundle_name_filter_.empty() &&
-          !(*all_names_)[i].starts_with(bundle_name_filter_ + " ")) {
+      if (!bundle_name_filter_.empty() && !name.starts_with(bundle_name_filter_ + " ")) {
         continue;
+      }
+      if (!exclude_search_text_.empty()) {
+        if (StringMatchesSearch(name, exclude_search_words)) {
+          continue;
+        }
       }
       indices.push_back(i);
     }
+
+    num_matches_ = indices.size();
   }
 
   Application& app_ = GetUiApp();
   std::string search_text_;
+  std::string exclude_search_text_;
   std::string handled_search_text_;
+  std::string handled_exclude_search_text_;
   const ObjectType type_;
   const std::string type_name_ = ObjectTypeToString(type_);
   ViewType view_type_ = ViewType::ALL;
@@ -394,6 +448,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
   Lazy<std::vector<std::string>> bundle_names_;
   std::string bundle_name_filter_;
   std::string handled_bundle_name_filter_;
+  i64 num_matches_ = 0;
 };
 
 }  // namespace
