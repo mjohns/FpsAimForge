@@ -137,7 +137,7 @@ class TopBarImpl : public TopBar {
       ImGui::EndPopup();
     }
     if (update_available) {
-      ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 8);
+      ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 6);
       if (ImGui::SelectableButton(icons::kDownload)) {
         result->do_update_clicked = true;
       }
