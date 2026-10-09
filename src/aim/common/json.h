@@ -18,6 +18,11 @@
 #ifndef INCLUDE_NLOHMANN_JSON_HPP_
 #define INCLUDE_NLOHMANN_JSON_HPP_
 
+#if defined(_MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable : 5053 5262)
+#endif
+
 #include <algorithm> // all_of, find, for_each, none_of
 #include <cmath> // isnan
 #include <cstddef> // nullptr_t, ptrdiff_t, size_t
@@ -35584,6 +35589,10 @@ NLOHMANN_JSON_NAMESPACE_END
 
 #endif  // INCLUDE_NLOHMANN_JSON_LITERALS_HPP_
 
+#endif
+
+#if defined(_MSC_VER)
+    #pragma warning(pop)
 #endif
 
 #endif  // INCLUDE_NLOHMANN_JSON_HPP_

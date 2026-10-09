@@ -258,9 +258,10 @@ target_link_libraries(
     spdlog)
 
 if(WIN32)
+  target_link_libraries(${NAME} PRIVATE winhttp)
 else()
-find_package(CURL REQUIRED)
-target_link_libraries(${NAME} PRIVATE CURL::libcurl)
+  find_package(CURL REQUIRED)
+  target_link_libraries(${NAME} PRIVATE CURL::libcurl)
 endif()
 
 include(warnings.cmake)
