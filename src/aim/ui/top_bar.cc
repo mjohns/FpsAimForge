@@ -143,7 +143,7 @@ class TopBarImpl : public TopBar {
       }
       {
         auto normal_font = app_.font_manager().UseDefault();
-        ImGui::HelpTooltip("Default bundle pack update avaiable. Do update now.");
+        ImGui::HelpTooltip("Default bundle pack update available.");
       }
       ImGui::SameLine();
     } else {
@@ -172,6 +172,7 @@ class TopBarImpl : public TopBar {
   Application& app_ = GetUiApp();
   SelectVariationDialog select_variation_dialog_{"TopBarSelectScenarioVariation"};
 };
+
 }  // namespace
 
 std::unique_ptr<TopBar> CreateTopBar() {
