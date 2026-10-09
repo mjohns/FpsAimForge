@@ -140,8 +140,9 @@ class ObjectBrowserImpl : public ObjectBrowser {
       ImGui::HelpMarker(
           "Filter results using case insensitive prefix search on words within the name. Spaces "
           "between search terms means name must match all provided terms. This allows further "
-          "refining results by adding more terms/filters. \"cli\" will match \"AF Clicking\" and "
-          "\"AF MyClick\" as camel case words get split when matching.");
+          "refining results by adding more terms/filters. \"cli\" matches \"AF Clicking\" and "
+          "\"AF MyClick\" as camel case words get split when matching. \"cli m\" matches \"AF "
+          "MyClick\".");
     }
 
     ImGui::BeginChild("SearchContent");

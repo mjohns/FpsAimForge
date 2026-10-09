@@ -324,6 +324,7 @@ class GuidesComponentImpl : public GuidesComponent {
 
     ImGui::SpacedSeparator();
 
+    ImGui::BeginChild("CurrentGuideContent");
     GuideViewer::Result result;
     viewer_.Draw(*guide, &result);
     if (result.selected_guide) {
@@ -331,6 +332,7 @@ class GuidesComponentImpl : public GuidesComponent {
       app_.history_manager().UpdateRecentView(ObjectType::GUIDE, *result.selected_guide);
     }
     *current_playlist_selected = result.current_playlist_selected;
+    ImGui::EndChild();
   }
 
   Application& app_ = GetUiApp();
