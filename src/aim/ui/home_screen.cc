@@ -558,7 +558,11 @@ class HomeScreen : public UiScreen {
     }
 
     if (kIsDebugBuild) {
-      ImGui::SetCursorAtBottom();
+      ImGui::SetCursorAtBottom(ImGui::GetFrameHeight() * 2);
+      std::string init_txt =
+          std::format("{:.2f}s init", app_.state().initialization_times.total.GetSeconds());
+      ImGui::Text(init_txt);
+      ImGui::HelpTooltip(init_txt);
       ImGui::Text("%d", (int)ImGui::GetIO().Framerate);
     }
   }
