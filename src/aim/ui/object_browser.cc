@@ -122,24 +122,26 @@ class ObjectBrowserImpl : public ObjectBrowser {
         "BundlePicker", &bundle_name_filter_, bundle_names_.value(), ImGui::GetFrameHeight() * 7);
     if (!bundle_name_filter_.empty()) {
       ImGui::SameLine();
-      if (ImGui::ClearButton()) {
+      if (ImGui::ClearButton("ClearBundle")) {
         bundle_name_filter_ = "";
       }
     }
 
     float available_width = ImGui::GetContentRegionAvail().x;
-    if (search_text_.size() > 0) {
-      float spacing = ImGui::GetStyle().ItemSpacing.x;
-      ImGui::SetNextItemWidth(available_width - spacing - ImGui::GetIconButtonWidth(icons::kClear));
-    } else {
-      ImGui::SetNextItemWidth(available_width);
-    }
+    float spacing = ImGui::GetStyle().ItemSpacing.x;
+    ImGui::SetNextItemWidth(available_width - spacing - ImGui::GetDefaultCharSizeX() * 2);
     ImGui::InputTextWithHint("##SearchInput", icons::kSearch, &search_text_);
+    ImGui::SameLine();
     if (search_text_.size() > 0) {
-      ImGui::SameLine();
-      if (ImGui::ClearButton()) {
+      if (ImGui::ClearButton("ClearSearchText")) {
         search_text_ = "";
       }
+    } else {
+      ImGui::HelpMarker(
+          "Filter results using case insensitive prefix search on words within the name. Spaces "
+          "between search terms means name must match all provided terms. This allows further "
+          "refining results by adding more terms/filters. \"cli\" will match \"AF Clicking\" and "
+          "\"AF MyClick\" as camel case words get split when matching.");
     }
 
     ImGui::BeginChild("SearchContent");

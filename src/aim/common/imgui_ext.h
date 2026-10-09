@@ -379,7 +379,7 @@ bool IconButton(const char* icon, float scale = 0.7);
 bool CircleIconButton(const char* icon, float scale = 0.7);
 float GetIconButtonWidth(const char* icon, float scale = 0.7);
 
-bool ClearButton();
+bool ClearButton(const char* id = "DefaultClearButton");
 
 bool BeginDefaultPopupModal(const char* id, bool* draw);
 

@@ -114,7 +114,8 @@ bool MenuButton() {
   return selected;
 }
 
-bool ClearButton() {
+bool ClearButton(const char* id) {
+  ImGui::IdGuard cid(id);
   return IconButton(aim::icons::kClear);
 }
 
