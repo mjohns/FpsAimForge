@@ -10,10 +10,10 @@ namespace aim {
 
 bool Wall::IsPointInBounds(const glm::vec2& point, float padding) const {
   if (is_barrel) {
-    return IsPointInCircle(point, width - padding);
+    return IsPointInCircle(point, (width / 2.0f) - padding);
   }
-  float half_width = (width - padding) / 2.0f;
-  float half_height = (height - padding) / 2.0f;
+  float half_width = (width / 2.0f) - padding;
+  float half_height = (height / 2.0f) - padding;
   glm::vec2 bottom_left(-1 * half_width, -1 * half_height);
   glm::vec2 top_right(half_width, half_height);
   return IsPointInRectangle(point, bottom_left, top_right);
