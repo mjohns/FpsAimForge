@@ -952,27 +952,6 @@ std::unique_ptr<Application> CreateNewApplication() {
   application->logger()->flush();
   application->state().initialization_times.total.end = stopwatch.GetElapsedMicros();
 
-  std::cout << std::format("Initialization took {}s", stopwatch.GetElapsedSeconds()) << std::endl;
-
-  // Stopwatch s;
-  // s.Start();
-  // FileDownload download;
-  // std::string etag = "W/\"ea2288d04437e5f6c22ca45c738a1985\"";
-  // etag = "";
-  // std::string url = "https://api.github.com/repos/mjohns/FpsAimForgeBundles/branches/main";
-  // // "https://github.com/mjohns/FpsAimForgeBundles/blob/1cee5121188c439c756920b19934f99544ac354a/"
-  // // "AF.bundle.json";
-  // if (!DownloadFile(url, etag, &download)) {
-  //   std::cout << "Failed to download url" << std::endl;
-  // }
-  //
-  // std::cout << std::format("Downloaded {}, {}s, etag={}",
-  //                          download.content.size(),
-  //                          s.GetElapsedSeconds(),
-  //                          download.etag)
-  //           << std::endl;
-  // std::cout << std::format("Downloaded {}", download.content) << std::endl;
-
   return application;
 }
 
