@@ -348,7 +348,7 @@ class AiAssistantScreen : public UiScreen {
     }
 
     ImGui::SameLine();
-    ImGui::TextDisabled(current_session_ == 0 ? "Latest" : std::format("Session -{}", current_session_).c_str());
+    ImGui::TextDisabled("%s", current_session_ == 0 ? "Latest" : std::format("Session -{}", current_session_).c_str());
     ImGui::Separator();
 
     if (!IsNimConfigured()) {
