@@ -838,19 +838,11 @@ Target Scenario::GetTargetTemplate(const TargetProfile& profile) {
       float radius_range = std::abs(start_radius - end_radius);
       g.is_positive_growth = end_radius > start_radius;
 
-      float linear_rate = radius_range / g.grow_time_seconds;
-      float accel_factor =
-          glm::clamp(profile.target_radius_growth_acceleration_factor(), 0.0f, 1.0f);
-      if (accel_factor > 0) {
-        g.speed = linear_rate * (1.0f - accel_factor);
-        // Figure out how much acceleration is needed to cover radius_range in grow time.
-        g.acceleration =
-            GetAccelerationForDistanceInTime(g.speed, radius_range, g.grow_time_seconds);
-      } else {
-        // No acceleration.
-        g.speed = linear_rate;
-        g.acceleration = 0.0f;
-      }
+      // This fork's TargetProfile schema does not expose the growth-acceleration
+      // factor, so use deterministic linear growth rather than referencing a
+      // nonexistent protobuf accessor.
+      g.speed = radius_range / g.grow_time_seconds;
+      g.acceleration = 0.0f;
 
       target.growth_info = g;
     }
