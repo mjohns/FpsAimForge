@@ -28,7 +28,13 @@ class RawTelemetryRecorder {
   };
 
   // Allocate the bounded buffer before gameplay begins so push_back does not grow it mid-run.
-  RawTelemetryRecorder() { events_.reserve(kMaxEvents); }
+  RawTelemetryRecorder() = default;
+
+  void Prepare() {
+    if (events_.capacity() < kMaxEvents) {
+      events_.reserve(kMaxEvents);
+    }
+  }
 
   void Record(const SDL_Event& event, std::int64_t run_time_micros) {
     if (!IsRelevant(event.type)) return;
