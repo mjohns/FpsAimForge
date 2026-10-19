@@ -148,6 +148,7 @@ class Scenario : public Screen {
 
   void UpdatePerfStats();
   void HandleScenarioDone();
+  void ExportTelemetry();
 
   void FlushPlayTime();
 
@@ -175,6 +176,7 @@ class Scenario : public Screen {
   i64 loop_count_ = 0;
   bool from_scenario_editor_;
   bool play_time_flushed_ = false;
+  bool telemetry_exported_ = false;
   const CreateScenarioParams create_params_;
   ImU32 health_color_;
   ImU32 health_background_color_;
