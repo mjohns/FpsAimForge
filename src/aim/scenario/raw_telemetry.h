@@ -27,7 +27,8 @@ class RawTelemetryRecorder {
     float data2 = 0;
   };
 
-  RawTelemetryRecorder() { events_.reserve(kInitialCapacity); }
+  // Allocate the bounded buffer before gameplay begins so push_back does not grow it mid-run.
+  RawTelemetryRecorder() { events_.reserve(kMaxEvents); }
 
   void Record(const SDL_Event& event, std::int64_t run_time_micros) {
     if (!IsRelevant(event.type)) return;
@@ -97,7 +98,7 @@ class RawTelemetryRecorder {
         << "\ndropped_input_events=" << dropped_events_
         << "\ninput_timestamp_units=SDL timestamp nanoseconds (source clock); run_time_micros=active scenario timer microseconds"
         << "\n\n[RAW_INPUT_EVENTS]\n"
-        << "index\tsdl_timestamp_ns\trun_time_micros\tevent_type\tx\ty\tdata1\tdata2\n";
+        << "index\tsdl_timestamp_ns\trun_time_micros\tevent_type\tevent_name\tx\ty\tdata1\tdata2\n";
     for (std::size_t i = 0; i < events_.size(); ++i) {
       const Event& e = events_[i];
       out << i << '\t' << e.sdl_timestamp_ns << '\t' << e.run_time_micros << '\t'
@@ -174,6 +175,18 @@ class RawTelemetryRecorder {
  private:
   static constexpr std::size_t kInitialCapacity = 65536;
   static constexpr std::size_t kMaxEvents = 500000;
+
+  static std::string_view EventName(std::uint32_t type) {
+    switch (type) {
+      case SDL_EVENT_MOUSE_MOTION: return "mouse_motion";
+      case SDL_EVENT_MOUSE_BUTTON_DOWN: return "mouse_button_down";
+      case SDL_EVENT_MOUSE_BUTTON_UP: return "mouse_button_up";
+      case SDL_EVENT_MOUSE_WHEEL: return "mouse_wheel";
+      case SDL_EVENT_KEY_DOWN: return "key_down";
+      case SDL_EVENT_KEY_UP: return "key_up";
+      default: return "other";
+    }
+  }
 
   static bool IsRelevant(std::uint32_t type) {
     return type == SDL_EVENT_MOUSE_MOTION ||
