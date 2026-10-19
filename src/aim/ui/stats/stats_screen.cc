@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <cassert>
+#include <filesystem>
+#include <iomanip>
 #include <mutex>
 #include <optional>
 #include <sstream>
@@ -361,6 +363,9 @@ class StatsScreen : public UiScreen {
                                       false)) {
       PushNextScreen(CreateReplayViewerScreen(replay_, &app_));
     }
+    if (replay_ && ImGui::Selectable("Export Replay as TXT", false)) {
+      ExportReplayTxt();
+    }
     if (replay_ && ImGui::Selectable(std::format("{} Export MP4", icons::kMovie).c_str(),
                                       false)) {
       StartReplayMp4Export();
@@ -381,6 +386,121 @@ class StatsScreen : public UiScreen {
         selected_screen_ = SelectedScreen::PERF;
       }
     }
+  }
+
+  void ExportReplayTxt() {
+    if (!replay_) {
+      txt_export_status_ = "TXT export failed: this run has no saved replay.";
+      return;
+    }
+
+    const auto exports_dir = app_.file_system().GetUserDataPath("replays");
+    std::error_code ec;
+    std::filesystem::create_directories(exports_dir, ec);
+    if (ec) {
+      txt_export_status_ = std::format("TXT export failed: could not create {} ({})",
+                                        exports_dir.string(), ec.message());
+      return;
+    }
+
+    std::string safe_name = scenario_name_;
+    for (char& c : safe_name) {
+      if (c == '/' || c == '\\' || c == ':' || c == '*' || c == '?' ||
+          c == '"' || c == '<' || c == '>' || c == '|' || c == ' ') {
+        c = '_';
+      }
+    }
+    txt_export_path_ = exports_dir / std::format("{}_{}.txt", safe_name, run_id_);
+
+    std::ostringstream out;
+    out << "FPS AIMFORGE REPLAY TXT EXPORT\n";
+    out << "Format: human-readable measurement dump (angles/targets/events/scores)\n";
+    out << "Run ID: " << run_id_ << "\n";
+    out << "Scenario: " << scenario_name_ << "\n";
+    out << "Recorded local time: "
+        << absl::FormatTime("%Y-%m-%d %H:%M:%S",
+                            absl::FromTimeT(details_.stats.epoch_seconds),
+                            absl::LocalTimeZone()) << "\n";
+    out << std::fixed << std::setprecision(6);
+    out << "Score: " << details_.stats.score << "\n";
+    out << "cm/360: " << (replay_->cm_per_360 > 0 ? replay_->cm_per_360
+                                                    : details_.stats.cm_per_360) << "\n";
+    out << "mm/360 (stored stats): " << details_.stats.mm_per_360 << "\n";
+    out << "Duration seconds: " << replay_->GetDurationSeconds() << "\n";
+    out << "Replay FPS: " << replay_->replay_fps << "\n";
+    out << "Target channels: " << replay_->num_targets << "\n";
+    out << "Shot type enum: " << static_cast<int>(replay_->shot_type) << "\n";
+    out << "Frame count: " << replay_->pitch_yaws.size() << "\n";
+    out << "Target sample count: " << replay_->target_data.size() << "\n";
+    out << "Target metadata count: " << replay_->target_metadata.size() << "\n";
+    out << "Event count: " << replay_->events.size() << "\n";
+    out << "Score sample count: " << replay_->scores.size() << "\n\n";
+    out << "[ROOM_PROTO_JSON]\n" << MessageToJson(replay_->room) << "\n\n";
+
+    out << "[AIM_ANGLES]\n";
+    out << "frame,time_seconds,pitch,yaw\n";
+    for (size_t i = 0; i < replay_->pitch_yaws.size(); ++i) {
+      const auto& sample = replay_->pitch_yaws[i];
+      out << i << ',' << static_cast<double>(i) / replay_->replay_fps << ','
+          << sample.pitch << ',' << sample.yaw << '\n';
+    }
+
+    out << "\n[TARGET_METADATA]\n";
+    out << "add_time_seconds,target_id,data_channel,x,y,z,radius,health,is_ghost,has_health,pill_height\n";
+    for (const auto& metadata : replay_->target_metadata) {
+      out << static_cast<double>(metadata.add_time_micros) / 1000000.0 << ','
+          << metadata.target_id << ',' << metadata.data_channel << ','
+          << metadata.initial_data.position.x << ',' << metadata.initial_data.position.y << ','
+          << metadata.initial_data.position.z << ',' << metadata.initial_data.radius << ','
+          << static_cast<int>(metadata.initial_data.health) << ','
+          << metadata.is_ghost << ',' << metadata.has_health << ','
+          << metadata.pill_height << '\n';
+    }
+
+    out << "\n[TARGET_SNAPSHOTS]\n";
+    out << "frame,time_seconds,channel,x,y,z,radius,health\n";
+    for (size_t i = 0; i < replay_->target_data.size(); ++i) {
+      const auto& sample = replay_->target_data[i];
+      const size_t frame = i / replay_->num_targets;
+      const size_t channel = i % replay_->num_targets;
+      out << frame << ',' << static_cast<double>(frame) / replay_->replay_fps << ','
+          << channel << ',' << sample.position.x << ',' << sample.position.y << ','
+          << sample.position.z << ',' << sample.radius << ','
+          << static_cast<int>(sample.health) << '\n';
+    }
+
+    out << "\n[EVENTS]\n";
+    out << "time_seconds,event_type,event_value\n";
+    for (const auto& event : replay_->events) {
+      out << static_cast<double>(event.time_micros) / 1000000.0 << ',';
+      switch (event.type) {
+        case ReplayEventType::PLAY_SOUND:
+          out << "PLAY_SOUND," << static_cast<int>(event.data.play_sound.sound);
+          break;
+        case ReplayEventType::REMOVE_TARGET:
+          out << "REMOVE_TARGET," << event.data.target_id;
+          break;
+        case ReplayEventType::MOUSE_CLICK:
+          out << "MOUSE_CLICK," << (event.data.is_hit ? "HIT" : "MISS");
+          break;
+        default:
+          out << "UNKNOWN,";
+          break;
+      }
+      out << '\n';
+    }
+
+    out << "\n[SCORE_SAMPLES]\n";
+    out << "time_seconds,score\n";
+    for (size_t i = 0; i < replay_->scores.size(); ++i) {
+      out << static_cast<double>(i) / kRecordScoresPerSecond << ',' << replay_->scores[i] << '\n';
+    }
+
+    if (!WriteStringToFile(txt_export_path_, out.str())) {
+      txt_export_status_ = "TXT export failed: unable to write the file. Check folder permissions.";
+      return;
+    }
+    txt_export_status_ = std::format("Replay TXT exported: {}", txt_export_path_.string());
   }
 
   void StartReplayMp4Export() {
@@ -406,6 +526,13 @@ class StatsScreen : public UiScreen {
   }
 
   void DrawExportStatus() {
+    if (!txt_export_status_.empty()) {
+      ImGui::TextWrapped("%s", txt_export_status_.c_str());
+      if (!txt_export_path_.empty() && ImGui::Button("Open TXT export folder")) {
+        OpenFolderInExplorer(txt_export_path_.parent_path());
+      }
+      ImGui::Spacing();
+    }
     if (!export_capture_state_) return;
     auto vis = export_capture_state_->vis_capture;
     if (!vis) {
@@ -1092,6 +1219,8 @@ class StatsScreen : public UiScreen {
   std::shared_ptr<VisualReplayCaptureState> visual_capture_state_;
   bool ai_watch_pending_ = false;
   std::shared_ptr<ReplayExportCaptureState> export_capture_state_;
+  std::filesystem::path txt_export_path_;
+  std::string txt_export_status_;
   float score_target_ = 0;
   bool delay_display_;
   std::unique_ptr<TopBar> top_bar_ = CreateTopBar();
