@@ -324,6 +324,7 @@ void Scenario::BeginRunWithOptionalCountdown() {
   }
   run_state_ = ScenarioRunState::RUNNING;
   timer_.ResumeRun();
+  raw_telemetry_.MarkRunStarted();
 }
 
 void Scenario::OnAttach() {
