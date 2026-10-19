@@ -102,8 +102,8 @@ class RawTelemetryRecorder {
     for (std::size_t i = 0; i < events_.size(); ++i) {
       const Event& e = events_[i];
       out << i << '\t' << e.sdl_timestamp_ns << '\t' << e.run_time_micros << '\t'
-          << e.type << '\t' << e.x << '\t' << e.y << '\t' << e.data1 << '\t'
-          << e.data2 << '\n';
+          << e.type << '\t' << EventName(e.type) << '\t' << e.x << '\t' << e.y << '\t'
+          << e.data1 << '\t' << e.data2 << '\n';
     }
 
     if (replay != nullptr) {
@@ -173,7 +173,6 @@ class RawTelemetryRecorder {
   }
 
  private:
-  static constexpr std::size_t kInitialCapacity = 65536;
   static constexpr std::size_t kMaxEvents = 500000;
 
   static std::string_view EventName(std::uint32_t type) {
