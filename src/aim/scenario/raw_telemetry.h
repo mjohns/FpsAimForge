@@ -40,6 +40,11 @@ class RawTelemetryRecorder {
     }
   }
 
+  void MarkRunStarted() {
+    run_start_epoch_ms_ = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count();
+  }
+
   void Record(const SDL_Event& event, std::int64_t run_time_micros) {
     if (!IsRelevant(event.type)) return;
     if (events_.size() >= kMaxEvents) {
@@ -222,6 +227,7 @@ class RawTelemetryRecorder {
 
   std::vector<Event> events_;
   std::uint64_t dropped_events_ = 0;
+  std::int64_t run_start_epoch_ms_ = 0;
 };
 
 }  // namespace aim
