@@ -315,6 +315,7 @@ void Scenario::OnEvent(const SDL_Event& event) {
 }
 
 void Scenario::BeginRunWithOptionalCountdown() {
+  raw_telemetry_.Prepare();
   float countdown_seconds = settings_.start_countdown_time();
   if (countdown_seconds > 0) {
     start_countdown_stopwatch_.Start();
@@ -366,6 +367,7 @@ void Scenario::OnTickStart() {
 
   if (run_state_ == ScenarioRunState::NOT_STARTED) {
     if (force_start_immediately_) {
+      raw_telemetry_.Prepare();
       run_state_ = ScenarioRunState::RUNNING;
       timer_.ResumeRun();
     } else if (settings_.disable_click_to_start()) {
