@@ -116,12 +116,11 @@ void BaseScenario::UpdateState(UpdateStateData* data) {
       bool is_growing = delta_seconds < g.grow_time_seconds;
       if (is_growing) {
         // Change radius.
-        float radius_range = std::abs(g.start_radius - g.end_radius);
-        float rate = radius_range / g.grow_time_seconds;
-        if (g.start_radius < g.end_radius) {
-          target.radius = g.start_radius + (rate * delta_seconds);
+        float radius_change = GetDistance(g.speed, g.acceleration, delta_seconds);
+        if (g.is_positive_growth) {
+          target.radius = g.start_radius + radius_change;
         } else {
-          target.radius = g.start_radius - (rate * delta_seconds);
+          target.radius = g.start_radius - radius_change;
         }
       } else {
         if (delta_seconds >= (g.grow_time_seconds + g.time_at_final_size_seconds)) {
