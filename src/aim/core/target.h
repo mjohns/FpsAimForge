@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "aim/common/random.h"
+#include "aim/common/util.h"
 #include "aim/common/simple_types.h"
 #include "aim/common/times.h"
 #include "aim/core/camera.h"
