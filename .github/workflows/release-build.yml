@@ -128,7 +128,7 @@ jobs:
           # FFmpeg is used only to turn the app's captured replay frames into MP4 for
           # NVIDIA's hosted video-capable NIM endpoint. The binary is distributed
           # separately from the application source and remains unmodified.
-          $ffmpegZip = "$env:RUNNER_TEMP\\ffmpeg902.zip"
+          $ffmpegZip = "$env:RUNNER_TEMP\ffmpeg902.zip"
           Invoke-WebRequest -Uri "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902.zip" -OutFile $ffmpegZip
 
           # Validate the download against the digest published by GitHub for this release asset.
@@ -144,9 +144,9 @@ jobs:
             throw "FFmpeg archive checksum mismatch: downloaded bytes differ from the digest published by GitHub."
           }
 
-          $ffmpegExtract = "$env:RUNNER_TEMP\\ffmpeg902"
+          $ffmpegExtract = "$env:RUNNER_TEMP\ffmpeg902"
           Expand-Archive -Path $ffmpegZip -DestinationPath $ffmpegExtract -Force
-          Copy-Item "$ffmpegExtract\\ffmpeg.exe" release-windows/ffmpeg.exe
+          Copy-Item "$ffmpegExtract\ffmpeg.exe" release-windows/ffmpeg.exe
           if (-not (Test-Path release-windows/ffmpeg.exe)) { throw "Bundled FFmpeg executable missing." }
 
           if (-not (Test-Path release-windows/FpsAimForge.exe)) { throw "Windows executable missing from release package." }
@@ -166,9 +166,9 @@ jobs:
           if ($ffmpegHash -ne $expectedHash) {
             throw "FFmpeg archive checksum mismatch: downloaded bytes differ from the digest published by GitHub."
           }
-          $ffmpegExtract = "$env:RUNNER_TEMP\\ffmpeg902"
+          $ffmpegExtract = "$env:RUNNER_TEMP\ffmpeg902"
           Expand-Archive -Path $ffmpegZip -DestinationPath $ffmpegExtract -Force
-          Copy-Item "$ffmpegExtract\\ffmpeg.exe" release-windows/ffmpeg.exe
+          Copy-Item "$ffmpegExtract\ffmpeg.exe" release-windows/ffmpeg.exe
           if (-not (Test-Path release-windows/ffmpeg.exe)) { throw "Bundled FFmpeg executable missing." }
 
           if (-not (Test-Path release-windows/FpsAimForge.exe)) { throw "Windows executable missing from release package." }
