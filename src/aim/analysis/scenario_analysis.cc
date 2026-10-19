@@ -472,10 +472,21 @@ std::string BuildNimAnalysisPrompt(const ScenarioAnalysis& analysis,
     "Be specific about WHAT the player felt and DID, not what the numbers say. "
     "Use only the supplied data — do not invent events.\n\n";
 
-  prompt << "Scenario data (internal — do NOT quote these numbers in your reply):\n";
+  prompt << "AI Overview — measured run context (internal; explain it in plain English):\n";
   prompt << analysis.deterministic_summary << "\n";
+  prompt << std::format("Exact cm/360: {:.3f}\n", analysis.cm_per_360);
   prompt << "Tracking: " << analysis.tracking_summary << "\n";
   prompt << "Timeline: " << analysis.timeline_summary << "\n\n";
+
+  prompt << "Weak Points — evidence-backed issues from this run:\n";
+  if (analysis.findings.empty()) {
+    prompt << "- No deterministic weak point was detected in the available replay data.\n";
+  } else {
+    for (const auto& finding : analysis.findings) {
+      prompt << "- " << finding.title << ": " << finding.detail << "\n";
+    }
+  }
+  prompt << "\n";
 
   if (!history.empty()) {
     prompt << "Recent history (" << std::min(history.size(), size_t(10)) << " runs):\n";
@@ -496,6 +507,10 @@ std::string BuildNimAnalysisPrompt(const ScenarioAnalysis& analysis,
 
   prompt <<
     "Now write your coaching response using EXACTLY these section headings:\n\n"
+    "AI Overview\n"
+    "(A concise overall interpretation of this run, grounded in measured data.)\n\n"
+    "Weak Points\n"
+    "(Name only weaknesses supported by the replay; if none are supported, say so.)\n\n"
     "How It Went\n"
     "(2-3 sentences. Tell them how the run felt overall — were they mostly on target or "
     "struggling? Did they improve or get worse as the scenario went on? Talk like a coach, not a report.)\n\n"
