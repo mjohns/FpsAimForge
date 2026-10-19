@@ -112,6 +112,7 @@ class RawTelemetryRecorder {
         << "schema_version=1\n"
         << "app_version=" << kAimForgeVersion
         << "\npolling_rate_hz=not_exposed_by_application"
+        << "\nrun_start_epoch_ms=" << run_start_epoch_ms_
         << "\nexported_at_epoch_ms="
         << std::chrono::duration_cast<std::chrono::milliseconds>(
                std::chrono::system_clock::now().time_since_epoch()).count()
@@ -196,6 +197,9 @@ class RawTelemetryRecorder {
     out << "\n[DATA_QUALITY]\n"
         << "events_dropped_due_to_capacity=" << dropped_events_
         << "\nraw_input_capture_enabled=true\n"
+        << "replay_data_available=" << (replay != nullptr) << "\n"
+        << "scenario_config_available=" << has_scenario_config << "\n"
+        << "settings_config_available=" << has_settings_config << "\n"
         << "note=No raw events were sent to any remote service by this exporter.\n";
     out.flush();
     return out.good();
