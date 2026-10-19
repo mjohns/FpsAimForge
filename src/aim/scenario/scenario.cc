@@ -826,13 +826,34 @@ Target Scenario::GetTargetTemplate(const TargetProfile& profile) {
     target.radius_at_kill = k;
   }
   if (profile.target_radius_growth_time_seconds() > 0) {
-    TargetGrowthInfo growth_info;
-    growth_info.start_time_seconds = timer_.GetElapsedSeconds();
-    growth_info.grow_time_seconds = profile.target_radius_growth_time_seconds();
-    growth_info.time_at_final_size_seconds = profile.target_radius_growth_final_size_time_seconds();
-    growth_info.end_radius = profile.target_radius_growth_size();
-    growth_info.start_radius = target.radius;
-    target.growth_info = growth_info;
+    TargetGrowthInfo g;
+    g.start_time_seconds = timer_.GetElapsedSeconds();
+    g.grow_time_seconds = profile.target_radius_growth_time_seconds();
+    g.time_at_final_size_seconds = profile.target_radius_growth_final_size_time_seconds();
+    g.start_radius = target.radius;
+    if (g.grow_time_seconds > 0) {
+      float start_radius = target.radius;
+      float end_radius = profile.target_radius_growth_size();
+
+      float radius_range = std::abs(start_radius - end_radius);
+      g.is_positive_growth = end_radius > start_radius;
+
+      float linear_rate = radius_range / g.grow_time_seconds;
+      float accel_factor =
+          glm::clamp(profile.target_radius_growth_acceleration_factor(), 0.0f, 1.0f);
+      if (accel_factor > 0) {
+        g.speed = linear_rate * (1.0f - accel_factor);
+        // Figure out how much acceleration is needed to cover radius_range in grow time.
+        g.acceleration =
+            GetAccelerationForDistanceInTime(g.speed, radius_range, g.grow_time_seconds);
+      } else {
+        // No acceleration.
+        g.speed = linear_rate;
+        g.acceleration = 0.0f;
+      }
+
+      target.growth_info = g;
+    }
   }
 
   target.speed = app_.rand().GetJittered(profile.speed(), profile.speed_jitter());
