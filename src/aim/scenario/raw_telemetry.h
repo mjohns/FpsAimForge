@@ -40,6 +40,8 @@ class RawTelemetryRecorder {
     }
   }
 
+  bool HasRunStarted() const { return run_start_epoch_ms_ > 0; }
+
   void MarkRunStarted() {
     run_start_epoch_ms_ = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()).count();
