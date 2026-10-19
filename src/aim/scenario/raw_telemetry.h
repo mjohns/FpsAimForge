@@ -127,7 +127,12 @@ class RawTelemetryRecorder {
         << (has_scenario_config ? scenario_config : "unavailable")
         << "\n\n[SETTINGS_PROTO_TEXT]\n"
         << (has_settings_config ? settings_config : "unavailable")
-        << "\n\n[RAW_INPUT_EVENTS]\n"
+        << "\n\n[EVENT_FIELD_LEGEND]\n"
+        << "mouse_motion: x=relative_dx, y=relative_dy, data1=absolute_x, data2=absolute_y\n"
+        << "mouse_button_down/up: x=button_id, y=click_count, data1=cursor_x, data2=cursor_y\n"
+        << "mouse_wheel: x=horizontal_delta, y=vertical_delta\n"
+        << "key_down/up: x=keycode, y=repeat_flag, data1=scancode, data2=modifier_mask\n"
+        << "\n[RAW_INPUT_EVENTS]\n"
         << "index\tsdl_timestamp_ns\trun_time_micros\tevent_type\tevent_name\tx\ty\tdata1\tdata2\n";
     for (std::size_t i = 0; i < events_.size(); ++i) {
       const Event& e = events_[i];
