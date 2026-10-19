@@ -99,4 +99,15 @@ static float GetStartSpeedForStopDistance(float stop_distance, float acceleratio
   return std::sqrt(speed_squared);
 }
 
+static float GetAccelerationForDistanceInTime(float start_speed, float distance, float time) {
+  if (time > 0) {
+    return 2.0f * (distance - start_speed * time) / (time * time);
+  }
+  return 0;
+}
+
+static float GetDistance(float start_speed, float acceleration, float time) {
+  return start_speed * time + 0.5f * acceleration * (time * time);
+}
+
 }  // namespace aim
