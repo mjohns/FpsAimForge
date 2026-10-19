@@ -131,6 +131,7 @@ set(SRCS
     "scenario/metronome.h"
     "scenario/replay.cc"
     "scenario/replay.h"
+    "scenario/raw_telemetry.h"
     "scenario/replay_viewer.cc"
     "scenario/replay_viewer.h"
     "scenario/scenario.cc"

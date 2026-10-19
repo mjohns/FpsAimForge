@@ -57,10 +57,16 @@ std::vector<float> GetMouseSpeeds(const Replay& replay) {
 
   double seconds_per_frame = 1.0 / static_cast<double>(replay.replay_fps);
 
-  // When calculating delta, look at the pitch/yaw n frames ahead.
-  i64 look_ahead_size = 4;
-  for (int frame_number = 0; frame_number < replay.pitch_yaws.size() - look_ahead_size;
-       ++frame_number) {
+  // When calculating delta, look at the pitch/yaw n frames ahead. Avoid
+  // subtracting from size_t before checking the length: short or malformed
+  // replays would otherwise underflow and the loop could read out of bounds.
+  constexpr size_t kLookAheadFrames = 4;
+  if (replay.pitch_yaws.size() <= kLookAheadFrames || replay.replay_fps == 0) {
+    return result;
+  }
+  const i64 look_ahead_size = static_cast<i64>(kLookAheadFrames);
+  const size_t frame_count = replay.pitch_yaws.size() - kLookAheadFrames;
+  for (size_t frame_number = 0; frame_number < frame_count; ++frame_number) {
     const PitchYaw& current_pitch_yaw = replay.pitch_yaws[frame_number];
     const PitchYaw& next_pitch_yaw = replay.pitch_yaws[frame_number + look_ahead_size];
 

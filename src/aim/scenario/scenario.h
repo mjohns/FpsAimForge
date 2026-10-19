@@ -15,6 +15,7 @@
 #include "aim/proto/theme.pb.h"
 #include "aim/scenario/metronome.h"
 #include "aim/scenario/replay.h"
+#include "aim/scenario/raw_telemetry.h"
 #include "aim/scenario/scenario_timer.h"
 #include "glm/mat4x4.hpp"  // IWYU pragma: keep
 #include "glm/vec3.hpp"    // IWYU pragma: keep
@@ -125,6 +126,7 @@ class Scenario : public Screen {
   glm::mat4 projection_;
 
   std::unique_ptr<ReplayRecorder> replay_;
+  RawTelemetryRecorder raw_telemetry_;
   Theme theme_;
   bool has_started_ = false;
   ScenarioRunState run_state_ = ScenarioRunState::NOT_STARTED;
