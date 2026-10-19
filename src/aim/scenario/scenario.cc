@@ -659,6 +659,8 @@ void Scenario::HandleScenarioDone() {
                                    effective_cm_per_360_,
                                    app_.settings_manager().GetDpi(),
                                    timer_.GetElapsedSeconds(),
+                                   def_,
+                                   settings_,
                                    replay_data)) {
       Logger::get()->warn("Failed to export local raw aim telemetry to {}", export_path.string());
     } else {
