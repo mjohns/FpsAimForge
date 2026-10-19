@@ -370,6 +370,7 @@ void Scenario::OnTickStart() {
       raw_telemetry_.Prepare();
       run_state_ = ScenarioRunState::RUNNING;
       timer_.ResumeRun();
+      raw_telemetry_.MarkRunStarted();
     } else if (settings_.disable_click_to_start()) {
       BeginRunWithOptionalCountdown();
     } else {
@@ -486,6 +487,7 @@ void Scenario::OnStartCountdownClickTick() {
   if (wait_seconds <= 0 || elapsed_seconds >= wait_seconds) {
     run_state_ = ScenarioRunState::RUNNING;
     timer_.ResumeRun();
+    raw_telemetry_.MarkRunStarted();
     start_countdown_stopwatch_.Stop();
     return;
   }
