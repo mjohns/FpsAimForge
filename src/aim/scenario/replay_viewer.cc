@@ -64,18 +64,19 @@ std::vector<float> GetMouseSpeeds(const Replay& replay) {
   if (replay.pitch_yaws.size() <= kLookAheadFrames || replay.replay_fps == 0) {
     return result;
   }
-  const i64 look_ahead_size = static_cast<i64>(kLookAheadFrames);
+  const double look_ahead_seconds =
+      seconds_per_frame * static_cast<double>(kLookAheadFrames);
   const size_t frame_count = replay.pitch_yaws.size() - kLookAheadFrames;
   for (size_t frame_number = 0; frame_number < frame_count; ++frame_number) {
     const PitchYaw& current_pitch_yaw = replay.pitch_yaws[frame_number];
-    const PitchYaw& next_pitch_yaw = replay.pitch_yaws[frame_number + look_ahead_size];
+    const PitchYaw& next_pitch_yaw = replay.pitch_yaws[frame_number + kLookAheadFrames];
 
     float delta_pitch = next_pitch_yaw.pitch - current_pitch_yaw.pitch;
     float delta_yaw = next_pitch_yaw.yaw - current_pitch_yaw.yaw;
 
     float delta = abs(delta_pitch) + abs(delta_yaw);
 
-    float delta_per_second = delta / (seconds_per_frame * look_ahead_size);
+    float delta_per_second = static_cast<float>(delta / look_ahead_seconds);
 
     float speed = delta_per_second * 100;
     result.push_back(speed);
