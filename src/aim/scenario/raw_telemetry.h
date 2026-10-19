@@ -10,6 +10,10 @@
 #include <vector>
 
 #include "SDL3/SDL.h"
+#include "google/protobuf/text_format.h"
+#include "aim/core/version.h"
+#include "aim/proto/settings.pb.h"
+#include "aim/proto/scenario.pb.h"
 #include "aim/scenario/replay.h"
 
 namespace aim {
@@ -83,6 +87,8 @@ class RawTelemetryRecorder {
                   double cm_per_360,
                   double dpi,
                   double duration_seconds,
+                  const ScenarioDef& scenario_def,
+                  const Settings& settings,
                   const Replay* replay) const {
     std::error_code ec;
     std::filesystem::create_directories(path.parent_path(), ec);
@@ -91,9 +97,17 @@ class RawTelemetryRecorder {
     std::ofstream out(path, std::ios::out | std::ios::trunc);
     if (!out) return false;
     out.precision(std::numeric_limits<float>::max_digits10);
+    std::string scenario_config;
+    std::string settings_config;
+    const bool has_scenario_config =
+        google::protobuf::TextFormat::PrintToString(scenario_def, &scenario_config);
+    const bool has_settings_config =
+        google::protobuf::TextFormat::PrintToString(settings, &settings_config);
     out << "FPS AIM FORGE RAW AIM TELEMETRY\n"
         << "schema_version=1\n"
-        << "exported_at_epoch_ms="
+        << "app_version=" << kAimForgeVersion
+        << "\npolling_rate_hz=not_exposed_by_application"
+        << "\nexported_at_epoch_ms="
         << std::chrono::duration_cast<std::chrono::milliseconds>(
                std::chrono::system_clock::now().time_since_epoch()).count()
         << "\nscenario=" << scenario_name
@@ -103,6 +117,10 @@ class RawTelemetryRecorder {
         << "\nraw_input_events=" << events_.size()
         << "\ndropped_input_events=" << dropped_events_
         << "\ninput_timestamp_units=SDL timestamp nanoseconds (source clock); run_time_micros=active scenario timer microseconds"
+        << "\n\n[SCENARIO_CONFIG_PROTO_TEXT]\n"
+        << (has_scenario_config ? scenario_config : "unavailable")
+        << "\n\n[SETTINGS_PROTO_TEXT]\n"
+        << (has_settings_config ? settings_config : "unavailable")
         << "\n\n[RAW_INPUT_EVENTS]\n"
         << "index\tsdl_timestamp_ns\trun_time_micros\tevent_type\tevent_name\tx\ty\tdata1\tdata2\n";
     for (std::size_t i = 0; i < events_.size(); ++i) {
