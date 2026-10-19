@@ -19,11 +19,14 @@ struct RadiusAtKill {
 };
 
 struct TargetGrowthInfo {
+  float start_time_seconds;
   float grow_time_seconds;
   float time_at_final_size_seconds = 0;
-  float start_time_seconds;
   float start_radius;
-  float end_radius;
+
+  float speed;
+  float acceleration = 0.0f;
+  bool is_positive_growth = true;
 };
 
 struct Target;
