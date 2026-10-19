@@ -95,6 +95,7 @@ bool ShouldRecordReplay(ScenarioDef& def,
 }  // namespace
 
 Scenario::~Scenario() {
+  ExportTelemetry();
   FlushPlayTime();
 }
 
@@ -649,27 +650,33 @@ void Scenario::OnRunningTick() {
   UpdatePerfStats();
 }
 
+void Scenario::ExportTelemetry() {
+  if (telemetry_exported_ || from_scenario_editor_ || !raw_telemetry_.HasRunStarted()) {
+    return;
+  }
+  telemetry_exported_ = true;
+  const auto export_path = app_.file_system().GetUserDataPath("aim-telemetry") /
+      std::format("aim-telemetry-{}.txt", GetNowEpochMicros());
+  const Replay* replay_data = replay_ ? replay_->replay().get() : nullptr;
+  if (!raw_telemetry_.ExportText(export_path,
+                                 scenario_name_,
+                                 effective_cm_per_360_,
+                                 app_.settings_manager().GetDpi(),
+                                 timer_.GetElapsedSeconds(),
+                                 def_,
+                                 settings_,
+                                 replay_data)) {
+    Logger::get()->warn("Failed to export local raw aim telemetry to {}", export_path.string());
+  } else {
+    Logger::get()->info("Saved local raw aim telemetry to {}", export_path.string());
+  }
+}
+
 void Scenario::HandleScenarioDone() {
   if (replay_) {
     replay_->FillInMissingPitchYaws();
   }
-  if (!from_scenario_editor_) {
-    const auto export_path = app_.file_system().GetUserDataPath("aim-telemetry") /
-        std::format("aim-telemetry-{}.txt", GetNowEpochMicros());
-    const Replay* replay_data = replay_ ? replay_->replay().get() : nullptr;
-    if (!raw_telemetry_.ExportText(export_path,
-                                   scenario_name_,
-                                   effective_cm_per_360_,
-                                   app_.settings_manager().GetDpi(),
-                                   timer_.GetElapsedSeconds(),
-                                   def_,
-                                   settings_,
-                                   replay_data)) {
-      Logger::get()->warn("Failed to export local raw aim telemetry to {}", export_path.string());
-    } else {
-      Logger::get()->info("Saved local raw aim telemetry to {}", export_path.string());
-    }
-  }
+  ExportTelemetry();
   if (from_scenario_editor_) {
     PopSelf();
     return;
