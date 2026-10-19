@@ -158,26 +158,4 @@ jobs:
         with:
           name: FpsAimForge-windows-x64
           path: release-windows/
-          if-no-files-found: error) {
-            throw "GitHub release metadata did not provide a SHA-256 digest for ffmpeg902.zip."
-          }
-          $expectedHash = $publishedDigest.Substring(7).ToLowerInvariant()
-          $ffmpegHash = (Get-FileHash $ffmpegZip -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($ffmpegHash -ne $expectedHash) {
-            throw "FFmpeg archive checksum mismatch: downloaded bytes differ from the digest published by GitHub."
-          }
-          $ffmpegExtract = "$env:RUNNER_TEMP\ffmpeg902"
-          Expand-Archive -Path $ffmpegZip -DestinationPath $ffmpegExtract -Force
-          Copy-Item "$ffmpegExtract\ffmpeg.exe" release-windows/ffmpeg.exe
-          if (-not (Test-Path release-windows/ffmpeg.exe)) { throw "Bundled FFmpeg executable missing." }
-
-          if (-not (Test-Path release-windows/FpsAimForge.exe)) { throw "Windows executable missing from release package." }
-          $shaderCount = (Get-ChildItem -Recurse -File release-windows/shaders | Measure-Object).Count
-          if ($shaderCount -lt 1) { throw "Compiled shader package is empty." }
-
-      - name: Upload Windows release artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: FpsAimForge-windows-x64
-          path: release-windows/
           if-no-files-found: error
