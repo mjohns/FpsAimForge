@@ -180,10 +180,10 @@ class SettingsScreen : public UiScreen {
 
       ImGui::InputFloat(ImGui::InputFloatParams("Fps")
                             .set_label("Max render fps")
-                            .set_is_optional()
+                            .set_default(1200)
                             .set_step(10, 100)
                             .set_width(char_x_ * 10)
-                            .set_range(30, 2000),
+                            .set_min(10),
                         PROTO_FLOAT_FIELD(Settings, &updater_.settings, max_render_fps));
       ImGui::SameLine();
       ImGui::HelpMarker(

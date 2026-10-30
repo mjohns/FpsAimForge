@@ -25,27 +25,24 @@
 #include "aim/proto/common.pb.h"
 #include "aim/proto/settings.pb.h"
 #include "aim/scenario/metronome.h"
-#include "aim/scenario/replay_viewer.h"
 #include "aim/scenario/scenario_factory.h"
 #include "aim/scenario/scenario_timer.h"
 #include "aim/ui/editor/scenario_editor_screen.h"
 #include "aim/ui/quick_settings_screen.h"
 #include "aim/ui/stats/stats_screen.h"
 #include "aim/ui/ui_app.h"
-#include "aim/ui/ui_screen.h"
 #include "glm/common.hpp"
 #include "glm/mat4x4.hpp"  // IWYU pragma: keep
 #include "glm/vec2.hpp"    // IWYU pragma: keep
 #include "glm/vec3.hpp"    // IWYU pragma: keep
 #include "imgui.h"
-#include "imgui/backends/imgui_impl_sdl3.h"
 
 namespace aim {
 namespace {
 
 constexpr const i16 kReplayFps = 240;
 constexpr const i16 kStaticReplayFps = 480;
-constexpr const int kDefaultTargetRenderFps = 600;
+constexpr const int kDefaultTargetRenderFps = 1200;
 constexpr const i64 kClickDebounceMicros = 3 * 1000;
 // Maximum amount of time on "click to start" screen before exiting back to menu.
 constexpr const i64 kMaxWaitTimeMicros = SecondsToMicros(60 * 2);
