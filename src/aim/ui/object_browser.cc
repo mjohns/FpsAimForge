@@ -24,6 +24,7 @@
 #include "aim/ui/ui_app.h"
 #include "editor/scenario_editor_common.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -177,7 +178,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
 
     if (ImGui::TreeNode("Advanced filters")) {
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Bundle");
+      ImGui::Text("%s", Tr("Bundle"));
       ImGui::SameLine();
       ImGui::SimpleDropdown("BundlePicker", &bundle_name_filter_, bundle_names_.value());
       if (!bundle_name_filter_.empty()) {
@@ -188,7 +189,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
       }
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Shot type");
+      ImGui::Text("%s", Tr("Shot type"));
       ImGui::SameLine();
       ImGui::SimpleTypeDropdown("ShotTypeFilterDropdown", &shot_type_filter_, shot_types_);
       if (shot_type_filter_ != ShotType::TYPE_NOT_SET) {
@@ -199,7 +200,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
       }
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Target score");
+      ImGui::Text("%s", Tr("Target score"));
       ImGui::SameLine();
       ImGui::SimpleTypeDropdown(
           "TargetScoreFilterDropdown", &target_score_filter_, kTargetScoreFilters);
@@ -307,11 +308,11 @@ class ObjectBrowserImpl : public ObjectBrowser {
         }
 
         if (is_scenario) {
-          if (ImGui::BeginMenu("Add to")) {
+          if (ImGui::BeginMenu(Tr("Add to"))) {
             DrawAddScenarioToPlaylistMenu(name);
             ImGui::EndMenu();
           }
-          if (ImGui::BeginMenu("Advanced")) {
+          if (ImGui::BeginMenu(Tr("Advanced"))) {
             DrawAdvancedScenarioMenu(name, result);
             ImGui::EndMenu();
           }
@@ -359,18 +360,18 @@ class ObjectBrowserImpl : public ObjectBrowser {
   }
 
   void DrawAdvancedScenarioMenu(const std::string& name, Result* result) {
-    if (ImGui::Selectable("View stats")) {
+    if (ImGui::Selectable(Tr("View stats"))) {
       app_.PushNextScreen(
           CreateStatsScreen(name, app_.stats_manager().GetLatestRunId(name), false));
     }
-    if (ImGui::Selectable("Copy as reference")) {
+    if (ImGui::Selectable(Tr("Copy as reference"))) {
       ScenarioEditorOptions opts;
       opts.scenario_name = name;
       opts.is_new_copy = true;
       opts.copy_as_reference = true;
       app_.PushNextScreen(CreateScenarioEditorScreen(opts));
     }
-    if (ImGui::Selectable("Create levels playlist")) {
+    if (ImGui::Selectable(Tr("Create levels playlist"))) {
       result->create_level_playlist_for_scenario = name;
     }
   }
@@ -383,7 +384,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
       if (ImGui::IconButton(icons::kDelete)) {
         app_.history_manager().DeleteRecentView(type_, name);
       }
-      ImGui::HelpTooltip("Delete from recents");
+      ImGui::HelpTooltip(Tr("Delete from recents"));
     }
     if (view_type_ == ViewType::STARRED) {
       ImGui::SameLine();

@@ -17,6 +17,7 @@
 #include "aim/ui/editor/strafe_editor.h"
 #include "aim/ui/search_selector.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -25,19 +26,19 @@ void DrawWallArcEditor(WallArcScenarioDef& d) {
   ImGui::IdGuard cid("WallArcEditor");
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Width");
+  ImGui::Text("%s", Tr("Width"));
   ImGui::SameLine();
   DrawRegionLengthEditor("Width", RegionLength::kXPercentValue, d.mutable_width(), 50);
   ImGui::SameLine();
-  ImGui::HelpMarker("The arc will be stretched over the specified width");
+  ImGui::HelpMarker(Tr("The arc will be stretched over the specified width"));
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Height");
+  ImGui::Text("%s", Tr("Height"));
   ImGui::SameLine();
   DrawRegionLengthEditor("Height", RegionLength::kYPercentValue, d.mutable_height(), 50);
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Height range");
+  ImGui::Text("%s", Tr("Height range"));
   ImGui::SameLine();
   bool use_range = d.has_height_jitter();
   ImGui::Checkbox("##UseRange", &use_range);
@@ -48,27 +49,27 @@ void DrawWallArcEditor(WallArcScenarioDef& d) {
     d.clear_height_jitter();
   }
 
-  ImGui::InputBool("Reflect", PROTO_BOOL_FIELD(WallArcScenarioDef, &d, reflect));
+  ImGui::InputBool(Tr("Reflect"), PROTO_BOOL_FIELD(WallArcScenarioDef, &d, reflect));
   ImGui::SameLine();
-  ImGui::HelpMarker("Turn the arc upside down.");
+  ImGui::HelpMarker(Tr("Turn the arc upside down."));
 
-  ImGui::InputBool("Start on floor", PROTO_BOOL_FIELD(WallArcScenarioDef, &d, start_on_ground));
+  ImGui::InputBool(Tr("Start on floor"), PROTO_BOOL_FIELD(WallArcScenarioDef, &d, start_on_ground));
 }
 
 void DrawSineEditor(SineScenarioDef& d) {
   ImGui::IdGuard cid("SineEditor");
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Height");
+  ImGui::Text("%s", Tr("Height"));
   ImGui::SameLine();
   DrawRegionLengthEditor("Height", RegionLength::kYPercentValue, d.mutable_height(), 20);
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Width");
+  ImGui::Text("%s", Tr("Width"));
   ImGui::SameLine();
   DrawRegionLengthEditor("Width", RegionLength::kXPercentValue, d.mutable_width(), 20);
 
-  ImGui::InputBool("Going left", PROTO_BOOL_FIELD(SineScenarioDef, &d, going_left));
+  ImGui::InputBool(Tr("Going left"), PROTO_BOOL_FIELD(SineScenarioDef, &d, going_left));
 }
 
 void DrawCircleEditor(CircleScenarioDef& d) {
@@ -76,12 +77,12 @@ void DrawCircleEditor(CircleScenarioDef& d) {
   ImGui::IdGuard cid("CircleEditor");
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Radius");
+  ImGui::Text("%s", Tr("Radius"));
   ImGui::SameLine();
   DrawRegionLengthEditor("Radius", RegionLength::kXPercentValue, d.mutable_radius(), 30);
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Final radius");
+  ImGui::Text("%s", Tr("Final radius"));
   ImGui::SameLine();
   DrawOptionalRegionLengthEditor("FinalRadius",
                                  RegionLength::kXPercentValue,
@@ -98,9 +99,9 @@ void DrawCircleEditor(CircleScenarioDef& d) {
                         .set_width(char_x * 10),
                     PROTO_FLOAT_FIELD(CircleScenarioDef, &d, start_degrees));
   ImGui::SameLine();
-  ImGui::HelpMarker("0 degrees starts at 3 o'clock and rotates counter clockwise.");
+  ImGui::HelpMarker(Tr("0 degrees starts at 3 o'clock and rotates counter clockwise."));
 
-  ImGui::InputBool("Start clockwise", PROTO_BOOL_FIELD(CircleScenarioDef, &d, rotate_clockwise));
+  ImGui::InputBool(Tr("Start clockwise"), PROTO_BOOL_FIELD(CircleScenarioDef, &d, rotate_clockwise));
 
   ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Switch direction after time")
                         .set_is_optional()
@@ -132,11 +133,11 @@ void DrawCircleEditor(CircleScenarioDef& d) {
   ImGui::SpacedSeparator();
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Depth");
+  ImGui::Text("%s", Tr("Depth"));
   ImGui::SameLine();
   DrawRegionLengthEditor("Depth", RegionLength::kDepthPercentValue, d.mutable_depth(), 0);
   ImGui::SameLine();
-  ImGui::HelpMarker("Distance away from the wall");
+  ImGui::HelpMarker(Tr("Distance away from the wall"));
 }
 
 void DrawWallWanderProfile(float char_x, WallWanderProfile* p) {
@@ -148,7 +149,7 @@ void DrawWallWanderProfile(float char_x, WallWanderProfile* p) {
                                 .set_width(char_x * 10),
                             PROTO_JITTERED_FIELD(WallWanderProfile, p, turn_time));
   ImGui::SameLine();
-  ImGui::HelpMarker("The amount of time to turn in a single direction before switching.");
+  ImGui::HelpMarker(Tr("The amount of time to turn in a single direction before switching."));
 
   ImGui::InputJitteredFloat(ImGui::InputFloatParams("TurnRate")
                                 .set_label("Turn rate")
@@ -170,7 +171,7 @@ void DrawWallWanderEditor(WallWanderScenarioDef& d) {
   if (d.profiles_size() == 0) {
     d.add_profiles();
   }
-  ImGui::Text("Wander profiles");
+  ImGui::Text("%s", Tr("Wander profiles"));
   ImGui::Indent();
   DrawProfileList("WanderProfileList",
                   "Profile",
@@ -193,7 +194,7 @@ void DrawLinearEditor(LinearScenarioDef& d) {
                             PROTO_JITTERED_FIELD(LinearScenarioDef, &d, angle));
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Initial left/right direction");
+  ImGui::Text("%s", Tr("Initial left/right direction"));
   ImGui::SameLine();
   Direction left_right_direction_type = d.has_left_right_initial_direction()
                                             ? d.left_right_initial_direction()
@@ -205,7 +206,7 @@ void DrawLinearEditor(LinearScenarioDef& d) {
   d.set_left_right_initial_direction(left_right_direction_type);
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Initial up/down direction");
+  ImGui::Text("%s", Tr("Initial up/down direction"));
   ImGui::SameLine();
   Direction up_down_direction_type = d.up_down_initial_direction();
   ImGui::SimpleTypeDropdown(
@@ -219,7 +220,7 @@ void DrawBarrelEditor(ScenarioDef& def) {
   BarrelScenarioDef& d = *def.mutable_barrel_def();
 
   if (!def.room().has_barrel_room()) {
-    ImGui::Text("Must use barrel room");
+    ImGui::Text("%s", Tr("Must use barrel room"));
     return;
   }
 
@@ -249,7 +250,7 @@ void DrawBarrelEditor(ScenarioDef& def) {
 
 void DrawBounceProfile(float char_x, BounceProfile* p) {
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Bounce height");
+  ImGui::Text("%s", Tr("Bounce height"));
   ImGui::SameLine();
   DrawJitteredRegionLengthEditor("BounceHeight",
                                  RegionLength::kYPercentValue,
@@ -264,7 +265,7 @@ void DrawBounceProfile(float char_x, BounceProfile* p) {
                                 .set_default(0)
                                 .set_width(char_x * 10),
                             PROTO_JITTERED_FIELD(BounceProfile, p, delay_seconds));
-  ImGui::InputBool("Only delay on floor", PROTO_BOOL_FIELD(BounceProfile, p, only_delay_on_floor));
+  ImGui::InputBool(Tr("Only delay on floor"), PROTO_BOOL_FIELD(BounceProfile, p, only_delay_on_floor));
 
   ImGui::InputJitteredFloat(ImGui::InputFloatParams::WithLabelAsId("Float time")
                                 .set_step(0.01, 0.05)
@@ -299,20 +300,20 @@ void DrawBounceEditor(BounceScenarioDef& d) {
   ImGui::IdGuard cid("BounceEditor");
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Floor height");
+  ImGui::Text("%s", Tr("Floor height"));
   ImGui::SameLine();
   DrawOptionalRegionLengthEditor("FloorHeight",
                                  RegionLength::kYPercentValue,
                                  PROTO_PTR_FIELD(RegionLength, BounceScenarioDef, &d, floor_height),
                                  0);
-  ImGui::InputBool("Start on floor", PROTO_BOOL_FIELD(BounceScenarioDef, &d, start_on_floor));
+  ImGui::InputBool(Tr("Start on floor"), PROTO_BOOL_FIELD(BounceScenarioDef, &d, start_on_floor));
 
   ImGui::SpacedSeparator();
 
   if (d.bounce_profiles_size() == 0) {
     d.add_bounce_profiles();
   }
-  ImGui::Text("Bounce profiles");
+  ImGui::Text("%s", Tr("Bounce profiles"));
   ImGui::Indent();
   DrawProfileList("BounceProfileList",
                   "Profile",
@@ -324,7 +325,7 @@ void DrawBounceEditor(BounceScenarioDef& d) {
 
 void DrawAngleStrafeProfile(float char_x, AngleStrafeProfile* p) {
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Distance");
+  ImGui::Text("%s", Tr("Distance"));
   ImGui::SameLine();
   DrawJitteredRegionLengthEditor("Distance",
                                  RegionLength::kXPercentValue,
@@ -391,7 +392,7 @@ void DrawAngleStrafeEditor(AngleStrafeScenarioDef& w) {
 
   ImGui::SpacedSeparator();
 
-  ImGui::Text("Strafe profiles");
+  ImGui::Text("%s", Tr("Strafe profiles"));
   ImGui::Indent();
   DrawProfileList("StrafeProfileList",
                   "Profile",
@@ -418,7 +419,7 @@ void DrawCenteringEditor(CenteringScenarioDef& c) {
   }
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Type");
+  ImGui::Text("%s", Tr("Type"));
   ImGui::SameLine();
   ImGui::SimpleDropdown("##TypeDrop", &type, {kPoints, kAngle}, char_x * 13);
 
@@ -451,13 +452,13 @@ void DrawCenteringEditor(CenteringScenarioDef& c) {
     }
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Point 1");
+    ImGui::Text("%s", Tr("Point 1"));
     ImGui::Indent();
     DrawRegionVec2Editor("Point1", c.mutable_wall_points(0));
     ImGui::Unindent();
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Point 2");
+    ImGui::Text("%s", Tr("Point 2"));
     ImGui::Indent();
     DrawRegionVec2Editor("Point2", c.mutable_wall_points(1));
     ImGui::Unindent();
@@ -466,7 +467,7 @@ void DrawCenteringEditor(CenteringScenarioDef& c) {
     for (int i = 2; i < c.wall_points_size(); ++i) {
       ImGui::IdGuard lid("ExtraPoint", i);
       ImGui::AlignTextToFramePadding();
-      ImGui::TextFmt("Point {}", i + 1);
+      ImGui::Text("%s", TrFormat("Point {}", i + 1).c_str());
       ImGui::SameLine();
       if (ImGui::Button(icons::kCancel)) {
         remove_at_i = i;
@@ -477,7 +478,7 @@ void DrawCenteringEditor(CenteringScenarioDef& c) {
     }
 
     ImGui::Spacing();
-    if (ImGui::Button("Add point")) {
+    if (ImGui::Button(Tr("Add point"))) {
       c.add_wall_points();
     }
 
@@ -547,7 +548,7 @@ void DrawShotTypeEditor(ShotType& s) {
   }
 
   if (type == ShotType::kClickMulti || type == ShotType::kClickSingle) {
-    ImGui::InputBool("Remove on miss", PROTO_BOOL_FIELD(ShotType, &s, remove_closest_on_miss));
+    ImGui::InputBool(Tr("Remove on miss"), PROTO_BOOL_FIELD(ShotType, &s, remove_closest_on_miss));
     ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Ghost on miss")
                           .set_is_optional()
                           .set_step(0.05, 0.2)
@@ -556,15 +557,13 @@ void DrawShotTypeEditor(ShotType& s) {
                           .set_width(char_x * 10),
                       PROTO_FLOAT_FIELD(ShotType, &s, ghost_closest_on_miss));
     ImGui::SameLine();
-    ImGui::HelpMarker(
-        "The closest target will become a ghost on miss and be removed after the specified time");
+    ImGui::HelpMarker(Tr("The closest target will become a ghost on miss and be removed after the specified time"));
     if (s.has_ghost_closest_on_miss()) {
       ImGui::Indent();
-      ImGui::InputBool("Unghost instead of remove",
+      ImGui::InputBool(Tr("Unghost instead of remove"),
                        PROTO_BOOL_FIELD(ShotType, &s, unghost_miss_on_expiration));
       ImGui::SameLine();
-      ImGui::HelpMarker(
-          "When the time expires the target will become clickable agazin instead of being removed");
+      ImGui::HelpMarker(Tr("When the time expires the target will become clickable agazin instead of being removed"));
       ImGui::Unindent();
     } else {
       s.clear_unghost_miss_on_expiration();
@@ -578,11 +577,11 @@ void DrawShotTypeEditor(ShotType& s) {
                           .set_width(char_x * 10),
                       PROTO_FLOAT_FIELD(ShotType, &s, click_rate_seconds));
     ImGui::SameLine();
-    ImGui::HelpMarker("The amount of time in seconds after shooting before you can shoot again");
+    ImGui::HelpMarker(Tr("The amount of time in seconds after shooting before you can shoot again"));
 
     bool has_reload = s.has_reload();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Reload");
+    ImGui::Text("%s", Tr("Reload"));
     ImGui::SameLine();
     ImGui::Checkbox("##ReloadCheckbox", &has_reload);
     ImGui::SameLine();
@@ -605,7 +604,7 @@ void DrawShotTypeEditor(ShotType& s) {
                           .set_width(char_x * 10),
                       PROTO_INT_FIELD(ReloadInfo, s.mutable_reload(), num_to_reload_on_hit));
       ImGui::SameLine();
-      ImGui::HelpMarker("Number of shots to reload on a hit up to the \"max shots\".");
+      ImGui::HelpMarker(Tr("Number of shots to reload on a hit up to the \"max shots\"."));
 
       ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Reload time")
                             .set_step(0.05, 0.2)
@@ -636,7 +635,7 @@ void DrawShotTypeEditor(ShotType& s) {
                           .set_width(char_x * 10),
                       PROTO_FLOAT_FIELD(ShotType, &s, health_seconds));
     ImGui::SameLine();
-    ImGui::HelpMarker("The amount of time in seconds to kill the target.");
+    ImGui::HelpMarker(Tr("The amount of time in seconds to kill the target."));
 
     ImGui::InputFloat(ImGui::InputFloatParams("HealthRegenRate")
                           .set_label("Health regen rate")
@@ -665,7 +664,7 @@ void DrawShotTypeEditor(ShotType& s) {
         "off the target, it will be removed and you will get partial points. The kill sound is "
         "played when this threshold is passed.");
 
-    ImGui::InputBool("No partial kills", PROTO_BOOL_FIELD(ShotType, &s, no_partial_kills));
+    ImGui::InputBool(Tr("No partial kills"), PROTO_BOOL_FIELD(ShotType, &s, no_partial_kills));
   }
 }
 
@@ -752,7 +751,7 @@ void DrawScenarioTypeTabs(ScenarioDef& def, Application* app) {
     }
   }
   if (scenario_type == ScenarioDef::kCenteringDef) {
-    if (ImGui::BeginTabItem("Centering")) {
+    if (ImGui::BeginTabItem(Tr("Centering"))) {
       ImGui::BeginChild("CenteringContent");
       DrawCenteringEditor(*def.mutable_centering_def());
       ImGui::EndChild();
@@ -771,7 +770,7 @@ void DrawScenarioTypeTabs(ScenarioDef& def, Application* app) {
   }
   if (scenario_type == ScenarioDef::kBounceDef) {
     auto* d = def.mutable_bounce_def();
-    if (ImGui::BeginTabItem("Bounce")) {
+    if (ImGui::BeginTabItem(Tr("Bounce"))) {
       ImGui::BeginChild("BounceContent");
       ImGui::Spacing();
       DrawBounceEditor(*d);
@@ -787,7 +786,7 @@ void DrawScenarioTypeTabs(ScenarioDef& def, Application* app) {
     }
   }
   if (scenario_type == ScenarioDef::kLinearDef) {
-    if (ImGui::BeginTabItem("Linear")) {
+    if (ImGui::BeginTabItem(Tr("Linear"))) {
       ImGui::BeginChild("LinearContent");
       ImGui::Spacing();
       DrawLinearEditor(*def.mutable_linear_def());
@@ -796,7 +795,7 @@ void DrawScenarioTypeTabs(ScenarioDef& def, Application* app) {
     }
   }
   if (scenario_type == ScenarioDef::kBarrelDef) {
-    if (ImGui::BeginTabItem("Barrel")) {
+    if (ImGui::BeginTabItem(Tr("Barrel"))) {
       ImGui::BeginChild("BarrelContent");
       ImGui::Spacing();
       DrawBarrelEditor(def);
@@ -823,7 +822,7 @@ void DrawScenarioTypeTabs(ScenarioDef& def, Application* app) {
     }
   }
   if (scenario_type == ScenarioDef::kCircleDef) {
-    if (ImGui::BeginTabItem("Circle")) {
+    if (ImGui::BeginTabItem(Tr("Circle"))) {
       ImGui::BeginChild("CircleContent");
       ImGui::Spacing();
       DrawCircleEditor(*def.mutable_circle_def());
@@ -832,7 +831,7 @@ void DrawScenarioTypeTabs(ScenarioDef& def, Application* app) {
     }
   }
   if (scenario_type == ScenarioDef::kSineDef) {
-    if (ImGui::BeginTabItem("Sine")) {
+    if (ImGui::BeginTabItem(Tr("Sine"))) {
       ImGui::BeginChild("SineContent");
       ImGui::Spacing();
       DrawSineEditor(*def.mutable_sine_def());
@@ -863,9 +862,9 @@ void DrawReferenceEditor(ScenarioDef& def,
 
   ReferenceScenarioDef& r = *def.mutable_reference_def();
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Scenario");
+  ImGui::Text("%s", Tr("Scenario"));
   ImGui::SameLine();
-  ImGui::HelpMarker("The name of the scenario to reference");
+  ImGui::HelpMarker(Tr("The name of the scenario to reference"));
   ImGui::SameLine();
 
   if (app != nullptr) {
@@ -882,7 +881,7 @@ void DrawReferenceEditor(ScenarioDef& def,
         opts.scenario_name = r.scenario_name();
         app->PushNextScreen(CreateScenarioEditorScreen(opts));
       }
-      ImGui::HelpTooltip("Go to the referenced scenario. All current edits will be lost.");
+      ImGui::HelpTooltip(Tr("Go to the referenced scenario. All current edits will be lost."));
     }
   } else {
     ImGui::InputText("##ScenarioReference", r.mutable_scenario_name());
@@ -913,7 +912,7 @@ void DrawReferenceEditor(ScenarioDef& def,
   if (app != nullptr) {
     bool has_room = r.has_room();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Change room");
+    ImGui::Text("%s", Tr("Change room"));
     ImGui::SameLine();
     ImGui::Checkbox("##OverrideRoomCheck", &has_room);
     if (has_room) {
@@ -946,7 +945,7 @@ void DrawReferenceEditor(ScenarioDef& def,
   ImGui::SpacedSeparator();
 
   if (app != nullptr) {
-    if (ImGui::Button("Bake")) {
+    if (ImGui::Button(Tr("Bake"))) {
       auto parent = app->scenario_manager().GetEvaluatedScenarioDef(r.scenario_name());
       if (parent) {
         ScenarioDef baked_def = *parent;
@@ -958,7 +957,7 @@ void DrawReferenceEditor(ScenarioDef& def,
       }
     }
     ImGui::SameLine();
-    ImGui::HelpMarker("Expand and remove the reference. Will now be an equivalent normal scenario");
+    ImGui::HelpMarker(Tr("Expand and remove the reference. Will now be an equivalent normal scenario"));
   }
 }
 

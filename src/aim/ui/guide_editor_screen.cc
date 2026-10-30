@@ -9,6 +9,7 @@
 #include "aim/ui/select_object_dialog.h"
 #include "aim/ui/select_variation_dialog.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -99,7 +100,7 @@ class SectionEditor {
     }
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Playlists");
+    ImGui::Text("%s", Tr("Playlists"));
 
     if (section.playlists_size() > 0 &&
         ImGui::BeginTable("Playlists",

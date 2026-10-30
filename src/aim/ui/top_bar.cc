@@ -12,6 +12,7 @@
 #include "aim/ui/theme_editor_screen.h"
 #include "aim/ui/ui_screen.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -55,7 +56,7 @@ class TopBarImpl : public TopBar {
     {
       auto font = app_.font_manager().UseLargeBold();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("FpsAimForge");
+      ImGui::Text("%s", Tr("FpsAimForge"));
     }
 
     auto font = app_.font_manager().UseLarge();

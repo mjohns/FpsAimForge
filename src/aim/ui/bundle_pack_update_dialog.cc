@@ -13,6 +13,7 @@
 #include "aim/core/bundle_manager.h"
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -91,7 +92,7 @@ class BundlePackUpdateDialogImpl : public BundlePackUpdateDialog {
       }
       if (elapsed_seconds > 10) {
         ImGui::SpacedSeparator();
-        if (ImGui::Button("Cancel")) {
+        if (ImGui::Button(Tr("Cancel"))) {
           ClosePopupAndCleanup();
         }
       }
@@ -137,7 +138,7 @@ class BundlePackUpdateDialogImpl : public BundlePackUpdateDialog {
     ImGui::AlignTextToFramePadding();
     ImGui::Text("Some updates failed");
     ImGui::SameLine();
-    if (ImGui::Button("Ok")) {
+    if (ImGui::Button(Tr("Ok"))) {
       *updated_bundle_packs_out = updated_packs;
       ClosePopupAndCleanup();
     }

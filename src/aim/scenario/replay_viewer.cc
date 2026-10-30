@@ -18,6 +18,13 @@
 #include "aim/scenario/scenario_timer.h"
 #include "imgui/backends/imgui_impl_sdl3.h"
 #include "implot.h"
+#include "aim/i18n/i18n.h"
+// i18n: Tr() returns translated printf-style literals; the format string is
+// non-literal by design, validated against the translation table in i18n.cc.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma GCC diagnostic ignored "-Wformat-security"
+#endif
 
 namespace aim {
 namespace {
@@ -121,8 +128,8 @@ void DrawMouseSpeedsPlot(float now, float t_step, std::span<float> mouse_speeds,
       float x_val = mouse_pos.x;
       float y_val = scores[closest_index];
       ImGui::BeginTooltip();
-      ImGui::Text("Score: %.2f", y_val);
-      ImGui::Text("Time: %.2f", x_val);
+      ImGui::Text(Tr("Score: %.2f"), y_val);
+      ImGui::Text(Tr("Time: %.2f"), x_val);
       ImGui::EndTooltip();
 
       ImPlot::SetNextMarkerStyle(
@@ -420,7 +427,7 @@ class ReplayViewerScreen : public Screen {
 
     float elapsed_seconds = timer_.GetElapsedSeconds();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("fps: %d", (int)ImGui::GetIO().Framerate);
+    ImGui::Text(Tr("fps: %d"), (int)ImGui::GetIO().Framerate);
     ImGui::SameLine();
     ImGui::InfoMarker(
         std::format("Approximate file size: {:.2f}mb", replay_->GetApproximateSizeMb()));
@@ -431,25 +438,25 @@ class ReplayViewerScreen : public Screen {
       PopSelf();
     }
 
-    ImGui::Text("recorded fps: %d", replay_->replay_fps);
+    ImGui::Text(Tr("recorded fps: %d"), replay_->replay_fps);
 
     float score = replay_view_->GetCurrentScore();
     if (score > 0) {
-      ImGui::TextFmt("score: {}", MaybeIntToString(score, 2));
+      ImGui::Text("%s", TrFormat("score: {}", MaybeIntToString(score, 2)).c_str());
     }
 
     if (has_click_events_) {
       const auto& durations = replay_view_->GetPreviousClickDurations();
-      ImGui::Text("click times");
+      ImGui::Text("%s", Tr("click times"));
       ImGui::Indent();
       if (durations.size() > 0) {
         for (int i = std::max<int>(0, durations.size() - 20); i < durations.size(); ++i) {
-          ImGui::Text("%0.2fs", durations[i]);
+          ImGui::Text(Tr("%0.2fs"), durations[i]);
         }
       }
       float click_now_seconds =
           MicrosToSeconds(now_micros - replay_view_->GetLastClickTimeMicros());
-      ImGui::Text("%0.2fs", click_now_seconds);
+      ImGui::Text(Tr("%0.2fs"), click_now_seconds);
       ImGui::Unindent();
 
       {
@@ -470,7 +477,7 @@ class ReplayViewerScreen : public Screen {
 
     i64 frame_number = replay_view_->GetCurrentFrameNumber();
     if (IsValidIndex(mouse_speeds_, frame_number)) {
-      ImGui::TextFmt("mouse speed: {}", MaybeIntToString(mouse_speeds_[frame_number], 0));
+      ImGui::Text("%s", TrFormat("mouse speed: {}", MaybeIntToString(mouse_speeds_[frame_number], 0)).c_str());
     }
 
     ImGui::SetCursorAtBottom(ImGui::GetFrameHeight() * 1.5);

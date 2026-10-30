@@ -13,6 +13,7 @@
 #include "aim/proto/guide.pb.h"
 #include "aim/ui/search_selector.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -137,7 +138,7 @@ void BaseEditorScreen::DrawTopBar() {
     }
   }
   ImGui::SameLine();
-  if (ImGui::Button("Cancel")) {
+  if (ImGui::Button(Tr("Cancel"))) {
     PopSelf();
   }
 

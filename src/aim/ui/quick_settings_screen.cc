@@ -10,6 +10,7 @@
 #include "aim/ui/settings_screen.h"
 #include "aim/ui/ui_screen.h"
 #include "backends/imgui_impl_sdl3.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -121,7 +122,7 @@ class QuickSettingsScreen : public UiScreen {
       ImGui::Spacing();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Themes");
+      ImGui::Text("%s", Tr("Themes"));
       // Display a few of the recent themes as direct buttons to click.
       ImGui::LoopId lid;
       for (int i = 0; i < std::min<int>(10, theme_names_.size()); ++i) {
@@ -138,7 +139,7 @@ class QuickSettingsScreen : public UiScreen {
       ImGui::Spacing();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Crosshairs");
+      ImGui::Text("%s", Tr("Crosshairs"));
 
       // Display a few of the recent crosshairs as direct buttons to click.
       for (int i = 0; i < std::min<int>(8, crosshair_names_.size()); ++i) {
@@ -199,26 +200,25 @@ class QuickSettingsScreen : public UiScreen {
       //                   PROTO_FLOAT_FIELD(Settings, &updater_.settings, cm_per_360));
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Theme");
+      ImGui::Text("%s", Tr("Theme"));
       ImGui::SameLine();
       ImGui::SimpleDropdown(
           "ThemeDropdown", updater_.settings.mutable_theme_name(), theme_names_, char_size.x * 20);
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Crosshair");
+      ImGui::Text("%s", Tr("Crosshair"));
       ImGui::SameLine();
       ImGui::SimpleDropdown("CrosshairDropdown",
                             updater_.settings.mutable_current_crosshair_name(),
                             crosshair_names_,
                             char_size.x * 18);
 
-      ImGui::InputBool("Auto hold tracking",
+      ImGui::InputBool(Tr("Auto hold tracking"),
                        PROTO_BOOL_FIELD(Settings, &updater_.settings, auto_hold_tracking));
-      ImGui::InputBool(
-          "Show health bars",
+      ImGui::InputBool(Tr("Show health bars"),
           PROTO_BOOL_FIELD(HealthBarSettings, updater_.settings.mutable_health_bar(), show));
 
-      ImGui::InputBool("Save settings per scenario",
+      ImGui::InputBool(Tr("Save settings per scenario"),
                        InvertBoolField(PROTO_BOOL_FIELD(
                            Settings, &updater_.settings, disable_per_scenario_settings)));
     }
@@ -246,7 +246,7 @@ class QuickSettingsScreen : public UiScreen {
       //                       .set_width(char_size.x * 9),
       //                   PROTO_FLOAT_FIELD(Settings, &updater_.settings, metronome_bpm));
 
-      if (ImGui::Button("Clear BPM")) {
+      if (ImGui::Button(Tr("Clear BPM"))) {
         updater_.settings.clear_metronome_bpm();
         updater_.settings.set_enable_metronome(false);
       }

@@ -28,6 +28,13 @@
 #include "aim/ui/top_bar.h"
 #include "imgui.h"
 #include "implot.h"
+#include "aim/i18n/i18n.h"
+// i18n: Tr() returns translated printf-style literals; the format string is
+// non-literal by design, validated against the translation table in i18n.cc.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma GCC diagnostic ignored "-Wformat-security"
+#endif
 
 namespace aim {
 namespace {
@@ -121,8 +128,8 @@ void DrawScoresOverTimePlot(const std::string& scenario_name,
       float x_val = mouse_pos.x;
       float y_val = scores[closest_index];
       ImGui::BeginTooltip();
-      ImGui::Text("Score: %.2f", y_val);
-      ImGui::Text("Time: %.2f", x_val);
+      ImGui::Text(Tr("Score: %.2f"), y_val);
+      ImGui::Text(Tr("Time: %.2f"), x_val);
       ImGui::EndTooltip();
 
       ImPlotSpec spec;
@@ -500,12 +507,12 @@ class StatsScreen : public UiScreen {
     ImGui::Spacing();
     if (percent_diff > 0) {
       auto font = app_.font_manager().UseDefault();
-      ImGui::Button("NEW HIGH SCORE");
+      ImGui::Button(Tr("NEW HIGH SCORE"));
     }
     {
       auto font = app_.font_manager().UseLarge();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Score:");
+      ImGui::Text("%s", Tr("Score:"));
       ImGui::SameLine();
       ImGui::Text(MaybeIntToString(stats.score, 2));
     }
@@ -625,7 +632,7 @@ class StatsScreen : public UiScreen {
     if (all_stats.size() > 2) {
       auto avg_comparison = GetStatsComparison(details_.stats, details_.average_stats);
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Average");
+      ImGui::Text("%s", Tr("Average"));
       ImGui::BeginDisabled();
       ImGui::SameLine();
       ImGui::Button(std::format("{}###avg_diff_button", avg_comparison.score_diff_percent_string));
@@ -633,7 +640,7 @@ class StatsScreen : public UiScreen {
     }
 
     if (all_stats.size() > 1) {
-      ImGui::TextFmt("{} total runs", all_stats.size());
+      ImGui::Text("%s", TrFormat("{} total runs", all_stats.size()).c_str());
     }
   }
 
@@ -664,7 +671,7 @@ class StatsScreen : public UiScreen {
 
       // if (compare_to_scenarios_.size() > 0) {
       //   ImGui::SpacedSeparator();
-      //   if (ImGui::TreeNode("More comparisons")) {
+      //   if (ImGui::TreeNode(Tr("More comparisons"))) {
       //     ImGui::IdGuard cid("MoreComparisons");
       //     DrawStatsTable(/*is_comparisons=*/true);
       //     ImGui::TreePop();
@@ -702,12 +709,12 @@ class StatsScreen : public UiScreen {
   }
 
   void DrawHistoryListTable() {
-    if (ImGui::Button("Clear history")) {
+    if (ImGui::Button(Tr("Clear history"))) {
       delete_history_confirmation_dialog_.NotifyOpen(
           std::format("Delete history for \"{}\"?", scenario_name_), scenario_name_);
     }
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Sort by score");
+    ImGui::Text("%s", Tr("Sort by score"));
     ImGui::SameLine();
     if (ImGui::Checkbox("##HistorySortByScore", &sort_by_score_)) {
       history_rows_ = {};

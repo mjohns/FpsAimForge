@@ -6,6 +6,13 @@
 #include "aim/common/mat_icons.h"
 #include "aim/core/play_time_manager.h"
 #include "aim/ui/editor/scenario_editor_common.h"
+#include "aim/i18n/i18n.h"
+// i18n: Tr() returns translated printf-style literals; the format string is
+// non-literal by design, validated against the translation table in i18n.cc.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma GCC diagnostic ignored "-Wformat-security"
+#endif
 
 namespace aim {
 namespace {
@@ -34,23 +41,22 @@ class PlayTimeScreen : public UiScreen {
         play_times.total.complete_run_time_seconds + play_times.total.partial_run_time_seconds;
     float total_partial_play_time_seconds = play_times.total.partial_run_time_seconds;
     ImGui::Spacing();
-    ImGui::Text("Total time: %.1f hours", total_play_time_seconds / 3600.0f);
-    ImGui::TextFmt("Partial run time: {:.1f} hours ({:.0f}%)",
-                   total_partial_play_time_seconds / 3600.0f,
-                   (total_partial_play_time_seconds / total_play_time_seconds) * 100);
+    ImGui::Text(Tr("Total time: %.1f hours"), total_play_time_seconds / 3600.0f);
+    ImGui::Text("%s", TrFormat("Partial run time: {:.1f} hours ({:.0f}%)", total_partial_play_time_seconds / 3600.0f,
+                   (total_partial_play_time_seconds / total_play_time_seconds) * 100).c_str());
     ImGui::SameLine();
-    ImGui::HelpMarker("Total time spent on runs that are restarted before completion");
+    ImGui::HelpMarker(Tr("Total time spent on runs that are restarted before completion"));
 
     ImGui::SpacedSeparator();
 
     auto sort_and_print_values = [](std::vector<std::pair<int, std::string>>& values) {
       absl::c_sort(values);
       for (const auto& entry : std::views::reverse(values)) {
-        ImGui::TextFmt("{}: {:.1f} hours", entry.second, entry.first / 3600.0f);
+        ImGui::Text("%s", TrFormat("{}: {:.1f} hours", entry.second, entry.first / 3600.0f).c_str());
       }
     };
 
-    ImGui::Text("By shot type");
+    ImGui::Text("%s", Tr("By shot type"));
     ImGui::Indent();
     const std::unordered_map<ShotType::TypeCase, PlayTimes>& by_shot_type =
         play_times.play_times_by_shot_type;
@@ -70,7 +76,7 @@ class PlayTimeScreen : public UiScreen {
 
     ImGui::SpacedSeparator();
 
-    ImGui::Text("By cm/360");
+    ImGui::Text("%s", Tr("By cm/360"));
     ImGui::Indent();
     const std::unordered_map<int, PlayTimes>& by_cm_per_360 = play_times.play_times_by_cm_per_360;
     std::vector<std::pair<int, std::string>> by_cm_per_360s;

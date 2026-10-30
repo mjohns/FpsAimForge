@@ -14,6 +14,7 @@
 #include "aim/core/settings_manager.h"
 #include "aim/graphics/crosshair_renderer.h"
 #include "aim/graphics/renderer.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -72,14 +73,14 @@ class ThemeEditor {
     float char_x = ImGui::GetDefaultCharSizeX();
     ImGui::IdGuard cid("CurrentThemeEditor");
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Theme");
+    ImGui::Text("%s", Tr("Theme"));
     ImGui::SameLine();
     ImGui::SetNextItemWidth(char_x * 20);
     ImGui::InputText("##NameInput", &current_theme_name_);
 
     bool is_reference = current_theme_.has_reference();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Reference");
+    ImGui::Text("%s", Tr("Reference"));
     ImGui::SameLine();
     ImGui::Checkbox("##ReferenceCheck", &is_reference);
     ImGui::SameLine();
@@ -106,21 +107,21 @@ class ThemeEditor {
       current_theme_.clear_reference();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Targets");
+      ImGui::Text("%s", Tr("Targets"));
       ImGui::Indent();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Color");
+      ImGui::Text("%s", Tr("Color"));
       ImGui::SameLine();
       DrawStoredColorEditor("TargetColor", current_theme_.mutable_target_color());
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Ghost color");
+      ImGui::Text("%s", Tr("Ghost color"));
       ImGui::SameLine();
       DrawStoredColorEditor("GhostTargetColor", current_theme_.mutable_ghost_target_color());
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Center color");
+      ImGui::Text("%s", Tr("Center color"));
       ImGui::SameLine();
       DrawOptionalStoredColorEditor(
           "CenterTargetColor",
@@ -131,16 +132,16 @@ class ThemeEditor {
       ImGui::SpacedSeparator();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Crosshair");
+      ImGui::Text("%s", Tr("Crosshair"));
       ImGui::Indent();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Color");
+      ImGui::Text("%s", Tr("Color"));
       ImGui::SameLine();
       DrawStoredColorEditor("CrosshairColor", current_theme_.mutable_crosshair()->mutable_color());
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Outline color");
+      ImGui::Text("%s", Tr("Outline color"));
       ImGui::SameLine();
       DrawStoredColorEditor("OutlineCrosshairColor",
                             current_theme_.mutable_crosshair()->mutable_outline_color());
@@ -150,12 +151,12 @@ class ThemeEditor {
       ImGui::SpacedSeparator();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Health bar");
+      ImGui::Text("%s", Tr("Health bar"));
       HealthBarAppearance& health_bar = *current_theme_.mutable_health_bar();
       ImGui::Indent();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Health color");
+      ImGui::Text("%s", Tr("Health color"));
       ImGui::SameLine();
       DrawStoredColorEditor("HealthColor", health_bar.mutable_health_color());
 
@@ -168,7 +169,7 @@ class ThemeEditor {
                         PROTO_FLOAT_FIELD(HealthBarAppearance, &health_bar, health_alpha));
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Background color");
+      ImGui::Text("%s", Tr("Background color"));
       ImGui::SameLine();
       DrawStoredColorEditor("HealthBackgroundColor", health_bar.mutable_background_color());
 
@@ -184,12 +185,12 @@ class ThemeEditor {
       ImGui::SpacedSeparator();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Walls");
+      ImGui::Text("%s", Tr("Walls"));
       ImGui::Indent();
 
       if (current_theme_.front_appearance().has_texture()) {
         ImGui::AlignTextToFramePadding();
-        ImGui::Text("Use same texture on all walls");
+        ImGui::Text("%s", Tr("Use same texture on all walls"));
         ImGui::SameLine();
         ImGui::Checkbox("##SameTextureCheck", &share_texture_and_scale_);
       } else {
@@ -289,7 +290,7 @@ class ThemeEditor {
 
     if (selected_type == kSolidColorItem) {
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Color");
+      ImGui::Text("%s", Tr("Color"));
       ImGui::SameLine();
       ImGui::InputStoredColor("##Color", appearance->mutable_color(), char_x);
     }
@@ -310,7 +311,7 @@ class ThemeEditor {
     }
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Mix percent");
+    ImGui::Text("%s", Tr("Mix percent"));
     ImGui::SameLine();
     ImGui::SetNextItemWidth(char_x * 9);
     float mix_percent = appearance->mix_percent();
@@ -318,7 +319,7 @@ class ThemeEditor {
     if (mix_percent > 0) {
       appearance->set_mix_percent(mix_percent);
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Mix color");
+      ImGui::Text("%s", Tr("Mix color"));
       ImGui::SameLine();
       DrawStoredColorEditor("MixColor", appearance->mutable_mix_color());
     } else {
@@ -476,7 +477,7 @@ class ThemeEditorScreen : public UiScreen {
     ImGui::SpacedSeparator();
     ImGui::BeginChild("ThemesListContent");
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Themes");
+    ImGui::Text("%s", Tr("Themes"));
     ImGui::SameLine();
     auto folder = app_.file_system().GetUserDataPath("resources/themes");
     if (ImGui::Button(icons::kOpenInNew)) {
@@ -492,13 +493,13 @@ class ThemeEditorScreen : public UiScreen {
       }
       const char* popup_id = "ThemeItemMenu";
       if (ImGui::BeginPopupContextItem(popup_id)) {
-        if (ImGui::Selectable("Copy")) {
+        if (ImGui::Selectable(Tr("Copy"))) {
           OpenThemeCopy(name);
         }
-        if (ImGui::Selectable("Edit")) {
+        if (ImGui::Selectable(Tr("Edit"))) {
           OpenExistingTheme(name);
         }
-        if (ImGui::Selectable("Delete")) {
+        if (ImGui::Selectable(Tr("Delete"))) {
           delete_confirmation_dialog_.NotifyOpen(std::format("Delete \"{}\"?", name), name);
         }
         ImGui::EndPopup();

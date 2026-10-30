@@ -39,6 +39,13 @@
 #include "glm/vec3.hpp"    // IWYU pragma: keep
 #include "imgui.h"
 #include "imgui/backends/imgui_impl_sdl3.h"
+#include "aim/i18n/i18n.h"
+// i18n: Tr() returns translated printf-style literals; the format string is
+// non-literal by design, validated against the translation table in i18n.cc.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma GCC diagnostic ignored "-Wformat-security"
+#endif
 
 namespace aim {
 namespace {
@@ -427,12 +434,12 @@ void Scenario::OnWaitingForClickTick() {
   ImGui::PushStyleColor(ImGuiCol_Text, ToImCol32(theme_.target_color()));
 
   ImGui::Text("%s", scenario_name_.c_str());
-  ImGui::Text("fps: %d", (int)ImGui::GetIO().Framerate);
+  ImGui::Text(Tr("fps: %d"), (int)ImGui::GetIO().Framerate);
   if (settings_.enable_metronome() && settings_.metronome_bpm() > 0) {
-    ImGui::Text("bpm: %.0f", settings_.metronome_bpm());
+    ImGui::Text(Tr("bpm: %.0f"), settings_.metronome_bpm());
   }
-  ImGui::Text("theme: %s", settings_.theme_name().c_str());
-  ImGui::Text("cm/360: %.0f", effective_cm_per_360_);
+  ImGui::Text(Tr("theme: %s"), settings_.theme_name().c_str());
+  ImGui::Text(Tr("cm/360: %.0f"), effective_cm_per_360_);
   ImGui::TextFmt("duration: {}s", MaybeIntToString(def_.duration_seconds(), 1));
 
   {
@@ -498,7 +505,7 @@ void Scenario::OnStartCountdownClickTick() {
 
   ImGui::PushStyleColor(ImGuiCol_Text, ToImCol32(theme_.target_color()));
   ImGui::Text("%s", scenario_name_.c_str());
-  ImGui::Text("fps: %d", (int)ImGui::GetIO().Framerate);
+  ImGui::Text(Tr("fps: %d"), (int)ImGui::GetIO().Framerate);
   ImGui::PopStyleColor();
 
   {
@@ -612,12 +619,12 @@ void Scenario::OnRunningTick() {
 
   ImGui::PushStyleColor(ImGuiCol_Text, ToImCol32(theme_.target_color()));
   float elapsed_seconds = timer_.GetElapsedSeconds();
-  ImGui::Text("time: %.1f", elapsed_seconds);
-  ImGui::Text("fps: %d", (int)ImGui::GetIO().Framerate);
-  ImGui::Text("ups: %.1fk", state_updates_per_second_);
-  ImGui::Text("cm/360: %.0f", effective_cm_per_360_);
+  ImGui::Text(Tr("time: %.1f"), elapsed_seconds);
+  ImGui::Text(Tr("fps: %d"), (int)ImGui::GetIO().Framerate);
+  ImGui::Text(Tr("ups: %.1fk"), state_updates_per_second_);
+  ImGui::Text(Tr("cm/360: %.0f"), effective_cm_per_360_);
   if (settings_.enable_metronome() && settings_.metronome_bpm() > 0) {
-    ImGui::Text("bpm: %.0f", settings_.metronome_bpm());
+    ImGui::Text(Tr("bpm: %.0f"), settings_.metronome_bpm());
   }
   ImGui::PopStyleColor();
 

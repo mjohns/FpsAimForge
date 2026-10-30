@@ -23,6 +23,7 @@
 #include "aim/ui/select_variation_dialog.h"
 #include "aim/ui/stats/stats_screen.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -47,7 +48,7 @@ class CreateLevelsPlaylistDialog {
         ImGui::InputText("##RelativeNameInput", name_.mutable_relative_name());
 
         ImGui::Spacing();
-        if (ImGui::Button("Create playlist")) {
+        if (ImGui::Button(Tr("Create playlist"))) {
           auto taken_names =
               app.playlist_manager().GetAllRelativeNamesInBundle(name_.bundle_name());
           *name_.mutable_relative_name() = MakeUniqueName(name_.relative_name(), taken_names);
@@ -68,7 +69,7 @@ class CreateLevelsPlaylistDialog {
           is_open_ = false;
         }
         ImGui::SameLine();
-        if (ImGui::Button("Cancel")) {
+        if (ImGui::Button(Tr("Cancel"))) {
           is_open_ = false;
           ImGui::CloseCurrentPopup();
         }
@@ -165,19 +166,19 @@ void DrawScenarioRightClickMenu(const char* popup_id,
     }
     ImGui::EndMenu();
   }
-  if (ImGui::BeginMenu("Advanced")) {
-    if (ImGui::Selectable("View stats")) {
+  if (ImGui::BeginMenu(Tr("Advanced"))) {
+    if (ImGui::Selectable(Tr("View stats"))) {
       app.PushNextScreen(CreateStatsScreen(
           scenario_name, app.stats_manager().GetLatestRunId(scenario_name), false));
     }
-    if (ImGui::Selectable("Copy as reference")) {
+    if (ImGui::Selectable(Tr("Copy as reference"))) {
       ScenarioEditorOptions opts;
       opts.scenario_name = scenario_name;
       opts.is_new_copy = true;
       opts.copy_as_reference = true;
       app.PushNextScreen(CreateScenarioEditorScreen(opts));
     }
-    if (ImGui::Selectable("Create levels playlist")) {
+    if (ImGui::Selectable(Tr("Create levels playlist"))) {
       dialogs->create_levels_playlist_dialog.NotifyOpen(scenario_name);
     }
     ImGui::EndMenu();
@@ -319,8 +320,7 @@ class ScenariosComponentImpl : public ScenariosComponent {
 
       if (evaluated_def->score_targets().target_score() > 0) {
         ImGui::AlignTextToFramePadding();
-        ImGui::TextFmt("Target score: {}",
-                       MaybeIntToString(evaluated_def->score_targets().target_score(), 1));
+        ImGui::Text("%s", TrFormat("Target score: {}", MaybeIntToString(evaluated_def->score_targets().target_score(), 1)).c_str());
       }
 
       ImGui::AlignTextToFramePadding();
@@ -338,24 +338,24 @@ class ScenariosComponentImpl : public ScenariosComponent {
       ImGui::IdGuard cid("HighScore");
       ImGui::SpacedSeparator();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("High score");
+      ImGui::Text("%s", Tr("High score"));
       ImGui::SameLine();
       if (ImGui::Button(MaybeIntToString(stats.high_score_stats.score))) {
         app_.GetCurrentScreen()->PushNextScreen(
             CreateStatsScreen(item.name, stats.high_score_stats.stats_id, false));
       }
-      ImGui::HelpTooltip("View stats for run.");
+      ImGui::HelpTooltip(Tr("View stats for run."));
       std::string high_score_time = GetHowLongAgoStringFromEpochSeconds(
           stats.high_score_stats.epoch_seconds, GetNowEpochSeconds());
       ImGui::SameLine();
-      ImGui::TextFmt("({})", high_score_time);
+      ImGui::Text("%s", TrFormat("({})", high_score_time).c_str());
 
       std::string last_run_str = GetHowLongAgoStringFromEpochSeconds(
           stats.last_run_stats.epoch_seconds, GetNowEpochSeconds());
       if (stats.total_runs == 1) {
-        ImGui::TextFmt("1 run ({})", last_run_str);
+        ImGui::Text("%s", TrFormat("1 run ({})", last_run_str).c_str());
       } else {
-        ImGui::TextFmt("{} runs ({})", stats.total_runs, last_run_str);
+        ImGui::Text("%s", TrFormat("{} runs ({})", stats.total_runs, last_run_str).c_str());
       }
     }
 
@@ -380,7 +380,7 @@ class ScenariosComponentImpl : public ScenariosComponent {
       ImGui::SpacedSeparator();
       ImGui::IdGuard cid("ReferencedScenario");
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Referenced scenario");
+      ImGui::Text("%s", Tr("Referenced scenario"));
       ImGui::SameLine();
       ImGui::HelpMarker(
           "This scenario references/extends the following scenario. Editing the referenced "
@@ -396,7 +396,7 @@ class ScenariosComponentImpl : public ScenariosComponent {
 
     if (!referencing_scenarios_.empty()) {
       ImGui::SpacedSeparator();
-      ImGui::Text("Referencing scenarios");
+      ImGui::Text("%s", Tr("Referencing scenarios"));
       ImGui::SameLine();
       ImGui::HelpMarker(
           "Scenarios that extend this scenario. Changing this scenario would change the following "
@@ -419,7 +419,7 @@ class ScenariosComponentImpl : public ScenariosComponent {
     {
       ImGui::IdGuard playlist_id("RelatedPlaylists");
       ImGui::SpacedSeparator();
-      ImGui::Text("Related playlists");
+      ImGui::Text("%s", Tr("Related playlists"));
       ImGui::Indent();
       auto related_playlist_button = [](const std::string& name, Application& app) {
         if (ImGui::Button(name)) {

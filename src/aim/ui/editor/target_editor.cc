@@ -9,6 +9,7 @@
 #include "aim/proto/scenario.pb.h"
 #include "aim/ui/editor/profile_list_editor.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -62,12 +63,12 @@ void DrawTargetProfile(float char_x, ScenarioDef& def, TargetProfile* profile) {
   }
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Use pill shape");
+  ImGui::Text("%s", Tr("Use pill shape"));
   ImGui::SameLine();
   bool use_pill = profile->has_pill();
   ImGui::Checkbox("##UsePill", &use_pill);
   ImGui::SameLine();
-  ImGui::HelpMarker("Switch from sphere target to a pill (capsule) shaped target.");
+  ImGui::HelpMarker(Tr("Switch from sphere target to a pill (capsule) shaped target."));
   if (use_pill) {
     ImGui::Indent();
     ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Height")
@@ -83,7 +84,7 @@ void DrawTargetProfile(float char_x, ScenarioDef& def, TargetProfile* profile) {
 
   bool has_growth = profile->target_radius_growth_time_seconds() > 0;
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Pulse");
+  ImGui::Text("%s", Tr("Pulse"));
   ImGui::SameLine();
   ImGui::Checkbox("##PulseCheckbox", &has_growth);
   ImGui::SameLine();
@@ -188,7 +189,7 @@ void DrawTargetEditor(ScenarioDef& def) {
     num_targets = 1;
   }
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Number of targets");
+  ImGui::Text("%s", Tr("Number of targets"));
   ImGui::SameLine();
   ImGui::SetNextItemWidth(char_x * 8);
   ImGui::InputInt("##NumberEntry", &num_targets, 1, 1);
@@ -200,7 +201,7 @@ void DrawTargetEditor(ScenarioDef& def) {
 
   ImGui::SpacedSeparator();
 
-  ImGui::Text("Target profiles");
+  ImGui::Text("%s", Tr("Target profiles"));
   ImGui::Indent();
   DrawProfileList("ProfileList",
                   "Profile",
@@ -211,10 +212,10 @@ void DrawTargetEditor(ScenarioDef& def) {
 
   ImGui::SpacedSeparator();
 
-  ImGui::InputBool("Newest target is ghost",
+  ImGui::InputBool(Tr("Newest target is ghost"),
                    PROTO_BOOL_FIELD(TargetDef, t, newest_target_is_ghost));
   ImGui::SameLine();
-  ImGui::HelpMarker("Ghost targets are unkillable and drawn in a different color.");
+  ImGui::HelpMarker(Tr("Ghost targets are unkillable and drawn in a different color."));
 
   ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Ghost wall border")
                         .set_is_optional()
@@ -258,12 +259,11 @@ void DrawTargetEditor(ScenarioDef& def) {
                         .set_width(char_x * 10),
                     PROTO_FLOAT_FIELD(TargetDef, t, stagger_initial_targets_seconds));
   ImGui::SameLine();
-  ImGui::HelpMarker(
-      "Time in seconds between each target being added at the start of the scenario.");
+  ImGui::HelpMarker(Tr("Time in seconds between each target being added at the start of the scenario."));
 
   bool has_delayed_targets = t->delayed_target_times_size() > 0;
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Delayed targets");
+  ImGui::Text("%s", Tr("Delayed targets"));
   ImGui::SameLine();
   ImGui::Checkbox("##DelayTargetsCheckbox", &has_delayed_targets);
   ImGui::SameLine();
@@ -291,7 +291,7 @@ void DrawTargetEditor(ScenarioDef& def) {
         delete_i = i;
       }
     }
-    if (ImGui::Button("Add")) {
+    if (ImGui::Button(Tr("Add"))) {
       add_item = true;
     }
     ImGui::Unindent();

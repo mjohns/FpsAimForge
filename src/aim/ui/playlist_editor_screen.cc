@@ -10,6 +10,7 @@
 #include "aim/ui/search_selector.h"
 #include "aim/ui/select_variation_dialog.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -47,7 +48,7 @@ class PlaylistEditorScreen : public BaseEditorScreen {
     }
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Type");
+    ImGui::Text("%s", Tr("Type"));
     ImGui::SameLine();
     PlaylistType type =
         updated_playlist_.has_levels() ? PlaylistType::LEVELS : PlaylistType::DEFAULT;
@@ -65,7 +66,7 @@ class PlaylistEditorScreen : public BaseEditorScreen {
     ImGui::SpacedSeparator();
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Description");
+    ImGui::Text("%s", Tr("Description"));
     ImGui::SameLine();
 
     if (ImGui::Button(icons::kEdit)) {
@@ -100,7 +101,7 @@ class PlaylistEditorScreen : public BaseEditorScreen {
 
     ImGui::IdGuard cid("LevelsEditor");
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Base scenario");
+    ImGui::Text("%s", Tr("Base scenario"));
     ImGui::SameLine();
     ImGui::InputText("###BaseScenarioInput", levels.mutable_base_scenario());
     if (levels.base_scenario().size() > 0) {
@@ -281,7 +282,7 @@ class PlaylistEditorScreen : public BaseEditorScreen {
   }
 
   void DrawAddScenarioInput() {
-    ImGui::Text("Add scenario");
+    ImGui::Text("%s", Tr("Add scenario"));
     ImGui::SameLine();
     ImGui::SetNextItemWidth(char_x_ * 24);
     ImGui::InputText("###AddScenarioInput", &scenario_search_text_);

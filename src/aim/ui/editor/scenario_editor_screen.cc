@@ -34,6 +34,7 @@
 #include "aim/ui/editor/target_editor.h"
 #include "imgui.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -150,7 +151,7 @@ class ScenarioEditorScreen : public UiScreen {
     if (ImGui::Button(std::format("{} Play", icons::kPlayArrow), button_size)) {
       PlayScenario();
     }
-    ImGui::HelpTooltip("Try playing the edited version of the scenario.", 0.4);
+    ImGui::HelpTooltip(Tr("Try playing the edited version of the scenario."), 0.4);
     ImGui::SameLine();
     std::string save_text = is_new_scenario_ ? std::format("{} Create", icons::kSave)
                                              : std::format("{} Update", icons::kSave);
@@ -169,7 +170,7 @@ class ScenarioEditorScreen : public UiScreen {
     const char* advanced_menu_id = "advanced_menu";
     if (ImGui::BeginPopupContextItem(advanced_menu_id)) {
       if (!is_new_scenario_) {
-        if (ImGui::Selectable("Make new copy")) {
+        if (ImGui::Selectable(Tr("Make new copy"))) {
           is_new_scenario_ = true;
           MakeRelativeNameUniqueInBundle();
         }
@@ -178,7 +179,7 @@ class ScenarioEditorScreen : public UiScreen {
             "Save the current changes in a new copy of the scenario leaving the original "
             "unchanged.");
 
-        if (ImGui::Selectable("Copy as reference")) {
+        if (ImGui::Selectable(Tr("Copy as reference"))) {
           PopSelf();
           ScenarioEditorOptions opts;
           opts.scenario_name = name_.full_name();
@@ -190,11 +191,11 @@ class ScenarioEditorScreen : public UiScreen {
         ImGui::HelpMarker("Switch to making a new copy of the current scenario as a reference.");
       }
 
-      if (ImGui::Selectable("Import Json")) {
+      if (ImGui::Selectable(Tr("Import Json"))) {
         import_from_json_dialog_.NotifyOpen("");
       }
 
-      if (ImGui::Selectable("View Json")) {
+      if (ImGui::Selectable(Tr("View Json"))) {
         view_json_dialog_.NotifyOpen(MessageToJson(def_));
       }
 
@@ -348,7 +349,7 @@ class ScenarioEditorScreen : public UiScreen {
     } else {
       float duration_seconds = FirstGreaterThanZero(def_.duration_seconds(), 45);
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Duration");
+      ImGui::Text("%s", Tr("Duration"));
       ImGui::SameLine();
       ImGui::SetNextItemWidth(char_x_ * 12);
       ImGui::InputFloat("##DurationSeconds", &duration_seconds, 5, 5, "%.0f");
@@ -357,7 +358,7 @@ class ScenarioEditorScreen : public UiScreen {
 
     ImGui::SpacedSeparator();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Scenario type");
+    ImGui::Text("%s", Tr("Scenario type"));
     ImGui::SameLine();
 
     if (def_.type_case() == ScenarioDef::TYPE_NOT_SET) {
@@ -373,7 +374,7 @@ class ScenarioEditorScreen : public UiScreen {
     ImGui::SpacedSeparator();
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Shot type");
+    ImGui::Text("%s", Tr("Shot type"));
     ImGui::SameLine();
     if (def_.has_reference_def()) {
       bool has_shot_type = def_.reference_def().has_shot_type();
@@ -424,7 +425,7 @@ class ScenarioEditorScreen : public UiScreen {
     } else {
       DrawOverridesEditor("LevelOverrides", def_.mutable_level_overrides(), /*is_levels=*/true);
       ImGui::SpacedSeparator();
-      if (ImGui::Button("Bake level")) {
+      if (ImGui::Button(Tr("Bake level"))) {
         def_ = ApplyScenarioLevelOverrides(def_, bake_level_);
         bake_level_ = 0;
       }
@@ -432,8 +433,7 @@ class ScenarioEditorScreen : public UiScreen {
       ImGui::InputFloat(ImGui::InputFloatParams("BakeLevel").set_step(1, 2).set_width(char_x_ * 8),
                         CreateFloatField(&bake_level_));
       ImGui::SameLine();
-      ImGui::HelpMarker(
-          "Fully evaluate the specified level updating values within the scenario being edited.");
+      ImGui::HelpMarker(Tr("Fully evaluate the specified level updating values within the scenario being edited."));
 
       if (IsDefaultInstance(def_.level_overrides())) {
         def_.clear_level_overrides();
@@ -507,7 +507,7 @@ class ScenarioEditorScreen : public UiScreen {
     ImGui::Spacing();
     if (ImGui::BeginTabBar("MiddleTabBar")) {
       if (def_.has_reference_def()) {
-        if (ImGui::BeginTabItem("Reference")) {
+        if (ImGui::BeginTabItem(Tr("Reference"))) {
           ImGui::BeginChild("ReferenceContent");
           ImGui::Spacing();
           std::string error_message;
@@ -539,7 +539,7 @@ class ScenarioEditorScreen : public UiScreen {
 
       bool use_target_placement = strat->has();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Set initial target location");
+      ImGui::Text("%s", Tr("Set initial target location"));
       ImGui::SameLine();
       bool changed = ImGui::Checkbox("##UseTargetPlacement", &use_target_placement);
       ImGui::SpacedSeparator();
@@ -572,11 +572,11 @@ class ScenarioEditorScreen : public UiScreen {
 
       if (!def_.has_reference_def()) {
         ImGui::SpacedSeparator();
-        if (ImGui::Button("Bake")) {
+        if (ImGui::Button(Tr("Bake"))) {
           def_ = ApplyScenarioOverrides(def_);
         }
         ImGui::SameLine();
-        ImGui::HelpMarker("Apply and remove the overrides.");
+        ImGui::HelpMarker(Tr("Apply and remove the overrides."));
       }
 
       ImGui::EndChild();
@@ -604,7 +604,7 @@ class ScenarioEditorScreen : public UiScreen {
 
   void DrawComparisonTab() {
     ImGui::IdGuard cid("ComparisonTab");
-    if (!ImGui::BeginTabItem("Compare")) {
+    if (!ImGui::BeginTabItem(Tr("Compare"))) {
       return;
     }
     ImGui::BeginChild("CompareContainer", ImVec2(0, 0));
@@ -614,7 +614,7 @@ class ScenarioEditorScreen : public UiScreen {
     });
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Scenario");
+    ImGui::Text("%s", Tr("Scenario"));
     ImGui::SameLine();
     ScenarioSearchInput(app_, &comparison_scenario_);
     auto maybe_compare_def = app_.scenario_manager().GetEvaluatedScenarioDef(comparison_scenario_);

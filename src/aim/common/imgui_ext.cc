@@ -9,6 +9,7 @@
 #include "imgui/backends/imgui_impl_sdlgpu3.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
 #include "imgui_internal.h"
+#include "aim/i18n/i18n.h"
 
 namespace ImGui {
 namespace {
@@ -174,7 +175,7 @@ bool NotificationPopup::Draw() {
     float button_width = ImGui::CalcTextSize("OK").x + ImGui::GetStyle().FramePadding.x * 2.0f;
     ImGui::SetCursorPosX((ImGui::GetWindowSize().x - button_width) * 0.5f);
 
-    if (ImGui::Button("Ok")) {
+    if (ImGui::Button(aim::Tr("Ok"))) {
       confirmed = true;
       text_ = "";
       popup_.Close();
@@ -339,7 +340,7 @@ void InputJitteredFloat(const InputFloatParams& params, aim::JitteredField<float
 
   if (!params.is_optional || field.value.has()) {
     ImGui::SameLine();
-    ImGui::Text("+/-");
+    ImGui::Text("%s", aim::Tr("+/-"));
     ImGui::SameLine();
     InputFloat(jitter_params, field.jitter);
   } else {
@@ -440,7 +441,7 @@ void InputStoredColor(const std::string& id, aim::StoredColor* stored_color, flo
 
   ImGui::SameLine();
   ImGui::Text("%s", aim::icons::kClose);
-  ImGui::HelpTooltip("Multiply color by value");
+  ImGui::HelpTooltip(aim::Tr("Multiply color by value"));
 
   ImGui::SameLine();
   ImGui::InputFloat(ImGui::InputFloatParams("ColorMultiplier")
@@ -521,13 +522,13 @@ std::optional<std::string> MultilineTextEntryDialog::Draw(bool can_set) {
                               ImGuiInputTextFlags_AllowTabInput);
     ImGui::Spacing();
     if (can_set) {
-      if (ImGui::Button("Set")) {
+      if (ImGui::Button(aim::Tr("Set"))) {
         result = text_;
         popup_.Close();
       }
       ImGui::SameLine();
     }
-    if (ImGui::Button("Cancel")) {
+    if (ImGui::Button(aim::Tr("Cancel"))) {
       popup_.Close();
     }
     popup_.End();

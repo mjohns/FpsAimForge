@@ -9,6 +9,7 @@
 #include "aim/proto/common.pb.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"  // IWYU pragma: keep
+#include "aim/i18n/i18n.h"
 
 namespace ImGui {
 
@@ -461,7 +462,7 @@ class ConfirmationDialog {
       popup_.Close();
     }
     ImGui::SameLine();
-    if (ImGui::Button("Cancel")) {
+    if (ImGui::Button(aim::Tr("Cancel"))) {
       popup_.Close();
     }
     popup_.End();

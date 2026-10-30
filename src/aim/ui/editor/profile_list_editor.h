@@ -12,6 +12,7 @@
 #include "google/protobuf/message.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 
@@ -64,14 +65,14 @@ void DrawOrderListEditor(const std::string& type_name,
 
     const char* item_menu_id = "order_list_item_menu";
     if (ImGui::BeginPopupContextItem(item_menu_id)) {
-      if (ImGui::Selectable("Insert above")) {
+      if (ImGui::Selectable(Tr("Insert above"))) {
         insert_at_i = i;
       }
-      if (ImGui::Selectable("Insert below")) {
+      if (ImGui::Selectable(Tr("Insert below"))) {
         insert_at_i = i + 1;
       }
       ImGui::Separator();
-      if (ImGui::Selectable("Delete")) {
+      if (ImGui::Selectable(Tr("Delete"))) {
         remove_at_i = i;
       }
       ImGui::EndPopup();
@@ -111,7 +112,7 @@ void DrawProfileList(const std::string& id,
 
   std::string lower_type_name = absl::AsciiStrToLower(type_name);
   ImGui::AlignTextToFramePadding();
-  ImGui::TextFmt("Explicit {} selection order", lower_type_name);
+  ImGui::Text("%s", TrFormat("Explicit {} selection order", lower_type_name).c_str());
 
   ProfileListInfo* profile_list_info = profile_list_info_field.get_mutable();
   google::protobuf::RepeatedField<int>* order_list = profile_list_info->mutable_explicit_order();
@@ -136,7 +137,7 @@ void DrawProfileList(const std::string& id,
   google::protobuf::RepeatedField<int>* start_order_list = profile_list_info->mutable_start_order();
   bool has_start_order = start_order_list->size() > 0;
   ImGui::AlignTextToFramePadding();
-  ImGui::TextFmt("Initial {} selection order", lower_type_name);
+  ImGui::Text("%s", TrFormat("Initial {} selection order", lower_type_name).c_str());
   ImGui::SameLine();
   ImGui::Checkbox("##HasStartOrder", &has_start_order);
   ImGui::SameLine();
@@ -172,17 +173,17 @@ void DrawProfileList(const std::string& id,
     ImGui::TextFmt("{} #{}", type_name, i);
     const char* item_menu_id = "profile_item_menu";
     if (ImGui::BeginPopupContextItem(item_menu_id)) {
-      if (ImGui::Selectable("Move up")) {
+      if (ImGui::Selectable(Tr("Move up"))) {
         move_up_i = i;
       }
-      if (ImGui::Selectable("Move down")) {
+      if (ImGui::Selectable(Tr("Move down"))) {
         move_down_i = i;
       }
-      if (ImGui::Selectable("Copy")) {
+      if (ImGui::Selectable(Tr("Copy"))) {
         copy_i = i;
       }
       ImGui::Separator();
-      if (ImGui::Selectable("Delete")) {
+      if (ImGui::Selectable(Tr("Delete"))) {
         remove_at_i = i;
       }
       ImGui::EndPopup();
@@ -199,7 +200,7 @@ void DrawProfileList(const std::string& id,
     ImGui::Indent();
     if (use_weights) {
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Selection weight");
+      ImGui::Text("%s", Tr("Selection weight"));
       ImGui::SameLine();
       int weight = p->info().weight();
       if (!p->info().has_weight()) {
@@ -227,7 +228,7 @@ void DrawProfileList(const std::string& id,
                           .set_width(char_x * 10),
                       PROTO_INT_FIELD(ProfileInfo, p->mutable_info(), next_profile));
       ImGui::SameLine();
-      ImGui::HelpMarker("If this profile is selected, always select the specified profile next.");
+      ImGui::HelpMarker(Tr("If this profile is selected, always select the specified profile next."));
 
       ImGui::InputInt(ImGui::InputIntParams("MinSelectionGap")
                           .set_label("Selection gap")

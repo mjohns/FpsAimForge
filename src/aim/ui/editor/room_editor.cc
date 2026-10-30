@@ -10,6 +10,7 @@
 #include "aim/ui/editor/scenario_editor_common.h"
 #include "glm/gtc/constants.hpp"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 
@@ -58,7 +59,7 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
 
   if (room.type_case() == Room::kSimpleRoom) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Width");
+    ImGui::Text("%s", Tr("Width"));
     ImGui::SameLine();
     float width = room.simple_room().width();
     ImGui::SetNextItemWidth(char_x * 12);
@@ -66,7 +67,7 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
     room.mutable_simple_room()->set_width(width);
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Height");
+    ImGui::Text("%s", Tr("Height"));
     ImGui::SameLine();
     float height = room.simple_room().height();
     ImGui::SetNextItemWidth(char_x * 12);
@@ -80,12 +81,12 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
                           .set_width(char_x * 12),
                       PROTO_FLOAT_FIELD(SimpleRoom, room.mutable_simple_room(), depth));
     ImGui::SameLine();
-    ImGui::HelpMarker("If set the room will have a fixed depth and the back wall will be drawn");
+    ImGui::HelpMarker(Tr("If set the room will have a fixed depth and the back wall will be drawn"));
   }
 
   if (room.type_case() == Room::kBarrelRoom) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Radius");
+    ImGui::Text("%s", Tr("Radius"));
     ImGui::SameLine();
     float radius = room.barrel_room().radius();
     ImGui::SetNextItemWidth(char_x * 12);
@@ -95,7 +96,7 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
 
   if (room.type_case() == Room::kCylinderRoom) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Height");
+    ImGui::Text("%s", Tr("Height"));
     ImGui::SameLine();
     float height = room.cylinder_room().height();
     ImGui::SetNextItemWidth(char_x * 12);
@@ -103,12 +104,12 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
 
     bool use_width_degrees = room.cylinder_room().width_degrees() > 0;
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Width as degrees");
+    ImGui::Text("%s", Tr("Width as degrees"));
     ImGui::SameLine();
     ImGui::Checkbox("##WidthPercentCheckbox", &use_width_degrees);
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Width");
+    ImGui::Text("%s", Tr("Width"));
     ImGui::SameLine();
     float current_width_degrees = 0;
     if (use_width_degrees) {
@@ -129,7 +130,7 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
 
     room.mutable_cylinder_room()->set_height(height);
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Radius");
+    ImGui::Text("%s", Tr("Radius"));
     ImGui::SameLine();
     float radius = room.cylinder_room().radius();
     ImGui::SetNextItemWidth(char_x * 12);
@@ -149,7 +150,7 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
   ImGui::SpacedSeparator();
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Camera position");
+  ImGui::Text("%s", Tr("Camera position"));
   ImGui::Indent();
   VectorEditor(
       ImGui::InputFloatParams("CameraPositionVector").set_step(1, 10).set_width(char_x * 10),
@@ -167,7 +168,7 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
   ImGui::Spacing();
   bool has_camera_up = room.has_camera_up();
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Set camera up");
+  ImGui::Text("%s", Tr("Set camera up"));
   ImGui::SameLine();
   ImGui::Checkbox("##CameraUp", &has_camera_up);
   ImGui::SameLine();
@@ -189,7 +190,7 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
   ImGui::Spacing();
   bool has_camera_front = room.has_camera_front();
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Set camera front");
+  ImGui::Text("%s", Tr("Set camera front"));
   ImGui::SameLine();
   ImGui::Checkbox("##CameraFront", &has_camera_front);
   if (has_camera_front) {
@@ -206,14 +207,14 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
   }
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Look at point");
+  ImGui::Text("%s", Tr("Look at point"));
   ImGui::SameLine();
   DrawOptionalRegionVec2Editor("LookAtPoint",
                                PROTO_PTR_FIELD(RegionVec2, Room, &room, look_at_point));
 
   ImGui::SpacedSeparator();
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Look around");
+  ImGui::Text("%s", Tr("Look around"));
 
   float yaw_per_click = 0.2;
   float pitch_per_click = 0.2;

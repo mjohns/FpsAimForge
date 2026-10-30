@@ -20,6 +20,13 @@
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "aim/i18n/i18n.h"
+// i18n: Tr() returns translated printf-style literals; the format string is
+// non-literal by design, validated against the translation table in i18n.cc.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma GCC diagnostic ignored "-Wformat-security"
+#endif
 
 namespace aim {
 namespace {
@@ -108,7 +115,7 @@ class PlaylistComponentImpl : public PlaylistComponent {
       if (is_readonly) {
         ImGui::AlignTextToFramePadding();
         ImGui::BeginDisabled();
-        ImGui::Text("%s Readonly", icons::kEditOff);
+        ImGui::Text(Tr("%s Readonly"), icons::kEditOff);
         ImGui::EndDisabled();
         ImGui::HelpTooltip(
             std::format("Bundle \"{}\" is readonly.", GetBundleName(run->playlist.name)));

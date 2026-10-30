@@ -6,6 +6,7 @@
 #include "aim/common/imgui_ext.h"
 #include "aim/ui/editor/profile_list_editor.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -35,17 +36,17 @@ void DrawTargetRegion(float char_x, bool support_depth, TargetRegion* region) {
   if (region_type == TargetRegion::kRectangle) {
     auto* t = region->mutable_rectangle();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Width");
+    ImGui::Text("%s", Tr("Width"));
     ImGui::SameLine();
     DrawRegionLengthEditor("Width", RegionLength::kXPercentValue, t->mutable_x_length(), 90);
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Height");
+    ImGui::Text("%s", Tr("Height"));
     ImGui::SameLine();
     DrawRegionLengthEditor("Height", RegionLength::kYPercentValue, t->mutable_y_length(), 90);
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Exclude inner rectangle");
+    ImGui::Text("%s", Tr("Exclude inner rectangle"));
     ImGui::SameLine();
     bool use_inner = t->has_inner_x_length() || t->has_inner_y_length();
     ImGui::Checkbox("##InnerCheckbox", &use_inner);
@@ -54,13 +55,13 @@ void DrawTargetRegion(float char_x, bool support_depth, TargetRegion* region) {
       ImGui::Indent();
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Width");
+      ImGui::Text("%s", Tr("Width"));
       ImGui::SameLine();
       DrawRegionLengthEditor(
           "InnerWidth", RegionLength::kXPercentValue, t->mutable_inner_x_length(), 25);
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Height");
+      ImGui::Text("%s", Tr("Height"));
       ImGui::SameLine();
       DrawRegionLengthEditor(
           "InnerHeight", RegionLength::kYPercentValue, t->mutable_inner_y_length(), 25);
@@ -75,13 +76,13 @@ void DrawTargetRegion(float char_x, bool support_depth, TargetRegion* region) {
   if (region_type == TargetRegion::kCircle) {
     auto* t = region->mutable_circle();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Diameter");
+    ImGui::Text("%s", Tr("Diameter"));
     ImGui::SameLine();
     DrawRegionLengthEditor("Diameter", RegionLength::kXPercentValue, t->mutable_diameter(), 90);
 
     // TODO: Optional region length
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Exclude inner diameter");
+    ImGui::Text("%s", Tr("Exclude inner diameter"));
     ImGui::SameLine();
     DrawOptionalRegionLengthEditor(
         "InnerDiameter",
@@ -93,19 +94,19 @@ void DrawTargetRegion(float char_x, bool support_depth, TargetRegion* region) {
   if (region_type == TargetRegion::kEllipse) {
     auto* t = region->mutable_ellipse();
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("X diameter");
+    ImGui::Text("%s", Tr("X diameter"));
     ImGui::SameLine();
     DrawRegionLengthEditor("XDiameter", RegionLength::kXPercentValue, t->mutable_x_diameter(), 90);
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Y diameter");
+    ImGui::Text("%s", Tr("Y diameter"));
     ImGui::SameLine();
     DrawRegionLengthEditor("YDiameter", RegionLength::kYPercentValue, t->mutable_y_diameter(), 90);
   }
 
   if (support_depth) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Depth");
+    ImGui::Text("%s", Tr("Depth"));
     ImGui::SameLine();
     DrawOptionalJitteredRegionLengthEditor(
         "Depth",
@@ -123,7 +124,7 @@ void DrawTargetRegion(float char_x, bool support_depth, TargetRegion* region) {
   }
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Fixed distance");
+  ImGui::Text("%s", Tr("Fixed distance"));
   ImGui::SameLine();
   DrawOptionalJitteredRegionLengthEditor(
       "FixedDistanceInput",
@@ -132,25 +133,24 @@ void DrawTargetRegion(float char_x, bool support_depth, TargetRegion* region) {
       PROTO_PTR_FIELD(RegionLength, TargetRegion, region, fixed_distance_from_last_target_jitter),
       10);
   ImGui::SameLine();
-  ImGui::HelpMarker(
-      "New target will be placed at a fixed distance from the last target that was added.");
+  ImGui::HelpMarker(Tr("New target will be placed at a fixed distance from the last target that was added."));
 
   if (!is_point) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Offset");
+    ImGui::Text("%s", Tr("Offset"));
     ImGui::SameLine();
     bool use_offsets = region->has_x_offset() || region->has_y_offset();
     ImGui::Checkbox("##OffsetsCheckbox", &use_offsets);
     if (use_offsets) {
       ImGui::Indent();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("X offset");
+      ImGui::Text("%s", Tr("X offset"));
       ImGui::SameLine();
       DrawRegionLengthPointEditor(
           "XOffset", RegionLength::kXPercentValue, region->mutable_x_offset());
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Y offset");
+      ImGui::Text("%s", Tr("Y offset"));
       ImGui::SameLine();
       DrawRegionLengthPointEditor(
           "YOffset", RegionLength::kYPercentValue, region->mutable_y_offset());
@@ -259,7 +259,7 @@ void DrawJitteredRegionLengthEditor(const std::string& id,
 
   ImGui::InputFloat(params, field);
   ImGui::SameLine();
-  ImGui::Text("+/-");
+  ImGui::Text("%s", Tr("+/-"));
   ImGui::SameLine();
   params.set_id("JitteredValueInput").set_step(0.5, 2.5);
   ImGui::InputFloat(params, jitter_field);
@@ -311,11 +311,11 @@ void DrawOptionalRegionLengthEditor(const std::string& id,
 void DrawRegionVec2Editor(const std::string& id, RegionVec2* v) {
   ImGui::IdGuard cid(id);
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("x");
+  ImGui::Text("%s", Tr("x"));
   ImGui::SameLine();
   DrawRegionLengthPointEditor("X" + id, RegionLength::kXPercentValue, v->mutable_x());
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("y");
+  ImGui::Text("%s", Tr("y"));
   ImGui::SameLine();
   DrawRegionLengthPointEditor("Y" + id, RegionLength::kYPercentValue, v->mutable_y());
 }
@@ -353,7 +353,7 @@ void DrawTargetPlacementStrategyEditor(const std::string& id,
     s->add_regions();
   }
 
-  ImGui::Text("Target locations");
+  ImGui::Text("%s", Tr("Target locations"));
   ImGui::Indent();
   DrawProfileList("RegionList",
                   "Region",
@@ -365,7 +365,7 @@ void DrawTargetPlacementStrategyEditor(const std::string& id,
   ImGui::SpacedSeparator();
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Min distance");
+  ImGui::Text("%s", Tr("Min distance"));
   ImGui::SameLine();
 
   DrawOptionalRegionLengthEditor(
@@ -374,10 +374,10 @@ void DrawTargetPlacementStrategyEditor(const std::string& id,
       PROTO_PTR_FIELD(RegionLength, TargetPlacementStrategy, s, min_distance),
       1);
   ImGui::SameLine();
-  ImGui::HelpMarker("Minimum distance between targets.");
+  ImGui::HelpMarker(Tr("Minimum distance between targets."));
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Min distance X");
+  ImGui::Text("%s", Tr("Min distance X"));
   ImGui::SameLine();
   DrawOptionalRegionLengthEditor(
       "MinDistanceXInput",
@@ -385,10 +385,10 @@ void DrawTargetPlacementStrategyEditor(const std::string& id,
       PROTO_PTR_FIELD(RegionLength, TargetPlacementStrategy, s, min_x_distance),
       1);
   ImGui::SameLine();
-  ImGui::HelpMarker("Minimum horizontal distance between targets along the x axis.");
+  ImGui::HelpMarker(Tr("Minimum horizontal distance between targets along the x axis."));
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Min distance Y");
+  ImGui::Text("%s", Tr("Min distance Y"));
   ImGui::SameLine();
   DrawOptionalRegionLengthEditor(
       "MinDistanceYInput",
@@ -396,18 +396,18 @@ void DrawTargetPlacementStrategyEditor(const std::string& id,
       PROTO_PTR_FIELD(RegionLength, TargetPlacementStrategy, s, min_y_distance),
       1);
   ImGui::SameLine();
-  ImGui::HelpMarker("Minimum vertical distance between targets along the y axis.");
+  ImGui::HelpMarker(Tr("Minimum vertical distance between targets along the y axis."));
 }
 
 void DrawBoundsEditor(const std::string& id, Bounds* bounds, BoundsDimensions dimensions) {
   ImGui::IdGuard cid(id);
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Bounds");
+  ImGui::Text("%s", Tr("Bounds"));
   ImGui::Indent();
 
   if (dimensions.draw_width) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Width");
+    ImGui::Text("%s", Tr("Width"));
     ImGui::SameLine();
     DrawOptionalRegionLengthEditor("Width",
                                    RegionLength::kXPercentValue,
@@ -417,7 +417,7 @@ void DrawBoundsEditor(const std::string& id, Bounds* bounds, BoundsDimensions di
 
   if (dimensions.draw_height) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Height");
+    ImGui::Text("%s", Tr("Height"));
     ImGui::SameLine();
     DrawOptionalRegionLengthEditor("Height",
                                    RegionLength::kYPercentValue,
@@ -427,7 +427,7 @@ void DrawBoundsEditor(const std::string& id, Bounds* bounds, BoundsDimensions di
 
   if (dimensions.draw_depth) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Depth");
+    ImGui::Text("%s", Tr("Depth"));
     ImGui::SameLine();
     DrawOptionalRegionLengthEditor("Depth",
                                    RegionLength::kDepthPercentValue,
@@ -509,7 +509,7 @@ bool BeginMaybeEditedTabItem(std::string name, bool edited) {
 void DrawScoreTargetsEditor(PtrField<ScoreTargets> score_targets) {
   float char_x = ImGui::GetDefaultCharSizeX();
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Target score");
+  ImGui::Text("%s", Tr("Target score"));
   ImGui::SameLine();
   bool has_score_targets = score_targets.has();
   ImGui::SameLine();

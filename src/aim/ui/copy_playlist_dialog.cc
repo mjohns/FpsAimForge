@@ -8,6 +8,7 @@
 #include "aim/core/history_manager.h"
 #include "aim/core/playlist_manager.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 
@@ -17,7 +18,7 @@ bool CopyPlaylistDialog::Draw(Application& app) {
   bool show_popup = source_.has_value();
   if (show_popup) {
     if (ImGui::BeginDefaultPopupModal(id_.c_str(), &show_popup)) {
-      ImGui::TextFmt("Copy \"{}\" to", source_->name);
+      ImGui::Text("%s", TrFormat("Copy \"{}\" to", source_->name).c_str());
       ImGui::SimpleDropdown("BundlePicker",
                             new_name_.mutable_bundle_name(),
                             bundle_names_,
@@ -27,7 +28,7 @@ bool CopyPlaylistDialog::Draw(Application& app) {
 
       ImGui::Indent();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Make new copies of all scenarios");
+      ImGui::Text("%s", Tr("Make new copies of all scenarios"));
       ImGui::SameLine();
       ImGui::Checkbox("##DeepCopy", &deep_copy_);
 
@@ -35,7 +36,7 @@ bool CopyPlaylistDialog::Draw(Application& app) {
         ImGui::Indent();
 
         ImGui::AlignTextToFramePadding();
-        ImGui::Text("As references");
+        ImGui::Text("%s", Tr("As references"));
         ImGui::SameLine();
         ImGui::Checkbox("##AsReferences", &as_references_);
         ImGui::SameLine();
@@ -44,7 +45,7 @@ bool CopyPlaylistDialog::Draw(Application& app) {
             "change when the underlying scenario changes.");
 
         ImGui::AlignTextToFramePadding();
-        ImGui::Text("Add name prefix*");
+        ImGui::Text("%s", Tr("Add name prefix*"));
         ImGui::SameLine();
         ImGui::InputText("##AddPrefix", &add_prefix_);
         ImGui::SameLine();
@@ -53,18 +54,18 @@ bool CopyPlaylistDialog::Draw(Application& app) {
             "name");
 
         ImGui::AlignTextToFramePadding();
-        ImGui::Text("Remove name prefix");
+        ImGui::Text("%s", Tr("Remove name prefix"));
         ImGui::SameLine();
         ImGui::InputText("##RemovePrefix", &remove_prefix_);
         ImGui::SameLine();
-        ImGui::HelpMarker("Strips the following prefix from the name of scenarios being copied");
+        ImGui::HelpMarker(Tr("Strips the following prefix from the name of scenarios being copied"));
 
         ImGui::Unindent();
       }
 
       ImGui::Unindent();
       ImGui::Spacing();
-      if (ImGui::Button("Copy")) {
+      if (ImGui::Button(Tr("Copy"))) {
         // Do copy
         CopyPlaylistOptions opts;
         opts.add_prefix = add_prefix_;
@@ -85,7 +86,7 @@ bool CopyPlaylistDialog::Draw(Application& app) {
         source_ = {};
       }
       ImGui::SameLine();
-      if (ImGui::Button("Cancel")) {
+      if (ImGui::Button(Tr("Cancel"))) {
         source_ = {};
         ImGui::CloseCurrentPopup();
       }
