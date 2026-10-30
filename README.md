@@ -5,14 +5,14 @@ FpsAimForge is an open source aim trainer focused on simplicity and self improve
 * Play on [Steam](https://store.steampowered.com/app/5165380/FpsAimForge/)
 * [All releases](https://github.com/mjohns/FpsAimForge/releases)
 * [Reddit](https://www.reddit.com/r/FpsAimForge/)
+* [Discord](https://discord.gg/R8Bsf8y8T)
+* [YouTube](https://www.youtube.com/@FpsAimForge)
 
 Major goals:
 * Creating and editing scenarios is actually simple.
 * Easy to play scenarios at varying difficulty levels and sensitivities while tracking/comparing progress. (progressive overload)
 * Amazing performance due to custom "engine" and local first (offline) design.
 * Small app download while still including playlists annd scenarios. You can download the full exe and a large selection of scenarios in just a 5mb download. No additional runtime downloads required.
-
-See [videos](https://www.youtube.com/@FpsAimForge) of FpsAimForge in action!
 
 Prebuilt binaries can be found under the [releases](https://github.com/mjohns/FpsAimForge/releases) tab.
 
