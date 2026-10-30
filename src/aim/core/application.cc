@@ -761,7 +761,11 @@ class ApplicationImpl : public Application {
     auto settings = settings_manager_->GetCurrentSettings();
     if (settings.max_render_fps() <= 0) {
       auto updater = settings_manager_->CreateUpdater();
-      updater.settings.set_max_render_fps(std::round(display_.refresh_rate * 2));
+      float fps = std::round(display_.refresh_rate * 2);
+      updater.settings.set_max_render_fps(fps);
+      if (fps < 230) {
+        updater.settings.set_present_mode(PresentMode::PRESENT_MODE_MAILBOX);
+      }
       updater.SaveIfChangesMade("");
     }
 

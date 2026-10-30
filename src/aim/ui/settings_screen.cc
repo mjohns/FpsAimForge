@@ -26,6 +26,19 @@
 namespace aim {
 namespace {
 
+constexpr const char* kPresentModeHelpText = R"AIMS(
+For high refresh rate monitors try IMMEDIATE. If you see screen tearing use MAILBOX.
+
+IMMEDIATE:
+  Renders directly to the screen without waiting. Offers the lowest input latency, but can cause noticeable screen tearing.
+
+MAILBOX:
+  Updates the screen at your monitor's refresh rate using the latest completed frame. Delivers smooth, tear-free visuals with low latency, but increases GPU load.
+
+VSYNC:
+  Syncs rendering directly to your monitor's refresh rate. Eliminates screen tearing and saves power, but can introduce input lag and frame stutter if performance drops.
+)AIMS";
+
 inline const std::vector<std::pair<ScenarioSettingsStoreType, std::string>>
     kScenarioSettingsStoreTypes{
         {ScenarioSettingsStoreType::STORE_GLOBALLY, "Global"},
@@ -196,6 +209,8 @@ class SettingsScreen : public UiScreen {
       PresentMode present_mode = updater_.settings.present_mode();
       ImGui::SimpleTypeDropdown("GpuPresentModes", &present_mode, kPresentModes, char_x_ * 10);
       updater_.settings.set_present_mode(present_mode);
+      ImGui::SameLine();
+      ImGui::HelpMarker(kPresentModeHelpText);
 
       ImGui::AlignTextToFramePadding();
       ImGui::Text("MSAA");
