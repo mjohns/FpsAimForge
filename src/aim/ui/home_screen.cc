@@ -30,6 +30,7 @@
 #include "aim/ui/ui_screen.h"
 #include "imgui.h"
 #include "imgui/backends/imgui_impl_sdl3.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -48,9 +49,9 @@ class SetInitialDpiDialog {
     std::optional<int> set_dpi;
     if (popup_.Begin()) {
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("What is your mouse DPI?");
+      ImGui::Text("%s", Tr("What is your mouse DPI?"));
       ImGui::SameLine();
-      ImGui::HelpMarker("DPI is used to calculate sensitivity given a cm/360 value.");
+      ImGui::HelpMarker(Tr("DPI is used to calculate sensitivity given a cm/360 value."));
 
       if (ImGui::Button("400")) {
         set_dpi = 400;
@@ -79,7 +80,7 @@ class SetInitialDpiDialog {
       if (!is_valid) {
         ImGui::BeginDisabled();
       }
-      if (ImGui::Button("Set")) {
+      if (ImGui::Button(Tr("Set"))) {
         set_dpi = dpi_input_value_;
       }
       if (!is_valid) {
@@ -401,7 +402,7 @@ class HomeScreen : public UiScreen {
         PushNextScreen(CreateStatsScreen(latest_run->scenario_name, latest_run->run_id, false));
       }
       if (left_nav_collapsed) {
-        ImGui::HelpTooltip("Results", tooltip_delay_seconds);
+        ImGui::HelpTooltip(Tr("Results"), tooltip_delay_seconds);
       }
     }
 

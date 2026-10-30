@@ -7,6 +7,7 @@
 #include "aim/core/scenario_manager.h"
 #include "imgui.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 
@@ -61,7 +62,7 @@ void ScenarioSearchInput(Application& app,
   if (scenario_name->size() > 0) {
     ImGui::SameLine();
     ImGui::Text("%s", icons::kWarning);
-    ImGui::HelpTooltip("No matching scenarios");
+    ImGui::HelpTooltip(Tr("No matching scenarios"));
   }
   auto scenario_names = app.scenario_manager().scenario_names();
   auto selected_scenario = SearchSelector(*scenario_name, *scenario_names, options);

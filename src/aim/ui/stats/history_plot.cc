@@ -11,6 +11,7 @@
 #include "aim/common/util.h"
 #include "imgui.h"
 #include "implot.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -110,10 +111,9 @@ void DrawHistoryPlot(const std::string& id,
 
         if (score < high_score) {
           float diff_percent = (high_score - score) / high_score;
-          ImGui::TextFmt(
-              "{} (-{}%)", MaybeIntToString(score, 2), MaybeIntToString(diff_percent * 100, 1));
+          ImGui::Text("%s", TrFormat("{} (-{}%)", MaybeIntToString(score, 2), MaybeIntToString(diff_percent * 100, 1)).c_str());
         } else {
-          ImGui::TextFmt("{} (High)", MaybeIntToString(score, 2));
+          ImGui::Text("%s", TrFormat("{} (High)", MaybeIntToString(score, 2)).c_str());
         }
 
         std::string time_ago =
@@ -142,7 +142,7 @@ void DrawHistoryPlot(const std::string& id,
         spec.LineWeight = IMPLOT_AUTO;
         if (abs(high_score - mouse_pos.y) < threshold.y) {
           ImGui::BeginTooltip();
-          ImGui::TextFmt("High score: {}", MaybeIntToString(high_score, 2));
+          ImGui::Text("%s", TrFormat("High score: {}", MaybeIntToString(high_score, 2)).c_str());
           ImGui::EndTooltip();
 
           float float_high_score = high_score;
@@ -150,7 +150,7 @@ void DrawHistoryPlot(const std::string& id,
           ImPlot::PlotScatter("HighScoreDot", &mouse_x, &float_high_score, 1, spec);
         } else if (score_target > 0 && abs(score_target - mouse_pos.y) < threshold.y) {
           ImGui::BeginTooltip();
-          ImGui::TextFmt("Target score: {}", MaybeIntToString(score_target, 2));
+          ImGui::Text("%s", TrFormat("Target score: {}", MaybeIntToString(score_target, 2)).c_str());
           ImGui::EndTooltip();
 
           float mouse_x = mouse_pos.x;

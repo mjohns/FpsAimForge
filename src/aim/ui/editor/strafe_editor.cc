@@ -5,6 +5,7 @@
 #include "aim/proto/scenario.pb.h"
 #include "aim/ui/editor/profile_list_editor.h"
 #include "aim/ui/editor/scenario_editor_common.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -69,7 +70,7 @@ void DrawStrafeProfile(float char_x,
                                 .set_width(char_x * 10),
                             PROTO_JITTERED_FIELD(StrafeProfile, p, pause_time));
   ImGui::SameLine();
-  ImGui::HelpMarker("Amount of time to pause at the end of the strafe in seconds");
+  ImGui::HelpMarker(Tr("Amount of time to pause at the end of the strafe in seconds"));
 
   if (p->has_pause_time()) {
     ImGui::Indent();
@@ -81,7 +82,7 @@ void DrawStrafeProfile(float char_x,
                           .set_width(char_x * 10),
                       PROTO_PERCENT_FIELD(StrafeProfile, p, pause_chance_percent));
     ImGui::SameLine();
-    ImGui::HelpMarker("Percent chance that the target will pause at the end of the strafe");
+    ImGui::HelpMarker(Tr("Percent chance that the target will pause at the end of the strafe"));
     ImGui::Unindent();
   } else {
     p->clear_pause_chance_percent();
@@ -100,31 +101,31 @@ void DrawLeftRightStrafeProfiles(PtrField<ProfileListInfo> profiles_info,
                                  Field<Direction> direction_field) {
   ImGui::IdGuard cid("LeftRightProfiles");
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Bounds");
+  ImGui::Text("%s", Tr("Bounds"));
   ImGui::SameLine();
   DrawOptionalRegionLengthEditor("Width",
                                  RegionLength::kXPercentValue,
                                  PROTO_PTR_FIELD(RegionLength, Bounds, bounds, width),
                                  90);
   ImGui::SameLine();
-  ImGui::HelpMarker("Constrain where the target can strafe on the wall");
+  ImGui::HelpMarker(Tr("Constrain where the target can strafe on the wall"));
 
   if (relative_bounds != nullptr) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Relative bounds");
+    ImGui::Text("%s", Tr("Relative bounds"));
     ImGui::SameLine();
     DrawOptionalRegionLengthEditor("RelativeWidth",
                                    RegionLength::kXPercentValue,
                                    PROTO_PTR_FIELD(RegionLength, Bounds, relative_bounds, width),
                                    40);
     ImGui::SameLine();
-    ImGui::HelpMarker("Constrain movement based on the initial target position");
+    ImGui::HelpMarker(Tr("Constrain movement based on the initial target position"));
   }
 
   float char_x = ImGui::GetDefaultCharSizeX();
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Initial left/right direction");
+  ImGui::Text("%s", Tr("Initial left/right direction"));
   ImGui::SameLine();
   Direction direction = direction_field.get();
   ImGui::SimpleTypeDropdown(
@@ -148,29 +149,29 @@ void DrawUpDownStrafeProfiles(PtrField<ProfileListInfo> profiles_info,
   float char_x = ImGui::GetDefaultCharSizeX();
   ImGui::IdGuard cid("UpDownProfiles");
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Bounds");
+  ImGui::Text("%s", Tr("Bounds"));
   ImGui::SameLine();
   DrawOptionalRegionLengthEditor("Height",
                                  RegionLength::kYPercentValue,
                                  PROTO_PTR_FIELD(RegionLength, Bounds, bounds, height),
                                  90);
   ImGui::SameLine();
-  ImGui::HelpMarker("Constrain where the target can strafe on the wall");
+  ImGui::HelpMarker(Tr("Constrain where the target can strafe on the wall"));
 
   if (relative_bounds != nullptr) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Relative bounds");
+    ImGui::Text("%s", Tr("Relative bounds"));
     ImGui::SameLine();
     DrawOptionalRegionLengthEditor("RelativeHeight",
                                    RegionLength::kYPercentValue,
                                    PROTO_PTR_FIELD(RegionLength, Bounds, relative_bounds, height),
                                    40);
     ImGui::SameLine();
-    ImGui::HelpMarker("Constrain movement based on the initial target position");
+    ImGui::HelpMarker(Tr("Constrain movement based on the initial target position"));
   }
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Initial up/down direction");
+  ImGui::Text("%s", Tr("Initial up/down direction"));
   ImGui::SameLine();
   Direction direction = direction_field.get();
   ImGui::SimpleTypeDropdown(
@@ -194,29 +195,29 @@ void DrawForwardBackStrafeProfiles(PtrField<ProfileListInfo> profiles_info,
   float char_x = ImGui::GetDefaultCharSizeX();
   ImGui::IdGuard cid("ForwardBackProfiles");
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Bounds");
+  ImGui::Text("%s", Tr("Bounds"));
   ImGui::SameLine();
   DrawOptionalRegionLengthEditor("Depth",
                                  RegionLength::kDepthPercentValue,
                                  PROTO_PTR_FIELD(RegionLength, Bounds, bounds, depth),
                                  50);
   ImGui::SameLine();
-  ImGui::HelpMarker("Constrain where the target can move forward and back");
+  ImGui::HelpMarker(Tr("Constrain where the target can move forward and back"));
 
   if (relative_bounds != nullptr) {
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Relative bounds");
+    ImGui::Text("%s", Tr("Relative bounds"));
     ImGui::SameLine();
     DrawOptionalRegionLengthEditor("RelativeDepth",
                                    RegionLength::kDepthPercentValue,
                                    PROTO_PTR_FIELD(RegionLength, Bounds, relative_bounds, depth),
                                    20);
     ImGui::SameLine();
-    ImGui::HelpMarker("Constrain movement based on the initial target position");
+    ImGui::HelpMarker(Tr("Constrain movement based on the initial target position"));
   }
 
   ImGui::AlignTextToFramePadding();
-  ImGui::Text("Initial forward/back direction");
+  ImGui::Text("%s", Tr("Initial forward/back direction"));
   ImGui::SameLine();
   Direction direction = direction_field.get();
   ImGui::SimpleTypeDropdown(

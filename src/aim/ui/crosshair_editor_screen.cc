@@ -12,6 +12,7 @@
 #include "aim/core/settings_manager.h"
 #include "aim/graphics/crosshair_renderer.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
+#include "aim/i18n/i18n.h"
 
 namespace aim {
 namespace {
@@ -100,7 +101,7 @@ class CrosshairEditorScreen : public UiScreen {
     Line();
     ImGui::BeginChild("CrosshairListContent");
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Crosshairs");
+    ImGui::Text("%s", Tr("Crosshairs"));
     ImGui::SameLine();
     auto folder = app_.file_system().GetUserDataPath("resources/crosshairs");
     if (ImGui::Button(icons::kOpenInNew)) {
@@ -116,13 +117,13 @@ class CrosshairEditorScreen : public UiScreen {
       }
       const char* popup_id = "CrosshairItemMenu";
       if (ImGui::BeginPopupContextItem(popup_id)) {
-        if (ImGui::Selectable("Copy")) {
+        if (ImGui::Selectable(Tr("Copy"))) {
           OpenCrosshairCopy(crosshair_name);
         }
-        if (ImGui::Selectable("Edit")) {
+        if (ImGui::Selectable(Tr("Edit"))) {
           OpenExistingCrosshair(crosshair_name);
         }
-        if (ImGui::Selectable("Delete")) {
+        if (ImGui::Selectable(Tr("Delete"))) {
           delete_confirmation_dialog_.NotifyOpen(std::format("Delete \"{}\"?", crosshair_name),
                                                  crosshair_name);
         }
@@ -206,7 +207,7 @@ class CrosshairEditorScreen : public UiScreen {
     Crosshair& c = crosshair_;
 
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Name");
+    ImGui::Text("%s", Tr("Name"));
     ImGui::SameLine();
     ImGui::SetNextItemWidth(char_x_ * 20);
     ImGui::InputText("##NameInput", &current_crosshair_name_);
@@ -223,23 +224,23 @@ class CrosshairEditorScreen : public UiScreen {
       ImGui::IdGuard lid("Layer", i);
       const char* item_menu_id = "layer_item_menu";
       if (ImGui::BeginPopupContextItem(item_menu_id)) {
-        if (ImGui::Selectable("Move up")) {
+        if (ImGui::Selectable(Tr("Move up"))) {
           move_up_i = i;
         }
-        if (ImGui::Selectable("Move down")) {
+        if (ImGui::Selectable(Tr("Move down"))) {
           move_down_i = i;
         }
-        if (ImGui::Selectable("Copy")) {
+        if (ImGui::Selectable(Tr("Copy"))) {
           copy_i = i;
         }
-        if (ImGui::Selectable("Delete")) {
+        if (ImGui::Selectable(Tr("Delete"))) {
           remove_at_i = i;
         }
         ImGui::EndPopup();
       }
 
       ImGui::AlignTextToFramePadding();
-      ImGui::TextFmt("Layer {}", i + 1);
+      ImGui::Text("%s", TrFormat("Layer {}", i + 1).c_str());
       ImGui::SameLine();
       if (ImGui::MenuButton()) {
         ImGui::OpenPopup(item_menu_id);
@@ -306,7 +307,7 @@ class CrosshairEditorScreen : public UiScreen {
 
       ImGui::TableNextColumn();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Type");
+      ImGui::Text("%s", Tr("Type"));
       ImGui::SameLine();
       CrosshairLayer::TypeCase type = l.type_case();
       if (type == CrosshairLayer::TYPE_NOT_SET) {
@@ -332,7 +333,7 @@ class CrosshairEditorScreen : public UiScreen {
 
       bool use_outline_color = l.use_outline_color() || l.circle().use_outline_color();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Use outline color");
+      ImGui::Text("%s", Tr("Use outline color"));
       ImGui::SameLine();
       ImGui::Checkbox("##UseOutline", &use_outline_color);
       l.set_use_outline_color(use_outline_color);
@@ -340,12 +341,12 @@ class CrosshairEditorScreen : public UiScreen {
       ImGui::HelpMarker("Replace the layer's color with the outline color from the theme.");
 
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Color");
+      ImGui::Text("%s", Tr("Color"));
       bool has_color = l.has_override_color();
       ImGui::SameLine();
       ImGui::Checkbox("##HasColor", &has_color);
       ImGui::SameLine();
-      ImGui::HelpMarker("Override the color defined by the theme.");
+      ImGui::HelpMarker(Tr("Override the color defined by the theme."));
       if (has_color) {
         ImGui::SameLine();
         ImGui::InputStoredColor("##Color", l.mutable_override_color(), char_x_);
@@ -356,7 +357,7 @@ class CrosshairEditorScreen : public UiScreen {
       bool supports_outlines = type != CrosshairLayer::kImage;
       if (supports_outlines) {
         ImGui::AlignTextToFramePadding();
-        ImGui::Text("Outline color");
+        ImGui::Text("%s", Tr("Outline color"));
         bool has_outline_color = l.has_override_outline_color();
         ImGui::SameLine();
         ImGui::Checkbox("##HasOutlineColor", &has_outline_color);
@@ -415,7 +416,7 @@ class CrosshairEditorScreen : public UiScreen {
 
   void DrawCrosshairImageEditor(ImageCrosshair* c) {
     ImGui::IdGuard cid("ImageCrosshair");
-    ImGui::Text("File name");
+    ImGui::Text("%s", Tr("File name"));
     ImGui::SameLine();
     ImGui::InputText("##FileNameInput", c->mutable_file_name());
   }

@@ -13,6 +13,13 @@
 #include "aim/proto/bundle.pb.h"
 #include "aim/ui/bundle_pack_update_dialog.h"
 #include "imgui.h"
+#include "aim/i18n/i18n.h"
+// i18n: Tr() returns translated printf-style literals; the format string is
+// non-literal by design, validated against the translation table in i18n.cc.
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma GCC diagnostic ignored "-Wformat-security"
+#endif
 
 namespace aim {
 namespace {
@@ -53,7 +60,7 @@ class AddBundlePackDialog {
       }
     }
 
-    if (ImGui::Button("Add")) {
+    if (ImGui::Button(Tr("Add"))) {
       popup_.Close();
       return bundle_pack_name_;
     }
@@ -61,7 +68,7 @@ class AddBundlePackDialog {
       ImGui::EndDisabled();
     }
     ImGui::SameLine();
-    if (ImGui::Button("Cancel")) {
+    if (ImGui::Button(Tr("Cancel"))) {
       popup_.Close();
     }
 
@@ -92,7 +99,7 @@ class AddBundleDialog {
 
     std::optional<std::string> added_name;
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Bundle name");
+    ImGui::Text("%s", Tr("Bundle name"));
     ImGui::SameLine();
     ImGui::InputText("##BundleNameInput", &bundle_name_);
 
@@ -105,10 +112,9 @@ class AddBundleDialog {
 
     if (!bundle_name_.empty() && !is_valid) {
       if (name_taken) {
-        ImGui::TextFmt("Bundle name \"{}\" already exists", bundle_name_);
+        ImGui::Text("%s", TrFormat("Bundle name \"{}\" already exists", bundle_name_).c_str());
       } else {
-        ImGui::TextFmt("Bundle name \"{}\" is invalid. Can only contains letters, numbers, and _",
-                       bundle_name_);
+        ImGui::Text("%s", TrFormat("Bundle name \"{}\" is invalid. Can only contains letters, numbers, and _", bundle_name_).c_str());
       }
     }
 
@@ -128,7 +134,7 @@ class AddBundleDialog {
       ImGui::EndDisabled();
     }
     ImGui::SameLine();
-    if (ImGui::Button("Cancel")) {
+    if (ImGui::Button(Tr("Cancel"))) {
       popup_.Close();
     }
 
@@ -183,7 +189,7 @@ class UpdateBundlePackInfoDialog {
 
     ImGui::SpacedSeparator();
 
-    if (ImGui::Button("Save")) {
+    if (ImGui::Button(Tr("Save"))) {
       std::string error_msg = Save();
       if (!error_msg.empty()) {
         notification_popup_.NotifyOpen(error_msg);
@@ -192,7 +198,7 @@ class UpdateBundlePackInfoDialog {
       }
     }
     ImGui::SameLine();
-    if (ImGui::Button("Cancel")) {
+    if (ImGui::Button(Tr("Cancel"))) {
       popup_.Close();
     }
   }
@@ -434,20 +440,20 @@ class BundleUiComponentImpl : public BundleUiComponent {
     if (ImGui::Button(std::format("{} Folder", icons::kOpenInNew))) {
       OpenFolderInExplorer(app_.file_system().GetUserDataPath("bundles"));
     }
-    ImGui::HelpTooltip("Open bundles folder in file explorer");
+    ImGui::HelpTooltip(Tr("Open bundles folder in file explorer"));
   }
 
   void DrawSelectedBundle() {
     auto maybe_bundle_info = app_.bundle_manager().GetBundleInfo(selected_bundle_name_);
     if (!maybe_bundle_info) {
-      ImGui::Text("Could not find bundle: %s", selected_bundle_name_.c_str());
+      ImGui::Text(Tr("Could not find bundle: %s"), selected_bundle_name_.c_str());
       return;
     }
     BundleInfo info = *maybe_bundle_info;
     LoadedBundleDetails details =
         app_.bundle_manager().GetLoadedBundleDetails(selected_bundle_name_);
 
-    ImGui::Text("Bundle name: %s", selected_bundle_name_.c_str());
+    ImGui::Text(Tr("Bundle name: %s"), selected_bundle_name_.c_str());
 
     bool need_update = false;
     bool reload_bundles_from_disk = false;
@@ -461,7 +467,7 @@ class BundleUiComponentImpl : public BundleUiComponent {
     } else {
       bool readonly = info.readonly();
       ImGui::AlignTextToFramePadding();
-      ImGui::Text("Readonly");
+      ImGui::Text("%s", Tr("Readonly"));
       ImGui::SameLine();
       if (ImGui::Checkbox("##ReadonlyInput", &readonly)) {
         info.set_readonly(readonly);
@@ -485,10 +491,11 @@ class BundleUiComponentImpl : public BundleUiComponent {
     ImGui::Separator();
     ImGui::Spacing();
 
-    CachedBundleDetails cached_details = GetBundleDetails(selected_bundle_name_);
-    ImGui::TextFmt("{} scenarios", cached_details.num_scenarios);
+CachedBundleDetails cached_details = GetBundleDetails(selected_bundle_name_);
+    ImGui::Text("%s", TrFormat("{} scenarios", cached_details.num_scenarios).c_str());
     if (cached_details.num_playlists > 0) {
-      ImGui::TextFmt("{} playlists", cached_details.num_playlists);
+      ImGui::Text("%s", TrFormat("{} playlists", cached_details.num_playlists).c_str());
+    }
     }
 
     ImGui::Spacing();
