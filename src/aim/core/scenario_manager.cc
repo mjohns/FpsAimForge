@@ -41,10 +41,17 @@ class ScenarioManagerImpl : public ScenarioManager {
   void AddScenariosForBundle(const std::string& bundle_name, BundleFile* bundle_file) override {
     for (const std::string& full_name : *scenario_names_) {
       ResourceName name = ResourceName::Parse(full_name);
+      NameInfo name_info = GetNameInfo(full_name);
+      if (name_info.HasDynamicSuffix()) {
+        continue;
+      }
       if (name.bundle_name() == bundle_name) {
-        BundleScenario& bundle_scenario = *bundle_file->add_scenarios();
-        bundle_scenario.set_name(name.relative_name());
-        *bundle_scenario.mutable_def() = scenario_map_[full_name].def;
+        auto it = scenario_map_.find(full_name);
+        if (it != scenario_map_.end()) {
+          BundleScenario& bundle_scenario = *bundle_file->add_scenarios();
+          bundle_scenario.set_name(name.relative_name());
+          *bundle_scenario.mutable_def() = it->second.def;
+        }
 
         // Backfill
         // ScenarioDef* s = bundle_scenario.mutable_def();
