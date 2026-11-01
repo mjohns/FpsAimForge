@@ -424,7 +424,6 @@ void Scenario::OnWaitingForClickTick() {
   ImGui::PushStyleColor(ImGuiCol_Text, ToImCol32(theme_.target_color()));
 
   ImGui::Text("%s", scenario_name_.c_str());
-  ImGui::Text("fps: %d", (int)ImGui::GetIO().Framerate);
   if (settings_.enable_metronome() && settings_.metronome_bpm() > 0) {
     ImGui::Text("bpm: %.0f", settings_.metronome_bpm());
   }
@@ -548,8 +547,15 @@ void Scenario::OnRunningTick() {
   current_times_.events_end = timer_.GetElapsedMicros();
 
   loop_count_++;
-  if (loop_count_ % 50000 == 0) {
-    state_updates_per_second_ = (num_state_updates_ / timer_.GetElapsedSeconds()) / 1000.0;
+  i64 now_micros = GetNowEpochMicros();
+  constexpr i64 snapshot_delta_micros = SecondsToMicros(0.5);
+  if ((now_micros - last_fps_snapshot_time_micros_) > snapshot_delta_micros) {
+    float elapsed_seconds = timer_.GetElapsedSeconds();
+    if (elapsed_seconds > 0) {
+      state_updates_per_second_ = (num_state_updates_ / elapsed_seconds) / 1000.0;
+    }
+    fps_ = (int)ImGui::GetIO().Framerate;
+    last_fps_snapshot_time_micros_ = now_micros;
   }
   // timer_.ResumeRun();
 
@@ -610,7 +616,7 @@ void Scenario::OnRunningTick() {
   ImGui::PushStyleColor(ImGuiCol_Text, ToImCol32(theme_.target_color()));
   float elapsed_seconds = timer_.GetElapsedSeconds();
   ImGui::Text("time: %.1f", elapsed_seconds);
-  ImGui::Text("fps: %d", (int)ImGui::GetIO().Framerate);
+  ImGui::Text("fps: %d", fps_);
   ImGui::Text("ups: %.1fk", state_updates_per_second_);
   ImGui::Text("cm/360: %.0f", effective_cm_per_360_);
   if (settings_.enable_metronome() && settings_.metronome_bpm() > 0) {
