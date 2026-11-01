@@ -405,7 +405,7 @@ class DrawDataBuilder {
         Cylinder c;
         c.radius = target.radius;
         c.up = target.pill_up;
-        c.height = target.height - target.radius;
+        c.height = target.height - (target.radius * 2);
         c.position = target.position;
 
         if (should_draw_center) {
