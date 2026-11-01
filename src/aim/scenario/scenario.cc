@@ -549,7 +549,8 @@ void Scenario::OnRunningTick() {
   loop_count_++;
   i64 now_micros = GetNowEpochMicros();
   constexpr i64 snapshot_delta_micros = SecondsToMicros(0.5);
-  if ((now_micros - last_fps_snapshot_time_micros_) > snapshot_delta_micros) {
+  if (loop_count_ == 2000 ||
+      (now_micros - last_fps_snapshot_time_micros_) > snapshot_delta_micros) {
     float elapsed_seconds = timer_.GetElapsedSeconds();
     if (elapsed_seconds > 0) {
       state_updates_per_second_ = (num_state_updates_ / elapsed_seconds) / 1000.0;
