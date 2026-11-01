@@ -580,7 +580,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
   ImGui::ConfirmationDialog<std::string> delete_confirmation_dialog_{"DeleteConfirmationDialog"};
   AllNames all_names_;
   std::optional<std::vector<int>> filtered_names_indices_;
-  SelectVariationDialog select_variation_dialog_{"ObjectBrowserVariationDialog"};
+  SelectVariationDialog select_variation_dialog_{"ObjectBrowserVariationDialog", type_};
   Lazy<std::vector<std::string>> bundle_names_;
   std::string bundle_name_filter_;
   std::string handled_bundle_name_filter_;

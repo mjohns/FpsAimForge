@@ -156,7 +156,7 @@ class PlaylistComponentImpl : public PlaylistComponent {
   }
 
  private:
-  SelectVariationDialog select_variation_dialog_{"PlaylistVariation"};
+  SelectVariationDialog select_variation_dialog_{"PlaylistVariation", ObjectType::PLAYLIST};
   Application& app_;
 
   ImGui::ConfirmationDialog<Playlist> delete_confirmation_dialog_{"DeleteConfirmationDialog1"};

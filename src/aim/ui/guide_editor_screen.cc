@@ -197,7 +197,7 @@ class SectionEditor {
   DragAndDrop playlist_drag_and_drop_;
   DragAndDrop guide_drag_and_drop_;
   int editing_variation_i_ = -1;
-  SelectVariationDialog select_variation_dialog_{"SelectPlaylistVariation"};
+  SelectVariationDialog select_variation_dialog_{"SelectPlaylistVariation", ObjectType::PLAYLIST};
 };
 
 BaseEditorOptions GetBaseOptions(const GuideEditorOptions& opts) {

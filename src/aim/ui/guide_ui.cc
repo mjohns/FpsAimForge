@@ -356,7 +356,7 @@ class GuidesComponentImpl : public GuidesComponent {
   std::unique_ptr<PlaylistComponent> playlist_component_ = CreatePlaylistComponent();
   GuideViewer viewer_;
   std::deque<std::string> guide_history_;
-  SelectVariationDialog select_variation_dialog_{"CurrentGuideVariation"};
+  SelectVariationDialog select_variation_dialog_{"CurrentGuideVariation", ObjectType::GUIDE};
 };
 
 }  // namespace

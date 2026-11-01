@@ -318,7 +318,7 @@ class PlaylistEditorScreen : public BaseEditorScreen {
   int editing_variation_i_ = -1;
   std::string scenario_search_text_;
   ImGui::MultilineTextEntryDialog description_dialog_{"DescriptionEditor"};
-  SelectVariationDialog select_variation_dialog_{"SelectScenarioVariation"};
+  SelectVariationDialog select_variation_dialog_{"SelectScenarioVariation", ObjectType::SCENARIO};
 };
 
 }  // namespace
