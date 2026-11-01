@@ -4,6 +4,8 @@
 
 #include "aim/common/imgui_ext.h"
 #include "aim/common/name_util.h"
+#include "aim/core/scenario_manager.h"
+#include "aim/ui/ui_app.h"
 #include "imgui.h"
 
 namespace aim {
@@ -85,10 +87,17 @@ bool SelectVariationDialog::Draw(std::string* updated_name) {
     float char_x = ImGui::GetDefaultCharSizeX();
 
     ImGui::SpacedSeparator();
+    float base_level = 1;
+    if (type_ == ObjectType::SCENARIO) {
+      auto scenario = GetUiApp().scenario_manager().GetEvaluatedScenarioDef(name_info_.base_name);
+      if (scenario && scenario->level_overrides().level_offset() > 0) {
+        base_level = scenario->level_overrides().level_offset();
+      }
+    }
     ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Level")
                           .set_is_optional()
                           .set_step(1, 2)
-                          .set_default(1)
+                          .set_default(base_level)
                           .set_width(char_x * 10),
                       CreateOptionalFloatField(&name_info_.level));
     ImGui::SpacedSeparator();
