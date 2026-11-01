@@ -176,7 +176,11 @@ bool IntersectRayPill(const Pill& pill,
   }
 
   float full_pill_height = pill.height;
-  float cylinder_height = (full_pill_height - (pill.radius * 2.0f)) * 0.5;
+  float diameter = pill.radius * 2.0f;
+  if (diameter >= full_pill_height) {
+    return IntersectRaySphere(pill.position, pill.radius, origin, direction, intersection_distance);
+  }
+  float cylinder_height = (full_pill_height - diameter) * 0.5;
 
   if (abs(cylinder_intersection_height) <= cylinder_height) {
     // Intersecting with cylinder portion of pill.

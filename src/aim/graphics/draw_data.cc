@@ -401,7 +401,7 @@ class DrawDataBuilder {
       }
       const glm::vec3& color = target.is_ghost ? ghost_target_color : target_color;
       bool should_draw_center = try_to_draw_center && !target.is_ghost;
-      if (target.is_pill) {
+      if (target.is_pill && target.height >= (target.radius * 2.0f)) {
         Cylinder c;
         c.radius = target.radius;
         c.up = target.pill_up;
