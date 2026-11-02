@@ -451,8 +451,6 @@ void DrawOverridesEditor(const char* id, ScenarioOverrides* overrides, bool is_l
   /*
   // TODO: Not sure if these are implemented correctly or make sense. Maybe should have more
   // specific names.
-  ImGui::InputFloat(default_params.clone().set_id_and_label("Time scale multiplier"),
-                    PROTO_FLOAT_FIELD(ScenarioOverrides, overrides, time_scale_multiplier));
   ImGui::InputFloat(default_params.clone().set_id_and_label("Distance multiplier"),
                     PROTO_FLOAT_FIELD(ScenarioOverrides, overrides, distance_multiplier));
   */
@@ -461,6 +459,12 @@ void DrawOverridesEditor(const char* id, ScenarioOverrides* overrides, bool is_l
   ImGui::InputFloat(
       default_params.clone().set_id_and_label("Remove after time multiplier"),
       PROTO_FLOAT_FIELD(ScenarioOverrides, overrides, remove_target_after_seconds_multiplier));
+
+  ImGui::InputFloat(default_params.clone().set_id_and_label("Profile time multiplier"),
+                    PROTO_FLOAT_FIELD(ScenarioOverrides, overrides, time_scale_multiplier));
+  ImGui::SameLine();
+  ImGui::HelpMarker("Scales the time values within strafe profiles and wander profiles.");
+
   ImGui::InputFloat(
       default_params.clone().set_id_and_label("Min distance between targets multiplier"),
       PROTO_FLOAT_FIELD(ScenarioOverrides, overrides, min_distance_multiplier));
