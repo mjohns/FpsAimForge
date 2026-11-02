@@ -4,6 +4,7 @@
 
 #include "aim/common/imgui_ext.h"
 #include "aim/common/name_util.h"
+#include "aim/common/util.h"
 #include "aim/core/scenario_manager.h"
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
@@ -100,6 +101,10 @@ bool SelectVariationDialog::Draw(std::string* updated_name) {
                           .set_default(base_level)
                           .set_width(char_x * 10),
                       CreateOptionalFloatField(&name_info_.level));
+    if (name_info_.level && base_level != 1) {
+      ImGui::SameLine();
+      ImGui::TextDisabledFmt("Base level: {}", MaybeIntToString(base_level, 1)); 
+    }
     ImGui::SpacedSeparator();
 
     const auto default_percent_param = ImGui::InputFloatParams("BaseId")
