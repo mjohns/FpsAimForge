@@ -284,6 +284,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
     if (!is_selector_) {
       const char* menu_id = "ItemMenu";
       if (ImGui::BeginPopupContextItem(menu_id)) {
+        NameInfo name_info = GetNameInfo(name);
         auto resource_name = ResourceName::Parse(name);
         bool is_readonly = is_readonly_object ||
                            app_.bundle_manager().IsBundleReadonly(resource_name.bundle_name());
@@ -317,7 +318,7 @@ class ObjectBrowserImpl : public ObjectBrowser {
           }
         }
 
-        if (!is_readonly) {
+        if (!is_readonly && !name_info.HasDynamicSuffix()) {
           ImGui::SpacedSeparator();
           if (ImGui::Selectable(std::format("{} Delete", icons::kDelete))) {
             delete_confirmation_dialog_.NotifyOpen(std::format("Delete \"{}\"?", name), name);
