@@ -229,6 +229,7 @@ class ScenarioEditorScreen : public UiScreen {
     }
 
     if (app_.BeginFullscreenWindow()) {
+      DrawNotificationPopup();
       DrawScreenInternal();
     }
     ImGui::End();
