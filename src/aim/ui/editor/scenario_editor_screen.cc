@@ -298,6 +298,9 @@ class ScenarioEditorScreen : public UiScreen {
   }
 
   void DrawLeftColumn() {
+    referenced_scenario_ =
+        app_.scenario_manager().GetEvaluatedScenarioDef(def_.reference_def().scenario_name());
+
     ImGui::IdGuard cid("LeftColumn");
     ImGui::Spacing();
     ImGui::Spacing();
@@ -346,6 +349,10 @@ class ScenarioEditorScreen : public UiScreen {
               .set_step(5, 5)
               .set_width(char_x_ * 12),
           PROTO_INT_FIELD(ReferenceScenarioDef, def_.mutable_reference_def(), duration_seconds));
+      if (!def_.reference_def().has_duration_seconds() && referenced_scenario_) {
+        ImGui::SameLine();
+        ImGui::TextDisabledFmt("{}", MaybeIntToString(referenced_scenario_->duration_seconds(), 1));
+      }
     } else {
       float duration_seconds = FirstGreaterThanZero(def_.duration_seconds(), 45);
       ImGui::AlignTextToFramePadding();
@@ -393,6 +400,11 @@ class ScenarioEditorScreen : public UiScreen {
     ImGui::SpacedSeparator();
 
     DrawScoreTargetsEditor(PROTO_PTR_FIELD(ScoreTargets, ScenarioDef, &def_, score_targets));
+    if (referenced_scenario_ && !def_.has_score_targets()) {
+      ImGui::SameLine();
+      ImGui::TextDisabledFmt(
+          "{}", MaybeIntToString(referenced_scenario_->score_targets().target_score(), 1));
+    }
 
     ImGui::SpacedSeparator();
 
@@ -836,6 +848,7 @@ class ScenarioEditorScreen : public UiScreen {
   std::string comparison_scenario_;
   std::unique_ptr<SelectObjectDialog> import_room_dialog_ =
       CreateSelectObjectDialog("ImportRoomDialog", ObjectType::SCENARIO);
+  std::optional<ScenarioDef> referenced_scenario_;
 };
 
 }  // namespace
