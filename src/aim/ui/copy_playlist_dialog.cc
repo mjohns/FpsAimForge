@@ -18,10 +18,7 @@ bool CopyPlaylistDialog::Draw(Application& app) {
   if (show_popup) {
     if (ImGui::BeginDefaultPopupModal(id_.c_str(), &show_popup)) {
       ImGui::TextFmt("Copy \"{}\" to", source_->name);
-      ImGui::SimpleDropdown("BundlePicker",
-                            new_name_.mutable_bundle_name(),
-                            bundle_names_,
-                            ImGui::GetFrameHeight() * 9);
+      ImGui::SimpleDropdown("BundlePicker", new_name_.mutable_bundle_name(), bundle_names_);
       ImGui::SameLine();
       ImGui::InputText("##RelativeNameInput", new_name_.mutable_relative_name());
 

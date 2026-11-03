@@ -474,9 +474,15 @@ class PlaylistManagerImpl : public PlaylistManager {
         MakeUniqueName(new_playlist_name.relative_name(), taken_names);
 
     PlaylistDef dest = source_playlist->def();
+    bool is_levels = dest.has_levels();
+    if (!is_levels) {
+      // Bake dynamic suffixes.
+      dest.clear_items();
+      auto items = source_playlist->items(scenario_manager_);
+      dest.mutable_items()->Add(items.begin(), items.end());
+    }
 
     if (options.deep_copy) {
-      bool is_levels = dest.has_levels();
       std::unordered_set<std::string> scenarios_to_copy;
       if (is_levels) {
         scenarios_to_copy.insert(dest.levels().base_scenario());
