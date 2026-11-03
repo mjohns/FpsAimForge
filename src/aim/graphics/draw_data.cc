@@ -436,9 +436,14 @@ class DrawDataBuilder {
                       center_target_color,
                       draw_data);
       } else {
-        // AddDrawSphere(view_projection, target.position, target.radius, color, draw_data);
-        AddDrawSphereCircle(
-            view_projection, target.position, target.radius, color, look_at, draw_data);
+        if (target.HasHealth()) {
+          // Health bars can clip with the targets so draw them as the full sphere to reduce visual
+          // issues.
+          AddDrawSphere(view_projection, target.position, target.radius, color, draw_data);
+        } else {
+          AddDrawSphereCircle(
+              view_projection, target.position, target.radius, color, look_at, draw_data);
+        }
       }
 
       if (health_bar_settings.show() && target.HasHealth()) {
