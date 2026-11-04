@@ -27,6 +27,7 @@
 #include "aim/scenario/metronome.h"
 #include "aim/scenario/scenario_factory.h"
 #include "aim/scenario/scenario_timer.h"
+#include "aim/ui/editor/scenario_editor_common.h"
 #include "aim/ui/editor/scenario_editor_screen.h"
 #include "aim/ui/quick_settings_screen.h"
 #include "aim/ui/stats/stats_screen.h"
@@ -138,6 +139,16 @@ Scenario::Scenario(const CreateScenarioParams& params)
                                                static_cast<i32>(def_.duration_seconds()),
                                                def_.target_def().num_targets(),
                                                requires_per_frame_target_data);
+  }
+
+  for (auto& entry : kShotTypes) {
+    if (entry.first == def_.shot_type().type_case()) {
+      shot_type_string_ = entry.second;
+      break;
+    }
+  }
+  if (def_.shot_type().has_reload()) {
+    shot_type_string_ += " (Reload)";
   }
 }
 
@@ -447,6 +458,13 @@ void Scenario::OnWaitingForClickTick() {
 
   if (target_score_ > 0) {
     std::string message = std::format("Target score: {}", MaybeIntToString(target_score_, 2));
+    text_size = ImGui::CalcTextSize(message.c_str());
+    ImGui::SetCursorPosX(app_.screen_info().center.x - text_size.x * 0.5);
+    ImGui::Text("%s", message.c_str());
+  }
+
+  if (!shot_type_string_.empty()) {
+    std::string message = std::format("Shot type: {}", shot_type_string_);
     text_size = ImGui::CalcTextSize(message.c_str());
     ImGui::SetCursorPosX(app_.screen_info().center.x - text_size.x * 0.5);
     ImGui::Text("%s", message.c_str());

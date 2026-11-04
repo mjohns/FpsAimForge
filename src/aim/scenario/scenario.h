@@ -180,6 +180,7 @@ class Scenario : public Screen {
   ImU32 health_background_color_;
   i64 waiting_start_time_micros_ = -1;
   float target_score_ = 0;
+  std::string shot_type_string_;
 };
 
 }  // namespace aim
