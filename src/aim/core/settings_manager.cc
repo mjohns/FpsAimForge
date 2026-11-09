@@ -38,6 +38,9 @@ SoundSettings GetDefaultSoundSettings() {
 
   sounds.mutable_tracking_hit()->set_name("apa-hit-4.ogg");
   sounds.mutable_tracking_kill()->set_name("kill.ogg");
+  sounds.mutable_tracking_miss()->set_name("apa-hit-2.ogg");
+  sounds.mutable_tracking_miss()->set_volume_level(0.3);
+  sounds.mutable_tracking_miss()->set_pitch_modifier(0.5);
 
   sounds.mutable_target_expired()->set_name("8Bit3.ogg");
   sounds.mutable_reload()->set_name("reload.ogg");
