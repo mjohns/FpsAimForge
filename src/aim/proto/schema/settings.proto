@@ -85,6 +85,13 @@ message Settings {
   // The cm360 variations to include for the automatically generated "cm360" playlists
   // and guides.
   repeated float default_cm_per_360s = 26;
+
+  MovementSettings movement = 27;
+}
+
+message MovementSettings {
+  bool enable_movement = 1;
+  float speed_multiplier = 2;
 }
 
 message SoundItem {
@@ -164,4 +171,10 @@ message Keybinds {
   KeyMapping quick_metronome = 6;
   KeyMapping edit_scenario = 7;
   KeyMapping adjust_health_bar_size = 8;
+
+  // WASD movement
+  KeyMapping left = 9;
+  KeyMapping right = 10;
+  KeyMapping forward = 11;
+  KeyMapping back = 12;
 }

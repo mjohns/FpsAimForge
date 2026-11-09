@@ -88,6 +88,32 @@ struct ScenarioSettingsConfigDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ScenarioSettingsConfigDefaultTypeInternal _ScenarioSettingsConfig_default_instance_;
 
+inline constexpr MovementSettings::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        enable_movement_{false},
+        speed_multiplier_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR MovementSettings::MovementSettings(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(MovementSettings_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct MovementSettingsDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR MovementSettingsDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~MovementSettingsDefaultTypeInternal() {}
+  union {
+    MovementSettings _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MovementSettingsDefaultTypeInternal _MovementSettings_default_instance_;
+
 inline constexpr KeyMapping::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -259,7 +285,11 @@ inline constexpr Keybinds::Impl_::Impl_(
         adjust_crosshair_size_{nullptr},
         quick_metronome_{nullptr},
         edit_scenario_{nullptr},
-        adjust_health_bar_size_{nullptr} {}
+        adjust_health_bar_size_{nullptr},
+        left_{nullptr},
+        right_{nullptr},
+        forward_{nullptr},
+        back_{nullptr} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR Keybinds::Keybinds(::_pbi::ConstantInitialized)
@@ -299,6 +329,7 @@ inline constexpr Settings::Impl_::Impl_(
         sounds_{nullptr},
         scenario_settings_config_{nullptr},
         db_backups_{nullptr},
+        movement_{nullptr},
         dpi_{0},
         cm_per_360_{0},
         metronome_bpm_{0},
@@ -363,7 +394,7 @@ const ::uint32_t
         2,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_._has_bits_),
-        28, // hasbit index offset
+        29, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_.dpi_),
         PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_.cm_per_360_),
         PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_.theme_name_),
@@ -389,31 +420,40 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_.explicit_display_name_),
         PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_.db_backups_),
         PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_.default_cm_per_360s_),
-        9,
+        PROTOBUF_FIELD_OFFSET(::aim::Settings, _impl_.movement_),
         10,
-        1,
-        13,
         11,
-        12,
-        2,
+        1,
         14,
-        4,
+        12,
+        13,
+        2,
         15,
-        5,
+        4,
         16,
+        5,
         17,
         18,
-        6,
         19,
-        7,
+        6,
         20,
+        7,
         21,
         22,
         23,
         24,
+        25,
         3,
         8,
         0,
+        9,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::aim::MovementSettings, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::aim::MovementSettings, _impl_.enable_movement_),
+        PROTOBUF_FIELD_OFFSET(::aim::MovementSettings, _impl_.speed_multiplier_),
+        0,
+        1,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::SoundItem, _impl_._has_bits_),
         6, // hasbit index offset
@@ -501,7 +541,7 @@ const ::uint32_t
         3,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_._has_bits_),
-        11, // hasbit index offset
+        15, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.fire_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.restart_scenario_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.next_scenario_),
@@ -510,6 +550,10 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.quick_metronome_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.edit_scenario_),
         PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.adjust_health_bar_size_),
+        PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.left_),
+        PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.right_),
+        PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.forward_),
+        PROTOBUF_FIELD_OFFSET(::aim::Keybinds, _impl_.back_),
         0,
         1,
         2,
@@ -518,6 +562,10 @@ const ::uint32_t
         5,
         6,
         7,
+        8,
+        9,
+        10,
+        11,
 };
 
 static const ::_pbi::MigrationSchema
@@ -525,17 +573,19 @@ static const ::_pbi::MigrationSchema
         {0, sizeof(::aim::HealthBarSettings)},
         {9, sizeof(::aim::BackupSettings)},
         {18, sizeof(::aim::Settings)},
-        {71, sizeof(::aim::SoundItem)},
-        {80, sizeof(::aim::SoundSettings)},
-        {103, sizeof(::aim::ScenarioSettings)},
-        {124, sizeof(::aim::ScenarioSettingsConfig)},
-        {145, sizeof(::aim::KeyMapping)},
-        {156, sizeof(::aim::Keybinds)},
+        {73, sizeof(::aim::MovementSettings)},
+        {80, sizeof(::aim::SoundItem)},
+        {89, sizeof(::aim::SoundSettings)},
+        {112, sizeof(::aim::ScenarioSettings)},
+        {133, sizeof(::aim::ScenarioSettingsConfig)},
+        {154, sizeof(::aim::KeyMapping)},
+        {165, sizeof(::aim::Keybinds)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::aim::_HealthBarSettings_default_instance_._instance,
     &::aim::_BackupSettings_default_instance_._instance,
     &::aim::_Settings_default_instance_._instance,
+    &::aim::_MovementSettings_default_instance_._instance,
     &::aim::_SoundItem_default_instance_._instance,
     &::aim::_SoundSettings_default_instance_._instance,
     &::aim::_ScenarioSettings_default_instance_._instance,
@@ -551,7 +601,7 @@ const char descriptor_table_protodef_settings_2eproto[] ABSL_ATTRIBUTE_SECTION_V
     "J\004\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006\"j\n\016BackupSettings\022\036\n\017"
     "disable_backups\030\001 \001(\010B\005\252\001\002\010\002\022\033\n\023backup_e"
     "very_n_days\030\002 \001(\005\022\033\n\023max_backups_to_keep"
-    "\030\003 \001(\005\"\312\006\n\010Settings\022\013\n\003dpi\030\001 \001(\002\022\022\n\ncm_p"
+    "\030\003 \001(\005\"\363\006\n\010Settings\022\013\n\003dpi\030\001 \001(\002\022\022\n\ncm_p"
     "er_360\030\002 \001(\002\022\022\n\ntheme_name\030\004 \001(\t\022\037\n\020enab"
     "le_metronome\030\003 \001(\010B\005\252\001\002\010\002\022\025\n\rmetronome_b"
     "pm\030\005 \001(\002\022\026\n\016crosshair_size\030\006 \001(\002\022\036\n\026curr"
@@ -572,49 +622,55 @@ const char descriptor_table_protodef_settings_2eproto[] ABSL_ATTRIBUTE_SECTION_V
     "aa_level\030\027 \001(\0162\016.aim.MsaaLevel\022\035\n\025explic"
     "it_display_name\030\030 \001(\t\022\'\n\ndb_backups\030\031 \001("
     "\0132\023.aim.BackupSettings\022\033\n\023default_cm_per"
-    "_360s\030\032 \003(\002\"G\n\tSoundItem\022\014\n\004name\030\001 \001(\t\022\024"
-    "\n\014volume_level\030\002 \001(\002\022\026\n\016pitch_modifier\030\003"
-    " \001(\002\"\366\002\n\rSoundSettings\022\033\n\023master_volume_"
-    "level\030\001 \001(\002\022\"\n\nclick_miss\030\002 \001(\0132\016.aim.So"
-    "undItem\022!\n\tclick_hit\030\003 \001(\0132\016.aim.SoundIt"
-    "em\022\"\n\nclick_kill\030\004 \001(\0132\016.aim.SoundItem\022\036"
-    "\n\006reload\030\005 \001(\0132\016.aim.SoundItem\022%\n\rtracki"
-    "ng_miss\030\006 \001(\0132\016.aim.SoundItem\022$\n\014trackin"
-    "g_hit\030\007 \001(\0132\016.aim.SoundItem\022%\n\rtracking_"
-    "kill\030\010 \001(\0132\016.aim.SoundItem\022&\n\016target_exp"
-    "ired\030\t \001(\0132\016.aim.SoundItem\022!\n\tmetronome\030"
-    "\014 \001(\0132\016.aim.SoundItem\"\232\002\n\020ScenarioSettin"
-    "gs\022\022\n\ncm_per_360\030\001 \001(\002\022\022\n\ntheme_name\030\002 \001"
-    "(\t\022\025\n\rmetronome_bpm\030\003 \001(\002\022\026\n\016crosshair_s"
-    "ize\030\004 \001(\002\022\026\n\016crosshair_name\030\005 \001(\t\022!\n\022aut"
-    "o_hold_tracking\030\007 \001(\010B\005\252\001\002\010\002\022*\n\nhealth_b"
-    "ar\030\010 \001(\0132\026.aim.HealthBarSettings\022\037\n\020enab"
-    "le_metronome\030\t \001(\010B\005\252\001\002\010\002\022!\n\031tracking_sh"
-    "ots_per_second\030\n \001(\002J\004\010\006\020\007\"\224\004\n\026ScenarioS"
-    "ettingsConfig\0222\n\ncm_per_360\030\001 \001(\0162\036.aim."
-    "ScenarioSettingsStoreType\0222\n\ntheme_name\030"
-    "\002 \001(\0162\036.aim.ScenarioSettingsStoreType\0225\n"
-    "\rmetronome_bpm\030\003 \001(\0162\036.aim.ScenarioSetti"
-    "ngsStoreType\0226\n\016crosshair_size\030\004 \001(\0162\036.a"
-    "im.ScenarioSettingsStoreType\0226\n\016crosshai"
-    "r_name\030\005 \001(\0162\036.aim.ScenarioSettingsStore"
-    "Type\022:\n\022auto_hold_tracking\030\006 \001(\0162\036.aim.S"
-    "cenarioSettingsStoreType\0222\n\nhealth_bar\030\007"
-    " \001(\0162\036.aim.ScenarioSettingsStoreType\0228\n\020"
-    "enable_metronome\030\010 \001(\0162\036.aim.ScenarioSet"
-    "tingsStoreType\022A\n\031tracking_shots_per_sec"
-    "ond\030\t \001(\0162\036.aim.ScenarioSettingsStoreTyp"
-    "e\"T\n\nKeyMapping\022\020\n\010mapping1\030\001 \001(\t\022\020\n\010map"
-    "ping2\030\002 \001(\t\022\020\n\010mapping3\030\003 \001(\t\022\020\n\010mapping"
-    "4\030\004 \001(\t\"\330\002\n\010Keybinds\022\035\n\004fire\030\001 \001(\0132\017.aim"
-    ".KeyMapping\022)\n\020restart_scenario\030\002 \001(\0132\017."
-    "aim.KeyMapping\022&\n\rnext_scenario\030\003 \001(\0132\017."
-    "aim.KeyMapping\022\'\n\016quick_settings\030\004 \001(\0132\017"
-    ".aim.KeyMapping\022.\n\025adjust_crosshair_size"
-    "\030\005 \001(\0132\017.aim.KeyMapping\022(\n\017quick_metrono"
-    "me\030\006 \001(\0132\017.aim.KeyMapping\022&\n\redit_scenar"
-    "io\030\007 \001(\0132\017.aim.KeyMapping\022/\n\026adjust_heal"
-    "th_bar_size\030\010 \001(\0132\017.aim.KeyMapping*p\n\tMs"
+    "_360s\030\032 \003(\002\022\'\n\010movement\030\033 \001(\0132\025.aim.Move"
+    "mentSettings\"E\n\020MovementSettings\022\027\n\017enab"
+    "le_movement\030\001 \001(\010\022\030\n\020speed_multiplier\030\002 "
+    "\001(\002\"G\n\tSoundItem\022\014\n\004name\030\001 \001(\t\022\024\n\014volume"
+    "_level\030\002 \001(\002\022\026\n\016pitch_modifier\030\003 \001(\002\"\366\002\n"
+    "\rSoundSettings\022\033\n\023master_volume_level\030\001 "
+    "\001(\002\022\"\n\nclick_miss\030\002 \001(\0132\016.aim.SoundItem\022"
+    "!\n\tclick_hit\030\003 \001(\0132\016.aim.SoundItem\022\"\n\ncl"
+    "ick_kill\030\004 \001(\0132\016.aim.SoundItem\022\036\n\006reload"
+    "\030\005 \001(\0132\016.aim.SoundItem\022%\n\rtracking_miss\030"
+    "\006 \001(\0132\016.aim.SoundItem\022$\n\014tracking_hit\030\007 "
+    "\001(\0132\016.aim.SoundItem\022%\n\rtracking_kill\030\010 \001"
+    "(\0132\016.aim.SoundItem\022&\n\016target_expired\030\t \001"
+    "(\0132\016.aim.SoundItem\022!\n\tmetronome\030\014 \001(\0132\016."
+    "aim.SoundItem\"\232\002\n\020ScenarioSettings\022\022\n\ncm"
+    "_per_360\030\001 \001(\002\022\022\n\ntheme_name\030\002 \001(\t\022\025\n\rme"
+    "tronome_bpm\030\003 \001(\002\022\026\n\016crosshair_size\030\004 \001("
+    "\002\022\026\n\016crosshair_name\030\005 \001(\t\022!\n\022auto_hold_t"
+    "racking\030\007 \001(\010B\005\252\001\002\010\002\022*\n\nhealth_bar\030\010 \001(\013"
+    "2\026.aim.HealthBarSettings\022\037\n\020enable_metro"
+    "nome\030\t \001(\010B\005\252\001\002\010\002\022!\n\031tracking_shots_per_"
+    "second\030\n \001(\002J\004\010\006\020\007\"\224\004\n\026ScenarioSettingsC"
+    "onfig\0222\n\ncm_per_360\030\001 \001(\0162\036.aim.Scenario"
+    "SettingsStoreType\0222\n\ntheme_name\030\002 \001(\0162\036."
+    "aim.ScenarioSettingsStoreType\0225\n\rmetrono"
+    "me_bpm\030\003 \001(\0162\036.aim.ScenarioSettingsStore"
+    "Type\0226\n\016crosshair_size\030\004 \001(\0162\036.aim.Scena"
+    "rioSettingsStoreType\0226\n\016crosshair_name\030\005"
+    " \001(\0162\036.aim.ScenarioSettingsStoreType\022:\n\022"
+    "auto_hold_tracking\030\006 \001(\0162\036.aim.ScenarioS"
+    "ettingsStoreType\0222\n\nhealth_bar\030\007 \001(\0162\036.a"
+    "im.ScenarioSettingsStoreType\0228\n\020enable_m"
+    "etronome\030\010 \001(\0162\036.aim.ScenarioSettingsSto"
+    "reType\022A\n\031tracking_shots_per_second\030\t \001("
+    "\0162\036.aim.ScenarioSettingsStoreType\"T\n\nKey"
+    "Mapping\022\020\n\010mapping1\030\001 \001(\t\022\020\n\010mapping2\030\002 "
+    "\001(\t\022\020\n\010mapping3\030\003 \001(\t\022\020\n\010mapping4\030\004 \001(\t\""
+    "\330\003\n\010Keybinds\022\035\n\004fire\030\001 \001(\0132\017.aim.KeyMapp"
+    "ing\022)\n\020restart_scenario\030\002 \001(\0132\017.aim.KeyM"
+    "apping\022&\n\rnext_scenario\030\003 \001(\0132\017.aim.KeyM"
+    "apping\022\'\n\016quick_settings\030\004 \001(\0132\017.aim.Key"
+    "Mapping\022.\n\025adjust_crosshair_size\030\005 \001(\0132\017"
+    ".aim.KeyMapping\022(\n\017quick_metronome\030\006 \001(\013"
+    "2\017.aim.KeyMapping\022&\n\redit_scenario\030\007 \001(\013"
+    "2\017.aim.KeyMapping\022/\n\026adjust_health_bar_s"
+    "ize\030\010 \001(\0132\017.aim.KeyMapping\022\035\n\004left\030\t \001(\013"
+    "2\017.aim.KeyMapping\022\036\n\005right\030\n \001(\0132\017.aim.K"
+    "eyMapping\022 \n\007forward\030\013 \001(\0132\017.aim.KeyMapp"
+    "ing\022\035\n\004back\030\014 \001(\0132\017.aim.KeyMapping*p\n\tMs"
     "aaLevel\022\026\n\022MSAA_LEVEL_UNKNOWN\020\000\022\022\n\016MSAA_"
     "LEVEL_OFF\020\001\022\021\n\rMSAA_LEVEL_2X\020\002\022\021\n\rMSAA_L"
     "EVEL_4X\020\004\022\021\n\rMSAA_LEVEL_8X\020\010*q\n\031Scenario"
@@ -630,13 +686,13 @@ static ::absl::once_flag descriptor_table_settings_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_settings_2eproto = {
     false,
     false,
-    3036,
+    3276,
     descriptor_table_protodef_settings_2eproto,
     "settings.proto",
     &descriptor_table_settings_2eproto_once,
     descriptor_table_settings_2eproto_deps,
     1,
-    9,
+    10,
     schemas,
     file_default_instances,
     TableStruct_settings_2eproto::offsets,
@@ -1327,6 +1383,9 @@ Settings::Settings(
   _impl_.db_backups_ = (CheckHasBit(cached_has_bits, 0x00000100U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.db_backups_)
                 : nullptr;
+  _impl_.movement_ = (CheckHasBit(cached_has_bits, 0x00000200U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.movement_)
+                : nullptr;
   ::memcpy(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, dpi_),
            reinterpret_cast<const char*>(&from._impl_) +
@@ -1374,6 +1433,7 @@ inline void Settings::SharedDtor(MessageLite& self) {
   delete this_._impl_.sounds_;
   delete this_._impl_.scenario_settings_config_;
   delete this_._impl_.db_backups_;
+  delete this_._impl_.movement_;
   this_._impl_.~Impl_();
 }
 
@@ -1432,17 +1492,17 @@ Settings::GetClassData() const {
   return Settings_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<5, 25, 5, 98, 2>
+const ::_pbi::TcParseTable<5, 26, 6, 98, 2>
 Settings::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Settings, _impl_._has_bits_),
     0, // no _extensions_
-    26, 248,  // max_field_number, fast_idx_mask
+    27, 248,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4227859456,  // skipmap
+    4160750592,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    25,  // num_field_entries
-    5,  // num_aux_entries
+    26,  // num_field_entries
+    6,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Settings_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -1454,15 +1514,15 @@ Settings::_table_ = {
     {::_pbi::TcParser::MiniParse, {}},
     // float dpi = 1;
     {::_pbi::TcParser::FastF32S1,
-     {13, 9, 0,
+     {13, 10, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.dpi_)}},
     // float cm_per_360 = 2;
     {::_pbi::TcParser::FastF32S1,
-     {21, 10, 0,
+     {21, 11, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.cm_per_360_)}},
     // bool enable_metronome = 3 [features = {
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.enable_metronome_), 13>(),
-     {24, 13, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.enable_metronome_), 14>(),
+     {24, 14, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.enable_metronome_)}},
     // string theme_name = 4;
     {::_pbi::TcParser::FastUS1,
@@ -1470,27 +1530,27 @@ Settings::_table_ = {
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.theme_name_)}},
     // float metronome_bpm = 5;
     {::_pbi::TcParser::FastF32S1,
-     {45, 11, 0,
+     {45, 12, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.metronome_bpm_)}},
     // float crosshair_size = 6;
     {::_pbi::TcParser::FastF32S1,
-     {53, 12, 0,
+     {53, 13, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.crosshair_size_)}},
     // string current_crosshair_name = 7;
     {::_pbi::TcParser::FastUS1,
      {58, 2, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.current_crosshair_name_)}},
     // bool disable_click_to_start = 8 [features = {
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.disable_click_to_start_), 14>(),
-     {64, 14, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.disable_click_to_start_), 15>(),
+     {64, 15, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_click_to_start_)}},
     // .aim.Keybinds keybinds = 9;
     {::_pbi::TcParser::FastMtS1,
      {74, 4, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.keybinds_)}},
     // bool auto_hold_tracking = 10 [features = {
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.auto_hold_tracking_), 15>(),
-     {80, 15, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.auto_hold_tracking_), 16>(),
+     {80, 16, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.auto_hold_tracking_)}},
     {::_pbi::TcParser::MiniParse, {}},
     // .aim.HealthBarSettings health_bar = 12;
@@ -1498,16 +1558,16 @@ Settings::_table_ = {
      {98, 5, 1,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.health_bar_)}},
     // bool disable_per_scenario_settings = 13 [features = {
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.disable_per_scenario_settings_), 16>(),
-     {104, 16, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Settings, _impl_.disable_per_scenario_settings_), 17>(),
+     {104, 17, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_per_scenario_settings_)}},
     // float max_render_fps = 14;
     {::_pbi::TcParser::FastF32S1,
-     {117, 17, 0,
+     {117, 18, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.max_render_fps_)}},
     // .aim.PresentMode present_mode = 15;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Settings, _impl_.present_mode_), 18>(),
-     {120, 18, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Settings, _impl_.present_mode_), 19>(),
+     {120, 19, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.present_mode_)}},
     // .aim.SoundSettings sounds = 16;
     {::_pbi::TcParser::FastMtS2,
@@ -1515,7 +1575,7 @@ Settings::_table_ = {
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.sounds_)}},
     // float start_countdown_time = 17;
     {::_pbi::TcParser::FastF32S2,
-     {397, 19, 0,
+     {397, 20, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.start_countdown_time_)}},
     // .aim.ScenarioSettingsConfig scenario_settings_config = 18;
     {::_pbi::TcParser::FastMtS2,
@@ -1523,23 +1583,23 @@ Settings::_table_ = {
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.scenario_settings_config_)}},
     // float tracking_shots_per_second = 19;
     {::_pbi::TcParser::FastF32S2,
-     {413, 20, 0,
+     {413, 21, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.tracking_shots_per_second_)}},
     // float proximity_min_shots_per_second = 20;
     {::_pbi::TcParser::FastF32S2,
-     {421, 21, 0,
+     {421, 22, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.proximity_min_shots_per_second_)}},
     // float proximity_max_shots_per_second = 21;
     {::_pbi::TcParser::FastF32S2,
-     {429, 22, 0,
+     {429, 23, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.proximity_max_shots_per_second_)}},
     // bool disable_replays = 22;
     {::_pbi::TcParser::FastV8S2,
-     {432, 23, 0,
+     {432, 24, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_replays_)}},
     // .aim.MsaaLevel msaa_level = 23;
     {::_pbi::TcParser::FastV32S2,
-     {440, 24, 0,
+     {440, 25, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.msaa_level_)}},
     // string explicit_display_name = 24;
     {::_pbi::TcParser::FastUS2,
@@ -1553,7 +1613,10 @@ Settings::_table_ = {
     {::_pbi::TcParser::FastF32P2,
      {466, 0, 0,
       PROTOBUF_FIELD_OFFSET(Settings, _impl_.default_cm_per_360s_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // .aim.MovementSettings movement = 27;
+    {::_pbi::TcParser::FastMtS2,
+     {474, 9, 5,
+      PROTOBUF_FIELD_OFFSET(Settings, _impl_.movement_)}},
     {::_pbi::TcParser::MiniParse, {}},
     {::_pbi::TcParser::MiniParse, {}},
     {::_pbi::TcParser::MiniParse, {}},
@@ -1562,55 +1625,57 @@ Settings::_table_ = {
     65535, 65535
   }}, {{
     // float dpi = 1;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.dpi_), _Internal::kHasBitsOffset + 9, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.dpi_), _Internal::kHasBitsOffset + 10, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // float cm_per_360 = 2;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.cm_per_360_), _Internal::kHasBitsOffset + 10, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.cm_per_360_), _Internal::kHasBitsOffset + 11, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // bool enable_metronome = 3 [features = {
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.enable_metronome_), _Internal::kHasBitsOffset + 13, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.enable_metronome_), _Internal::kHasBitsOffset + 14, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
     // string theme_name = 4;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.theme_name_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // float metronome_bpm = 5;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.metronome_bpm_), _Internal::kHasBitsOffset + 11, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.metronome_bpm_), _Internal::kHasBitsOffset + 12, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // float crosshair_size = 6;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.crosshair_size_), _Internal::kHasBitsOffset + 12, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.crosshair_size_), _Internal::kHasBitsOffset + 13, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // string current_crosshair_name = 7;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.current_crosshair_name_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // bool disable_click_to_start = 8 [features = {
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_click_to_start_), _Internal::kHasBitsOffset + 14, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_click_to_start_), _Internal::kHasBitsOffset + 15, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
     // .aim.Keybinds keybinds = 9;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.keybinds_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // bool auto_hold_tracking = 10 [features = {
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.auto_hold_tracking_), _Internal::kHasBitsOffset + 15, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.auto_hold_tracking_), _Internal::kHasBitsOffset + 16, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
     // .aim.HealthBarSettings health_bar = 12;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.health_bar_), _Internal::kHasBitsOffset + 5, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // bool disable_per_scenario_settings = 13 [features = {
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_per_scenario_settings_), _Internal::kHasBitsOffset + 16, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_per_scenario_settings_), _Internal::kHasBitsOffset + 17, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
     // float max_render_fps = 14;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.max_render_fps_), _Internal::kHasBitsOffset + 17, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.max_render_fps_), _Internal::kHasBitsOffset + 18, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // .aim.PresentMode present_mode = 15;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.present_mode_), _Internal::kHasBitsOffset + 18, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.present_mode_), _Internal::kHasBitsOffset + 19, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
     // .aim.SoundSettings sounds = 16;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.sounds_), _Internal::kHasBitsOffset + 6, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // float start_countdown_time = 17;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.start_countdown_time_), _Internal::kHasBitsOffset + 19, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.start_countdown_time_), _Internal::kHasBitsOffset + 20, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // .aim.ScenarioSettingsConfig scenario_settings_config = 18;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.scenario_settings_config_), _Internal::kHasBitsOffset + 7, 3, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // float tracking_shots_per_second = 19;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.tracking_shots_per_second_), _Internal::kHasBitsOffset + 20, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.tracking_shots_per_second_), _Internal::kHasBitsOffset + 21, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // float proximity_min_shots_per_second = 20;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.proximity_min_shots_per_second_), _Internal::kHasBitsOffset + 21, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.proximity_min_shots_per_second_), _Internal::kHasBitsOffset + 22, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // float proximity_max_shots_per_second = 21;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.proximity_max_shots_per_second_), _Internal::kHasBitsOffset + 22, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.proximity_max_shots_per_second_), _Internal::kHasBitsOffset + 23, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // bool disable_replays = 22;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_replays_), _Internal::kHasBitsOffset + 23, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.disable_replays_), _Internal::kHasBitsOffset + 24, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
     // .aim.MsaaLevel msaa_level = 23;
-    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.msaa_level_), _Internal::kHasBitsOffset + 24, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.msaa_level_), _Internal::kHasBitsOffset + 25, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
     // string explicit_display_name = 24;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.explicit_display_name_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // .aim.BackupSettings db_backups = 25;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.db_backups_), _Internal::kHasBitsOffset + 8, 4, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // repeated float default_cm_per_360s = 26;
     {PROTOBUF_FIELD_OFFSET(Settings, _impl_.default_cm_per_360s_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedFloat)},
+    // .aim.MovementSettings movement = 27;
+    {PROTOBUF_FIELD_OFFSET(Settings, _impl_.movement_), _Internal::kHasBitsOffset + 9, 5, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::aim::Keybinds>()},
@@ -1618,6 +1683,7 @@ Settings::_table_ = {
       {::_pbi::TcParser::GetTable<::aim::SoundSettings>()},
       {::_pbi::TcParser::GetTable<::aim::ScenarioSettingsConfig>()},
       {::_pbi::TcParser::GetTable<::aim::BackupSettings>()},
+      {::_pbi::TcParser::GetTable<::aim::MovementSettings>()},
   }},
   {{
     "\14\0\0\0\12\0\0\26\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\25\0\0\0\0\0\0\0\0"
@@ -1665,21 +1731,31 @@ PROTOBUF_NOINLINE void Settings::Clear() {
       _impl_.scenario_settings_config_->Clear();
     }
   }
-  if (CheckHasBit(cached_has_bits, 0x00000100U)) {
-    ABSL_DCHECK(_impl_.db_backups_ != nullptr);
-    _impl_.db_backups_->Clear();
+  if (BatchCheckHasBit(cached_has_bits, 0x00000300U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000100U)) {
+      ABSL_DCHECK(_impl_.db_backups_ != nullptr);
+      _impl_.db_backups_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+      ABSL_DCHECK(_impl_.movement_ != nullptr);
+      _impl_.movement_->Clear();
+    }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x0000fe00U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000fc00U)) {
     ::memset(&_impl_.dpi_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.auto_hold_tracking_) -
-        reinterpret_cast<char*>(&_impl_.dpi_)) + sizeof(_impl_.auto_hold_tracking_));
+        reinterpret_cast<char*>(&_impl_.disable_click_to_start_) -
+        reinterpret_cast<char*>(&_impl_.dpi_)) + sizeof(_impl_.disable_click_to_start_));
   }
   if (BatchCheckHasBit(cached_has_bits, 0x00ff0000U)) {
-    ::memset(&_impl_.disable_per_scenario_settings_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.disable_replays_) -
-        reinterpret_cast<char*>(&_impl_.disable_per_scenario_settings_)) + sizeof(_impl_.disable_replays_));
+    ::memset(&_impl_.auto_hold_tracking_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.proximity_max_shots_per_second_) -
+        reinterpret_cast<char*>(&_impl_.auto_hold_tracking_)) + sizeof(_impl_.proximity_max_shots_per_second_));
   }
-  _impl_.msaa_level_ = 0;
+  if (BatchCheckHasBit(cached_has_bits, 0x03000000U)) {
+    ::memset(&_impl_.disable_replays_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.msaa_level_) -
+        reinterpret_cast<char*>(&_impl_.disable_replays_)) + sizeof(_impl_.msaa_level_));
+  }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1704,21 +1780,21 @@ PROTOBUF_NOINLINE void Settings::Clear() {
 
   cached_has_bits = this_._impl_._has_bits_[0];
   // float dpi = 1;
-  if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000400U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         1, this_._internal_dpi(), target);
   }
 
   // float cm_per_360 = 2;
-  if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000800U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         2, this_._internal_cm_per_360(), target);
   }
 
   // bool enable_metronome = 3 [features = {
-  if (CheckHasBit(cached_has_bits, 0x00002000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00004000U)) {
     if (this_._internal_enable_metronome() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
@@ -1735,14 +1811,14 @@ PROTOBUF_NOINLINE void Settings::Clear() {
   }
 
   // float metronome_bpm = 5;
-  if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+  if (CheckHasBit(cached_has_bits, 0x00001000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         5, this_._internal_metronome_bpm(), target);
   }
 
   // float crosshair_size = 6;
-  if (CheckHasBit(cached_has_bits, 0x00001000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00002000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         6, this_._internal_crosshair_size(), target);
@@ -1757,7 +1833,7 @@ PROTOBUF_NOINLINE void Settings::Clear() {
   }
 
   // bool disable_click_to_start = 8 [features = {
-  if (CheckHasBit(cached_has_bits, 0x00004000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00008000U)) {
     if (this_._internal_disable_click_to_start() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
@@ -1773,7 +1849,7 @@ PROTOBUF_NOINLINE void Settings::Clear() {
   }
 
   // bool auto_hold_tracking = 10 [features = {
-  if (CheckHasBit(cached_has_bits, 0x00008000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00010000U)) {
     if (this_._internal_auto_hold_tracking() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
@@ -1789,7 +1865,7 @@ PROTOBUF_NOINLINE void Settings::Clear() {
   }
 
   // bool disable_per_scenario_settings = 13 [features = {
-  if (CheckHasBit(cached_has_bits, 0x00010000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00020000U)) {
     if (this_._internal_disable_per_scenario_settings() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
@@ -1798,14 +1874,14 @@ PROTOBUF_NOINLINE void Settings::Clear() {
   }
 
   // float max_render_fps = 14;
-  if (CheckHasBit(cached_has_bits, 0x00020000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00040000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         14, this_._internal_max_render_fps(), target);
   }
 
   // .aim.PresentMode present_mode = 15;
-  if (CheckHasBit(cached_has_bits, 0x00040000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00080000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteEnumToArray(
         15, this_._internal_present_mode(), target);
@@ -1819,7 +1895,7 @@ PROTOBUF_NOINLINE void Settings::Clear() {
   }
 
   // float start_countdown_time = 17;
-  if (CheckHasBit(cached_has_bits, 0x00080000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00100000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         17, this_._internal_start_countdown_time(), target);
@@ -1833,35 +1909,35 @@ PROTOBUF_NOINLINE void Settings::Clear() {
   }
 
   // float tracking_shots_per_second = 19;
-  if (CheckHasBit(cached_has_bits, 0x00100000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00200000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         19, this_._internal_tracking_shots_per_second(), target);
   }
 
   // float proximity_min_shots_per_second = 20;
-  if (CheckHasBit(cached_has_bits, 0x00200000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00400000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         20, this_._internal_proximity_min_shots_per_second(), target);
   }
 
   // float proximity_max_shots_per_second = 21;
-  if (CheckHasBit(cached_has_bits, 0x00400000U)) {
+  if (CheckHasBit(cached_has_bits, 0x00800000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteFloatToArray(
         21, this_._internal_proximity_max_shots_per_second(), target);
   }
 
   // bool disable_replays = 22;
-  if (CheckHasBit(cached_has_bits, 0x00800000U)) {
+  if (CheckHasBit(cached_has_bits, 0x01000000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteBoolToArray(
         22, this_._internal_disable_replays(), target);
   }
 
   // .aim.MsaaLevel msaa_level = 23;
-  if (CheckHasBit(cached_has_bits, 0x01000000U)) {
+  if (CheckHasBit(cached_has_bits, 0x02000000U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteEnumToArray(
         23, this_._internal_msaa_level(), target);
@@ -1889,6 +1965,13 @@ PROTOBUF_NOINLINE void Settings::Clear() {
     }
   }
 
+  // .aim.MovementSettings movement = 27;
+  if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        27, *this_._impl_.movement_, this_._impl_.movement_->GetCachedSize(), target,
+        stream);
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -1914,9 +1997,9 @@ PROTOBUF_NOINLINE void Settings::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  total_size += ::absl::popcount(0x00780000U & cached_has_bits) * 6;
-  total_size += ::absl::popcount(0x00021e00U & cached_has_bits) * 5;
-  total_size += static_cast<bool>(0x00800000U & cached_has_bits) * 3;
+  total_size += ::absl::popcount(0x00f00000U & cached_has_bits) * 6;
+  total_size += ::absl::popcount(0x00043c00U & cached_has_bits) * 5;
+  total_size += static_cast<bool>(0x01000000U & cached_has_bits) * 3;
   if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
     // repeated float default_cm_per_360s = 26;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
@@ -1964,47 +2047,52 @@ PROTOBUF_NOINLINE void Settings::Clear() {
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.scenario_settings_config_);
     }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x0000e100U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000c300U)) {
     // .aim.BackupSettings db_backups = 25;
     if (CheckHasBit(cached_has_bits, 0x00000100U)) {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.db_backups_);
     }
+    // .aim.MovementSettings movement = 27;
+    if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.movement_);
+    }
     // bool enable_metronome = 3 [features = {
-    if (CheckHasBit(cached_has_bits, 0x00002000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00004000U)) {
       if (this_._internal_enable_metronome() != 0) {
         total_size += 2;
       }
     }
     // bool disable_click_to_start = 8 [features = {
-    if (CheckHasBit(cached_has_bits, 0x00004000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00008000U)) {
       if (this_._internal_disable_click_to_start() != 0) {
         total_size += 2;
       }
     }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x000b0000U)) {
     // bool auto_hold_tracking = 10 [features = {
-    if (CheckHasBit(cached_has_bits, 0x00008000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00010000U)) {
       if (this_._internal_auto_hold_tracking() != 0) {
         total_size += 2;
       }
     }
-  }
-  if (BatchCheckHasBit(cached_has_bits, 0x00050000U)) {
     // bool disable_per_scenario_settings = 13 [features = {
-    if (CheckHasBit(cached_has_bits, 0x00010000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00020000U)) {
       if (this_._internal_disable_per_scenario_settings() != 0) {
         total_size += 2;
       }
     }
     // .aim.PresentMode present_mode = 15;
-    if (CheckHasBit(cached_has_bits, 0x00040000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00080000U)) {
       total_size += 1 +
                     ::_pbi::WireFormatLite::EnumSize(this_._internal_present_mode());
     }
   }
    {
     // .aim.MsaaLevel msaa_level = 23;
-    if (CheckHasBit(cached_has_bits, 0x01000000U)) {
+    if (CheckHasBit(cached_has_bits, 0x02000000U)) {
       total_size += 2 +
                     ::_pbi::WireFormatLite::EnumSize(this_._internal_msaa_level());
     }
@@ -2084,63 +2172,73 @@ void Settings::MergeImpl(::google::protobuf::MessageLite& to_msg,
       }
     }
     if (CheckHasBit(cached_has_bits, 0x00000200U)) {
-      _this->_impl_.dpi_ = from._impl_.dpi_;
+      ABSL_DCHECK(from._impl_.movement_ != nullptr);
+      if (_this->_impl_.movement_ == nullptr) {
+        _this->_impl_.movement_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.movement_);
+      } else {
+        _this->_impl_.movement_->MergeFrom(*from._impl_.movement_);
+      }
     }
     if (CheckHasBit(cached_has_bits, 0x00000400U)) {
-      _this->_impl_.cm_per_360_ = from._impl_.cm_per_360_;
+      _this->_impl_.dpi_ = from._impl_.dpi_;
     }
     if (CheckHasBit(cached_has_bits, 0x00000800U)) {
-      _this->_impl_.metronome_bpm_ = from._impl_.metronome_bpm_;
+      _this->_impl_.cm_per_360_ = from._impl_.cm_per_360_;
     }
     if (CheckHasBit(cached_has_bits, 0x00001000U)) {
-      _this->_impl_.crosshair_size_ = from._impl_.crosshair_size_;
+      _this->_impl_.metronome_bpm_ = from._impl_.metronome_bpm_;
     }
     if (CheckHasBit(cached_has_bits, 0x00002000U)) {
+      _this->_impl_.crosshair_size_ = from._impl_.crosshair_size_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00004000U)) {
       if (from._internal_enable_metronome() != 0) {
         _this->_impl_.enable_metronome_ = from._impl_.enable_metronome_;
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00004000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00008000U)) {
       if (from._internal_disable_click_to_start() != 0) {
         _this->_impl_.disable_click_to_start_ = from._impl_.disable_click_to_start_;
-      }
-    }
-    if (CheckHasBit(cached_has_bits, 0x00008000U)) {
-      if (from._internal_auto_hold_tracking() != 0) {
-        _this->_impl_.auto_hold_tracking_ = from._impl_.auto_hold_tracking_;
       }
     }
   }
   if (BatchCheckHasBit(cached_has_bits, 0x00ff0000U)) {
     if (CheckHasBit(cached_has_bits, 0x00010000U)) {
+      if (from._internal_auto_hold_tracking() != 0) {
+        _this->_impl_.auto_hold_tracking_ = from._impl_.auto_hold_tracking_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00020000U)) {
       if (from._internal_disable_per_scenario_settings() != 0) {
         _this->_impl_.disable_per_scenario_settings_ = from._impl_.disable_per_scenario_settings_;
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00020000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00040000U)) {
       _this->_impl_.max_render_fps_ = from._impl_.max_render_fps_;
     }
-    if (CheckHasBit(cached_has_bits, 0x00040000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00080000U)) {
       _this->_impl_.present_mode_ = from._impl_.present_mode_;
     }
-    if (CheckHasBit(cached_has_bits, 0x00080000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00100000U)) {
       _this->_impl_.start_countdown_time_ = from._impl_.start_countdown_time_;
     }
-    if (CheckHasBit(cached_has_bits, 0x00100000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00200000U)) {
       _this->_impl_.tracking_shots_per_second_ = from._impl_.tracking_shots_per_second_;
     }
-    if (CheckHasBit(cached_has_bits, 0x00200000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00400000U)) {
       _this->_impl_.proximity_min_shots_per_second_ = from._impl_.proximity_min_shots_per_second_;
     }
-    if (CheckHasBit(cached_has_bits, 0x00400000U)) {
+    if (CheckHasBit(cached_has_bits, 0x00800000U)) {
       _this->_impl_.proximity_max_shots_per_second_ = from._impl_.proximity_max_shots_per_second_;
     }
-    if (CheckHasBit(cached_has_bits, 0x00800000U)) {
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x03000000U)) {
+    if (CheckHasBit(cached_has_bits, 0x01000000U)) {
       _this->_impl_.disable_replays_ = from._impl_.disable_replays_;
     }
-  }
-  if (CheckHasBit(cached_has_bits, 0x01000000U)) {
-    _this->_impl_.msaa_level_ = from._impl_.msaa_level_;
+    if (CheckHasBit(cached_has_bits, 0x02000000U)) {
+      _this->_impl_.msaa_level_ = from._impl_.msaa_level_;
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -2174,6 +2272,277 @@ void Settings::InternalSwap(Settings* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) 
 }
 
 ::google::protobuf::Metadata Settings::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class MovementSettings::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<MovementSettings>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_._has_bits_);
+};
+
+MovementSettings::MovementSettings(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, MovementSettings_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:aim.MovementSettings)
+}
+MovementSettings::MovementSettings(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MovementSettings& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, MovementSettings_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(from._impl_) {
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+PROTOBUF_NDEBUG_INLINE MovementSettings::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void MovementSettings::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, enable_movement_),
+           0,
+           offsetof(Impl_, speed_multiplier_) -
+               offsetof(Impl_, enable_movement_) +
+               sizeof(Impl_::speed_multiplier_));
+}
+MovementSettings::~MovementSettings() {
+  // @@protoc_insertion_point(destructor:aim.MovementSettings)
+  SharedDtor(*this);
+}
+inline void MovementSettings::SharedDtor(MessageLite& self) {
+  MovementSettings& this_ = static_cast<MovementSettings&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL MovementSettings::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) MovementSettings(arena);
+}
+constexpr auto MovementSettings::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(MovementSettings),
+                                            alignof(MovementSettings));
+}
+constexpr auto MovementSettings::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_MovementSettings_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &MovementSettings::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<MovementSettings>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &MovementSettings::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<MovementSettings>(), &MovementSettings::ByteSizeLong,
+              &MovementSettings::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_._cached_size_),
+          false,
+      },
+      &MovementSettings::kDescriptorMethods,
+      &descriptor_table_settings_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull MovementSettings_class_data_ =
+        MovementSettings::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+MovementSettings::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&MovementSettings_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(MovementSettings_class_data_.tc_table);
+  return MovementSettings_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2>
+MovementSettings::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    MovementSettings_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::aim::MovementSettings>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // float speed_multiplier = 2;
+    {::_pbi::TcParser::FastF32S1,
+     {21, 1, 0,
+      PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_.speed_multiplier_)}},
+    // bool enable_movement = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(MovementSettings, _impl_.enable_movement_), 0>(),
+     {8, 0, 0,
+      PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_.enable_movement_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // bool enable_movement = 1;
+    {PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_.enable_movement_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // float speed_multiplier = 2;
+    {PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_.speed_multiplier_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void MovementSettings::Clear() {
+// @@protoc_insertion_point(message_clear_start:aim.MovementSettings)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    ::memset(&_impl_.enable_movement_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.speed_multiplier_) -
+        reinterpret_cast<char*>(&_impl_.enable_movement_)) + sizeof(_impl_.speed_multiplier_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL MovementSettings::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const MovementSettings& this_ = static_cast<const MovementSettings&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL MovementSettings::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const MovementSettings& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:aim.MovementSettings)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // bool enable_movement = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(
+        1, this_._internal_enable_movement(), target);
+  }
+
+  // float speed_multiplier = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(
+        2, this_._internal_speed_multiplier(), target);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:aim.MovementSettings)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t MovementSettings::ByteSizeLong(const MessageLite& base) {
+  const MovementSettings& this_ = static_cast<const MovementSettings&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t MovementSettings::ByteSizeLong() const {
+  const MovementSettings& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:aim.MovementSettings)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  total_size += static_cast<bool>(0x00000002U & cached_has_bits) * 5;
+  total_size += static_cast<bool>(0x00000001U & cached_has_bits) * 2;
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void MovementSettings::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<MovementSettings*>(&to_msg);
+  auto& from = static_cast<const MovementSettings&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:aim.MovementSettings)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _this->_impl_.enable_movement_ = from._impl_.enable_movement_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      _this->_impl_.speed_multiplier_ = from._impl_.speed_multiplier_;
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void MovementSettings::CopyFrom(const MovementSettings& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:aim.MovementSettings)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void MovementSettings::InternalSwap(MovementSettings* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_.speed_multiplier_)
+      + sizeof(MovementSettings::_impl_.speed_multiplier_)
+      - PROTOBUF_FIELD_OFFSET(MovementSettings, _impl_.enable_movement_)>(
+          reinterpret_cast<char*>(&_impl_.enable_movement_),
+          reinterpret_cast<char*>(&other->_impl_.enable_movement_));
+}
+
+::google::protobuf::Metadata MovementSettings::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -4446,6 +4815,18 @@ Keybinds::Keybinds(
   _impl_.adjust_health_bar_size_ = (CheckHasBit(cached_has_bits, 0x00000080U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.adjust_health_bar_size_)
                 : nullptr;
+  _impl_.left_ = (CheckHasBit(cached_has_bits, 0x00000100U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.left_)
+                : nullptr;
+  _impl_.right_ = (CheckHasBit(cached_has_bits, 0x00000200U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.right_)
+                : nullptr;
+  _impl_.forward_ = (CheckHasBit(cached_has_bits, 0x00000400U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.forward_)
+                : nullptr;
+  _impl_.back_ = (CheckHasBit(cached_has_bits, 0x00000800U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.back_)
+                : nullptr;
 
   // @@protoc_insertion_point(copy_constructor:aim.Keybinds)
 }
@@ -4459,9 +4840,9 @@ inline void Keybinds::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, fire_),
            0,
-           offsetof(Impl_, adjust_health_bar_size_) -
+           offsetof(Impl_, back_) -
                offsetof(Impl_, fire_) +
-               sizeof(Impl_::adjust_health_bar_size_));
+               sizeof(Impl_::back_));
 }
 Keybinds::~Keybinds() {
   // @@protoc_insertion_point(destructor:aim.Keybinds)
@@ -4482,6 +4863,10 @@ inline void Keybinds::SharedDtor(MessageLite& self) {
   delete this_._impl_.quick_metronome_;
   delete this_._impl_.edit_scenario_;
   delete this_._impl_.adjust_health_bar_size_;
+  delete this_._impl_.left_;
+  delete this_._impl_.right_;
+  delete this_._impl_.forward_;
+  delete this_._impl_.back_;
   this_._impl_.~Impl_();
 }
 
@@ -4528,17 +4913,17 @@ Keybinds::GetClassData() const {
   return Keybinds_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 8, 8, 0, 2>
+const ::_pbi::TcParseTable<4, 12, 12, 0, 2>
 Keybinds::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Keybinds, _impl_._has_bits_),
     0, // no _extensions_
-    8, 56,  // max_field_number, fast_idx_mask
+    12, 120,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967040,  // skipmap
+    4294963200,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    8,  // num_field_entries
-    8,  // num_aux_entries
+    12,  // num_field_entries
+    12,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Keybinds_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -4547,10 +4932,7 @@ Keybinds::_table_ = {
     ::_pbi::TcParser::GetTable<::aim::Keybinds>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .aim.KeyMapping adjust_health_bar_size = 8;
-    {::_pbi::TcParser::FastMtS1,
-     {66, 7, 7,
-      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.adjust_health_bar_size_)}},
+    {::_pbi::TcParser::MiniParse, {}},
     // .aim.KeyMapping fire = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
@@ -4579,6 +4961,29 @@ Keybinds::_table_ = {
     {::_pbi::TcParser::FastMtS1,
      {58, 6, 6,
       PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.edit_scenario_)}},
+    // .aim.KeyMapping adjust_health_bar_size = 8;
+    {::_pbi::TcParser::FastMtS1,
+     {66, 7, 7,
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.adjust_health_bar_size_)}},
+    // .aim.KeyMapping left = 9;
+    {::_pbi::TcParser::FastMtS1,
+     {74, 8, 8,
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.left_)}},
+    // .aim.KeyMapping right = 10;
+    {::_pbi::TcParser::FastMtS1,
+     {82, 9, 9,
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.right_)}},
+    // .aim.KeyMapping forward = 11;
+    {::_pbi::TcParser::FastMtS1,
+     {90, 10, 10,
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.forward_)}},
+    // .aim.KeyMapping back = 12;
+    {::_pbi::TcParser::FastMtS1,
+     {98, 11, 11,
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.back_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
@@ -4598,8 +5003,20 @@ Keybinds::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.edit_scenario_), _Internal::kHasBitsOffset + 6, 6, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // .aim.KeyMapping adjust_health_bar_size = 8;
     {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.adjust_health_bar_size_), _Internal::kHasBitsOffset + 7, 7, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .aim.KeyMapping left = 9;
+    {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.left_), _Internal::kHasBitsOffset + 8, 8, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .aim.KeyMapping right = 10;
+    {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.right_), _Internal::kHasBitsOffset + 9, 9, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .aim.KeyMapping forward = 11;
+    {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.forward_), _Internal::kHasBitsOffset + 10, 10, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .aim.KeyMapping back = 12;
+    {PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.back_), _Internal::kHasBitsOffset + 11, 11, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
+      {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
+      {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
+      {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
+      {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
       {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
       {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
       {::_pbi::TcParser::GetTable<::aim::KeyMapping>()},
@@ -4652,6 +5069,24 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
     if (CheckHasBit(cached_has_bits, 0x00000080U)) {
       ABSL_DCHECK(_impl_.adjust_health_bar_size_ != nullptr);
       _impl_.adjust_health_bar_size_->Clear();
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x00000f00U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000100U)) {
+      ABSL_DCHECK(_impl_.left_ != nullptr);
+      _impl_.left_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+      ABSL_DCHECK(_impl_.right_ != nullptr);
+      _impl_.right_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+      ABSL_DCHECK(_impl_.forward_ != nullptr);
+      _impl_.forward_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+      ABSL_DCHECK(_impl_.back_ != nullptr);
+      _impl_.back_->Clear();
     }
   }
   _impl_._has_bits_.Clear();
@@ -4733,6 +5168,34 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
         stream);
   }
 
+  // .aim.KeyMapping left = 9;
+  if (CheckHasBit(cached_has_bits, 0x00000100U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        9, *this_._impl_.left_, this_._impl_.left_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .aim.KeyMapping right = 10;
+  if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        10, *this_._impl_.right_, this_._impl_.right_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .aim.KeyMapping forward = 11;
+  if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        11, *this_._impl_.forward_, this_._impl_.forward_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .aim.KeyMapping back = 12;
+  if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        12, *this_._impl_.back_, this_._impl_.back_->GetCachedSize(), target,
+        stream);
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -4798,6 +5261,28 @@ PROTOBUF_NOINLINE void Keybinds::Clear() {
     if (CheckHasBit(cached_has_bits, 0x00000080U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.adjust_health_bar_size_);
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x00000f00U)) {
+    // .aim.KeyMapping left = 9;
+    if (CheckHasBit(cached_has_bits, 0x00000100U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.left_);
+    }
+    // .aim.KeyMapping right = 10;
+    if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.right_);
+    }
+    // .aim.KeyMapping forward = 11;
+    if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.forward_);
+    }
+    // .aim.KeyMapping back = 12;
+    if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.back_);
     }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -4885,6 +5370,40 @@ void Keybinds::MergeImpl(::google::protobuf::MessageLite& to_msg,
       }
     }
   }
+  if (BatchCheckHasBit(cached_has_bits, 0x00000f00U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000100U)) {
+      ABSL_DCHECK(from._impl_.left_ != nullptr);
+      if (_this->_impl_.left_ == nullptr) {
+        _this->_impl_.left_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.left_);
+      } else {
+        _this->_impl_.left_->MergeFrom(*from._impl_.left_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000200U)) {
+      ABSL_DCHECK(from._impl_.right_ != nullptr);
+      if (_this->_impl_.right_ == nullptr) {
+        _this->_impl_.right_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.right_);
+      } else {
+        _this->_impl_.right_->MergeFrom(*from._impl_.right_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+      ABSL_DCHECK(from._impl_.forward_ != nullptr);
+      if (_this->_impl_.forward_ == nullptr) {
+        _this->_impl_.forward_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.forward_);
+      } else {
+        _this->_impl_.forward_->MergeFrom(*from._impl_.forward_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+      ABSL_DCHECK(from._impl_.back_ != nullptr);
+      if (_this->_impl_.back_ == nullptr) {
+        _this->_impl_.back_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.back_);
+      } else {
+        _this->_impl_.back_->MergeFrom(*from._impl_.back_);
+      }
+    }
+  }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
@@ -4903,8 +5422,8 @@ void Keybinds::InternalSwap(Keybinds* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) 
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.adjust_health_bar_size_)
-      + sizeof(Keybinds::_impl_.adjust_health_bar_size_)
+      PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.back_)
+      + sizeof(Keybinds::_impl_.back_)
       - PROTOBUF_FIELD_OFFSET(Keybinds, _impl_.fire_)>(
           reinterpret_cast<char*>(&_impl_.fire_),
           reinterpret_cast<char*>(&other->_impl_.fire_));

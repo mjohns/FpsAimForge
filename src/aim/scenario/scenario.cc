@@ -561,6 +561,80 @@ void Scenario::OnStartCountdownClickTick() {
                                  look_at_);
 }
 
+void Scenario::MaybeHandleMovement() {
+  if (!settings_.movement().enable_movement()) {
+    return;
+  }
+  float delta = timer_.GetDeltaSeconds();
+  if (delta <= 0) {
+    return;
+  }
+
+  const bool* keyboard_state = SDL_GetKeyboardState(nullptr);
+
+  auto should_move_direction = [=](const KeyMapping& mapping) {
+    auto should_move_direction_single_key = [=](const std::string& key_name) {
+      if (key_name.empty()) {
+        return false;
+      }
+      auto scancode = SDL_GetScancodeFromName(key_name.c_str());
+      if (scancode != SDL_SCANCODE_UNKNOWN) {
+        return keyboard_state[scancode];
+      }
+      return false;
+    };
+    return should_move_direction_single_key(mapping.mapping1()) ||
+           should_move_direction_single_key(mapping.mapping2()) ||
+           should_move_direction_single_key(mapping.mapping3()) ||
+           should_move_direction_single_key(mapping.mapping4());
+  };
+
+  bool strafe_left = should_move_direction(settings_.keybinds().left());
+  bool strafe_right = should_move_direction(settings_.keybinds().right());
+  if (strafe_left && strafe_right) {
+    // cancel out movement
+    strafe_left = false;
+    strafe_right = false;
+  }
+
+  bool forward = should_move_direction(settings_.keybinds().forward());
+  bool back = should_move_direction(settings_.keybinds().back());
+  if (forward && back) {
+    // cancel out movement
+    forward = false;
+    back = false;
+  }
+
+  float base_speed = 60 * delta;
+  if (settings_.movement().speed_multiplier() > 0) {
+    base_speed *= settings_.movement().speed_multiplier();
+  }
+  bool has_strafe = strafe_left || strafe_right;
+  bool has_forward_back = forward || back;
+  if (!has_strafe && !has_forward_back) {
+    return;
+  }
+
+  if (has_strafe && has_forward_back) {
+    base_speed *= 0.7071;
+  }
+
+  if (has_strafe) {
+    float value = strafe_right ? 1.0f : -1.0f;
+    value *= base_speed;
+    camera_.UpdatePosition(camera_.GetPosition() + (value * look_at_.right));
+  }
+  if (has_forward_back) {
+    float value = forward ? 1.0f : -1.0f;
+    value *= base_speed;
+    glm::vec3 front = look_at_.front;
+    front.z = 0;
+    if (glm::length(front) > 0) {
+      camera_.UpdatePosition(camera_.GetPosition() + (value * glm::normalize(front)));
+    }
+  }
+}
+
 void Scenario::OnRunningTick() {
   current_times_.events_end = timer_.GetElapsedMicros();
 
@@ -597,6 +671,7 @@ void Scenario::OnRunningTick() {
     metronome_->DoTick(timer_.GetElapsedMicros());
   }
   look_at_ = camera_.GetLookAt();
+  MaybeHandleMovement();
 
   update_data_.is_click_held = is_click_held_ || settings_.auto_hold_tracking();
   for (auto& task : delayed_tasks_) {

@@ -50,6 +50,11 @@ class ScenarioTimer {
     return run_stopwatch_;
   }
 
+  // Returns the time since the last frame.
+  float GetDeltaSeconds() {
+    return MicrosToSeconds(frame_start_time_micros_ - previous_frame_start_time_micros_);
+  }
+
   i64 LastFrameRenderStartedMicrosAgo();
 
  private:

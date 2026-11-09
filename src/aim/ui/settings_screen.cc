@@ -11,6 +11,7 @@
 #include "aim/common/files.h"
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
+#include "aim/common/proto_util.h"
 #include "aim/common/search.h"
 #include "aim/common/system.h"
 #include "aim/common/util.h"
@@ -160,6 +161,10 @@ class SettingsScreen : public UiScreen {
         {"Adjust Health Bar Size",
          kAdjustHealthBarSizeHelpText,
          updater_.settings.mutable_keybinds()->mutable_adjust_health_bar_size()},
+        {"Strafe Left", "", updater_.settings.mutable_keybinds()->mutable_left()},
+        {"Strafe Right", "", updater_.settings.mutable_keybinds()->mutable_right()},
+        {"Move Forward", "", updater_.settings.mutable_keybinds()->mutable_forward()},
+        {"Move Back", "", updater_.settings.mutable_keybinds()->mutable_back()},
     };
   }
 
@@ -376,6 +381,26 @@ class SettingsScreen : public UiScreen {
 
       ImGui::InputBool(ImGui::InputBoolParams("DisableReplays").set_label("Disable replays"),
                        PROTO_BOOL_FIELD(Settings, &updater_.settings, disable_replays));
+
+      ImGui::SpacedSeparator();
+
+      auto* movement = updater_.settings.mutable_movement();
+      ImGui::InputBool(ImGui::InputBoolParams("EnableMovement").set_label("Enable movement"),
+                       PROTO_BOOL_FIELD(MovementSettings, movement, enable_movement));
+      ImGui::SameLine();
+      ImGui::HelpMarker("Enables WASD like movement of camera. Movement does not change scoring.");
+
+      ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Movement speed multiplier")
+                            .set_step(0.01, .1)
+                            .set_width(char_x_ * 9)
+                            .set_is_optional()
+                            .set_min(0.01)
+                            .set_default(1),
+                        PROTO_FLOAT_FIELD(MovementSettings, movement, speed_multiplier));
+
+      if (IsDefaultInstance(*movement)) {
+        updater_.settings.clear_movement();
+      }
 
       ImGui::SpacedSeparator();
 

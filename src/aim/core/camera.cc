@@ -106,6 +106,10 @@ void Camera::Update(int xrel, int yrel, float radians_per_dot) {
   // TODO: clamp yaw?
 }
 
+void Camera::UpdatePosition(const glm::vec3& position) {
+  position_ = position;
+}
+
 void Camera::UpdatePitch(float pitch) {
   pitch_ = ClampPitch(pitch);
 }

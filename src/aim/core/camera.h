@@ -62,6 +62,7 @@ class Camera {
   void UpdatePitch(float pitch);
   void UpdateYaw(float yaw);
   void UpdatePitchYaw(const PitchYaw& pitch_yaw);
+  void UpdatePosition(const glm::vec3& position);
 
  private:
   glm::vec3 position_;

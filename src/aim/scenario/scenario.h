@@ -149,6 +149,8 @@ class Scenario : public Screen {
 
   void FlushPlayTime();
 
+  void MaybeHandleMovement();
+
   i64 num_state_updates_ = 0;
   float state_updates_per_second_ = 0;
   int fps_ = 0;

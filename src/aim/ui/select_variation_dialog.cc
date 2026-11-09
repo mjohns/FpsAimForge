@@ -103,7 +103,7 @@ bool SelectVariationDialog::Draw(std::string* updated_name) {
                       CreateOptionalFloatField(&name_info_.level));
     if (name_info_.level && base_level != 1) {
       ImGui::SameLine();
-      ImGui::TextDisabledFmt("Base level: {}", MaybeIntToString(base_level, 1)); 
+      ImGui::TextDisabledFmt("Base level: {}", MaybeIntToString(base_level, 1));
     }
     ImGui::SpacedSeparator();
 
