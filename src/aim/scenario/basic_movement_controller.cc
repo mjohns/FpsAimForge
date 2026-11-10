@@ -50,7 +50,21 @@ void BasicWallMovementController::UpdatePosition(float now_seconds,
     t.wall_position = glm::vec2(0.0f);
   }
   UpdateDirectionAndSpeed(t, delta_seconds);
-  glm::vec2 new_position = *t.wall_position + (direction_ * (delta_seconds * speed_));
+
+  float distance_to_travel = delta_seconds * speed_;
+
+  glm::vec2 new_position = *t.wall_position;
+  new_position.y += direction_.y * distance_to_travel;
+
+  float cylinder_radius = room.cylinder_room().radius();
+  if (cylinder_radius > 0 && t.wall_depth > 4) {
+    float depth_radius = std::max<float>(cylinder_radius - t.wall_depth, 4);
+    float radius_speed_multiplier = cylinder_radius / depth_radius;
+    new_position.x += direction_.x * distance_to_travel * radius_speed_multiplier;
+  } else {
+    new_position.x += direction_.x * distance_to_travel;
+  }
+
   t.wall_position = new_position;
   t.position = WallPositionToWorldPosition(*t.wall_position, t.radius, room, t.wall_depth);
 }
