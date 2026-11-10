@@ -138,7 +138,8 @@ Scenario::Scenario(const CreateScenarioParams& params)
                                                replay_fps,
                                                static_cast<i32>(def_.duration_seconds()),
                                                def_.target_def().num_targets(),
-                                               requires_per_frame_target_data);
+                                               requires_per_frame_target_data,
+                                               settings_.movement().enable_movement());
   }
 
   for (auto& entry : kShotTypes) {
@@ -661,6 +662,9 @@ void Scenario::OnRunningTick() {
     if (replay_) {
       i64 replay_frame_number = timer_.GetReplayFrameNumber();
       replay_->SetPitchYaw(replay_frame_number, camera_.GetPitch(), camera_.GetYaw());
+      if (settings_.movement().enable_movement()) {
+        replay_->SetCameraPosition(replay_frame_number, camera_.GetPosition());
+      }
       replay_->SnapshotTargets(replay_frame_number, target_manager_.GetTargets());
     }
   }

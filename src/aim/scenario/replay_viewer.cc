@@ -272,6 +272,9 @@ class ReplayView {
       if (pitch_yaw.pitch < (GetMaxPitch() + 0.1f)) {
         camera.UpdatePitchYaw(pitch_yaw);
       }
+      if (IsValidIndex(replay.camera_positions, i)) {
+        camera.UpdatePosition(replay.camera_positions[i]);
+      }
       processed_pitch_yaws_up_to_index_ = i;
     }
 

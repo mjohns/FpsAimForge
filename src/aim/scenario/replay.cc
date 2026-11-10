@@ -12,7 +12,8 @@ ReplayRecorder::ReplayRecorder(const std::string& scenario_name,
                                u16 replay_fps,
                                i32 duration_seconds,
                                i32 num_targets,
-                               bool requires_per_frame_target_data)
+                               bool requires_per_frame_target_data,
+                               bool record_camera_position)
     : num_targets_(num_targets) {
   replay_ = std::make_shared<Replay>();
   replay_->scenario_name = scenario_name;
@@ -33,6 +34,9 @@ ReplayRecorder::ReplayRecorder(const std::string& scenario_name,
   PitchYaw invalid_pitch_yaw;
   invalid_pitch_yaw.pitch = GetMaxPitch() * 3;
   replay_->pitch_yaws.resize(max_replay_frame_number, invalid_pitch_yaw);
+  if (record_camera_position) {
+    replay_->camera_positions.reserve(max_replay_frame_number);
+  }
 
   // Make this large enough that it reasonably won't need to allocate more memory during a run.
   // Maybe we should drop certain event types (like sound) if it is approaching the limit.
@@ -139,6 +143,13 @@ void ReplayRecorder::SetPitchYaw(i64 frame_number, float pitch, float yaw) {
   }
 }
 
+void ReplayRecorder::SetCameraPosition(i64 frame_number, const glm::vec3& position) {
+  size_t num_to_add = (frame_number - replay_->camera_positions.size()) + 1;
+  if (num_to_add > 0) {
+    replay_->camera_positions.insert(replay_->camera_positions.end(), num_to_add, position);
+  }
+}
+
 void ReplayRecorder::SnapshotTargets(i64 frame_number, const std::vector<Target>& targets) {
   int start_index = frame_number * num_targets_;
   int end_index = start_index + num_targets_;
@@ -173,6 +184,7 @@ float Replay::GetApproximateSizeMb() const {
   size_bytes += target_metadata.size() * sizeof(ReplayTargetMetadata);
   size_bytes += events.size() * sizeof(ReplayEvent);
   size_bytes += scores.size() * sizeof(float);
+  size_bytes += camera_positions.size() * sizeof(float) * 3;
 
   return size_bytes / 1000000.0f;
 }

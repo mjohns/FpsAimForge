@@ -63,6 +63,7 @@ struct Replay {
   std::vector<PitchYaw> pitch_yaws;
   std::vector<ReplayTargetMetadata> target_metadata;
   std::vector<float> scores;
+  std::vector<glm::vec3> camera_positions;
 
   float GetApproximateSizeMb() const;
   float GetDurationSeconds() const;
@@ -76,12 +77,14 @@ class ReplayRecorder {
                  u16 replay_fps,
                  i32 duration_seconds,
                  i32 num_targets,
-                 bool requires_per_frame_target_data);
+                 bool requires_per_frame_target_data,
+                 bool record_camera_position);
 
   void AddTarget(i64 now_micros, const Target& target);
   void RemoveTarget(i64 now_micros, u16 target_id);
   void PlaySound(i64 now_micros, SoundType sound);
   void SetPitchYaw(i64 frame_number, float pitch, float yaw);
+  void SetCameraPosition(i64 frame_number, const glm::vec3& position);
   void AddMouseClick(i64 now_micros, bool is_hit);
   void AddScore(float score);
 
