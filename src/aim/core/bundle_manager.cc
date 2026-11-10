@@ -60,8 +60,8 @@ bool BundlePackInfoNameLessThan(const BundlePackInfo& lhs, const BundlePackInfo&
 }
 
 std::unordered_map<std::string, BundlePack> LoadBundlePackFiles(
-    const std::unordered_map<std::string, std::filesystem::path> bundle_pack_path_map,
-    const std::unordered_map<std::string, BundlePackInfo> info_map,
+    const std::unordered_map<std::string, std::filesystem::path>& bundle_pack_path_map,
+    std::unordered_map<std::string, BundlePackInfo>& info_map,
     std::vector<std::string>* error_messages) {
   std::unordered_map<std::string, BundlePack> result;
   for (auto& entry : bundle_pack_path_map) {
@@ -84,6 +84,13 @@ std::unordered_map<std::string, BundlePack> LoadBundlePackFiles(
     }
 
     result[pack_name] = pack;
+
+    if (it != info_map.end()) {
+      it->second.clear_bundle_names();
+      for (const auto& bundle : pack.items()) {
+        *it->second.add_bundle_names() = bundle.name();
+      }
+    }
   }
 
   return result;

@@ -54,6 +54,7 @@ message BundlePackInfo {
   // if there is a new version and show download option in top right if there is a new
   // version.
   bool automatically_check_for_updates = 4;
+  repeated string bundle_names = 5;
 }
 
 // Structure for bundles.json file.

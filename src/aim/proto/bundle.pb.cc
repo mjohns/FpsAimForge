@@ -29,6 +29,7 @@ namespace aim {
 inline constexpr BundlePackInfo::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
+        bundle_names_{},
         bundle_pack_name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
@@ -342,15 +343,17 @@ const ::uint32_t
         1,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::BundlePackInfo, _impl_._has_bits_),
-        7, // hasbit index offset
+        8, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::aim::BundlePackInfo, _impl_.bundle_pack_name_),
         PROTOBUF_FIELD_OFFSET(::aim::BundlePackInfo, _impl_.archived_),
         PROTOBUF_FIELD_OFFSET(::aim::BundlePackInfo, _impl_.source_url_),
         PROTOBUF_FIELD_OFFSET(::aim::BundlePackInfo, _impl_.automatically_check_for_updates_),
-        0,
-        2,
+        PROTOBUF_FIELD_OFFSET(::aim::BundlePackInfo, _impl_.bundle_names_),
         1,
         3,
+        2,
+        4,
+        0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::aim::BundleInfoFile, _impl_._has_bits_),
         5, // hasbit index offset
@@ -370,7 +373,7 @@ static const ::_pbi::MigrationSchema
         {37, sizeof(::aim::BundlePack)},
         {42, sizeof(::aim::BundleInfo)},
         {53, sizeof(::aim::BundlePackInfo)},
-        {64, sizeof(::aim::BundleInfoFile)},
+        {66, sizeof(::aim::BundleInfoFile)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::aim::_BundleScenario_default_instance_._instance,
@@ -399,13 +402,13 @@ const char descriptor_table_protodef_bundle_2eproto[] ABSL_ATTRIBUTE_SECTION_VAR
     "\n\nBundlePack\022\"\n\005items\030\001 \003(\0132\023.aim.Bundle"
     "PackItem\"_\n\nBundleInfo\022\023\n\013bundle_name\030\001 "
     "\001(\t\022\020\n\010readonly\030\002 \001(\010\022\020\n\010archived\030\003 \001(\010\022"
-    "\030\n\020bundle_pack_name\030\004 \001(\t\"y\n\016BundlePackI"
-    "nfo\022\030\n\020bundle_pack_name\030\001 \001(\t\022\020\n\010archive"
-    "d\030\002 \001(\010\022\022\n\nsource_url\030\003 \001(\t\022\'\n\037automatic"
-    "ally_check_for_updates\030\004 \001(\010\"]\n\016BundleIn"
-    "foFile\022 \n\007bundles\030\001 \003(\0132\017.aim.BundleInfo"
-    "\022)\n\014bundle_packs\030\002 \003(\0132\023.aim.BundlePackI"
-    "nfob\010editionsp\350\007"
+    "\030\n\020bundle_pack_name\030\004 \001(\t\"\217\001\n\016BundlePack"
+    "Info\022\030\n\020bundle_pack_name\030\001 \001(\t\022\020\n\010archiv"
+    "ed\030\002 \001(\010\022\022\n\nsource_url\030\003 \001(\t\022\'\n\037automati"
+    "cally_check_for_updates\030\004 \001(\010\022\024\n\014bundle_"
+    "names\030\005 \003(\t\"]\n\016BundleInfoFile\022 \n\007bundles"
+    "\030\001 \003(\0132\017.aim.BundleInfo\022)\n\014bundle_packs\030"
+    "\002 \003(\0132\023.aim.BundlePackInfob\010editionsp\350\007"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_bundle_2eproto_deps[3] = {
@@ -417,7 +420,7 @@ static ::absl::once_flag descriptor_table_bundle_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_bundle_2eproto = {
     false,
     false,
-    816,
+    839,
     descriptor_table_protodef_bundle_2eproto,
     "bundle.proto",
     &descriptor_table_bundle_2eproto_once,
@@ -2726,6 +2729,7 @@ PROTOBUF_NDEBUG_INLINE BundlePackInfo::Impl_::Impl_(
     [[maybe_unused]] const ::aim::BundlePackInfo& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
+        bundle_names_{visibility, arena, from.bundle_names_},
         bundle_pack_name_(arena, from.bundle_pack_name_),
         source_url_(arena, from.source_url_) {}
 
@@ -2756,6 +2760,7 @@ PROTOBUF_NDEBUG_INLINE BundlePackInfo::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
+        bundle_names_{visibility, arena},
         bundle_pack_name_(arena),
         source_url_(arena) {}
 
@@ -2790,8 +2795,20 @@ inline void* PROTOBUF_NONNULL BundlePackInfo::PlacementNew_(
   return ::new (mem) BundlePackInfo(arena);
 }
 constexpr auto BundlePackInfo::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(BundlePackInfo),
-                                            alignof(BundlePackInfo));
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.bundle_names_) +
+          decltype(BundlePackInfo::_impl_.bundle_names_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::CopyInit(
+        sizeof(BundlePackInfo), alignof(BundlePackInfo), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&BundlePackInfo::PlacementNew_,
+                                 sizeof(BundlePackInfo),
+                                 alignof(BundlePackInfo));
+  }
 }
 constexpr auto BundlePackInfo::InternalGenerateClassData_() {
   return ::google::protobuf::internal::ClassDataFull{
@@ -2827,16 +2844,16 @@ BundlePackInfo::GetClassData() const {
   return BundlePackInfo_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 4, 0, 53, 2>
+const ::_pbi::TcParseTable<3, 5, 0, 65, 2>
 BundlePackInfo::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_._has_bits_),
     0, // no _extensions_
-    4, 24,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967280,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    4,  // num_field_entries
+    5,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     BundlePackInfo_class_data_.base(),
@@ -2846,40 +2863,50 @@ BundlePackInfo::_table_ = {
     ::_pbi::TcParser::GetTable<::aim::BundlePackInfo>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bool automatically_check_for_updates = 4;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(BundlePackInfo, _impl_.automatically_check_for_updates_), 3>(),
-     {32, 3, 0,
-      PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.automatically_check_for_updates_)}},
+    {::_pbi::TcParser::MiniParse, {}},
     // string bundle_pack_name = 1;
     {::_pbi::TcParser::FastUS1,
-     {10, 0, 0,
+     {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.bundle_pack_name_)}},
     // bool archived = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(BundlePackInfo, _impl_.archived_), 2>(),
-     {16, 2, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(BundlePackInfo, _impl_.archived_), 3>(),
+     {16, 3, 0,
       PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.archived_)}},
     // string source_url = 3;
     {::_pbi::TcParser::FastUS1,
-     {26, 1, 0,
+     {26, 2, 0,
       PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.source_url_)}},
+    // bool automatically_check_for_updates = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(BundlePackInfo, _impl_.automatically_check_for_updates_), 4>(),
+     {32, 4, 0,
+      PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.automatically_check_for_updates_)}},
+    // repeated string bundle_names = 5;
+    {::_pbi::TcParser::FastUR1,
+     {42, 0, 0,
+      PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.bundle_names_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
     // string bundle_pack_name = 1;
-    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.bundle_pack_name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.bundle_pack_name_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // bool archived = 2;
-    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.archived_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.archived_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
     // string source_url = 3;
-    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.source_url_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.source_url_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // bool automatically_check_for_updates = 4;
-    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.automatically_check_for_updates_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.automatically_check_for_updates_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // repeated string bundle_names = 5;
+    {PROTOBUF_FIELD_OFFSET(BundlePackInfo, _impl_.bundle_names_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kUtf8String | ::_fl::kRepSString)},
   }},
   // no aux_entries
   {{
-    "\22\20\0\12\0\0\0\0"
+    "\22\20\0\12\0\14\0\0"
     "aim.BundlePackInfo"
     "bundle_pack_name"
     "source_url"
+    "bundle_names"
   }},
 };
 PROTOBUF_NOINLINE void BundlePackInfo::Clear() {
@@ -2890,11 +2917,14 @@ PROTOBUF_NOINLINE void BundlePackInfo::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      _impl_.bundle_pack_name_.ClearNonDefaultToEmpty();
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _impl_.bundle_names_.Clear();
     }
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      _impl_.bundle_pack_name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       _impl_.source_url_.ClearNonDefaultToEmpty();
     }
   }
@@ -2925,7 +2955,7 @@ PROTOBUF_NOINLINE void BundlePackInfo::Clear() {
 
   cached_has_bits = this_._impl_._has_bits_[0];
   // string bundle_pack_name = 1;
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     const ::std::string& _s = this_._internal_bundle_pack_name();
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
         _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "aim.BundlePackInfo.bundle_pack_name");
@@ -2933,14 +2963,14 @@ PROTOBUF_NOINLINE void BundlePackInfo::Clear() {
   }
 
   // bool archived = 2;
-  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteBoolToArray(
         2, this_._internal_archived(), target);
   }
 
   // string source_url = 3;
-  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     const ::std::string& _s = this_._internal_source_url();
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
         _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "aim.BundlePackInfo.source_url");
@@ -2948,10 +2978,20 @@ PROTOBUF_NOINLINE void BundlePackInfo::Clear() {
   }
 
   // bool automatically_check_for_updates = 4;
-  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteBoolToArray(
         4, this_._internal_automatically_check_for_updates(), target);
+  }
+
+  // repeated string bundle_names = 5;
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+    for (int i = 0, n = this_._internal_bundle_names_size(); i < n; ++i) {
+      const auto& s = this_._internal_bundle_names().Get(i);
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          s.data(), static_cast<int>(s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "aim.BundlePackInfo.bundle_names");
+      target = stream->WriteString(5, s, target);
+    }
   }
 
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -2979,15 +3019,24 @@ PROTOBUF_NOINLINE void BundlePackInfo::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  total_size += ::absl::popcount(0x0000000cU & cached_has_bits) * 2;
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+  total_size += ::absl::popcount(0x00000018U & cached_has_bits) * 2;
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    // repeated string bundle_names = 5;
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      total_size +=
+          1 * ::google::protobuf::internal::FromIntSize(this_._internal_bundle_names().size());
+      for (int i = 0, n = this_._internal_bundle_names().size(); i < n; ++i) {
+        total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+            this_._internal_bundle_names().Get(i));
+      }
+    }
     // string bundle_pack_name = 1;
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_bundle_pack_name());
     }
     // string source_url = 3;
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_source_url());
     }
@@ -3004,23 +3053,29 @@ void BundlePackInfo::MergeImpl(::google::protobuf::MessageLite& to_msg,
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     from.CheckHasBitConsistency();
   }
+  ::google::protobuf::Arena* arena = _this->GetArena();
   // @@protoc_insertion_point(class_specific_merge_from_start:aim.BundlePackInfo)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      _this->_internal_set_bundle_pack_name(from._internal_bundle_pack_name());
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _this->_internal_mutable_bundle_names()->InternalMergeFromWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), arena,
+          from._internal_bundle_names());
     }
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      _this->_internal_set_source_url(from._internal_source_url());
+      _this->_internal_set_bundle_pack_name(from._internal_bundle_pack_name());
     }
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
-      _this->_impl_.archived_ = from._impl_.archived_;
+      _this->_internal_set_source_url(from._internal_source_url());
     }
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      _this->_impl_.archived_ = from._impl_.archived_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       _this->_impl_.automatically_check_for_updates_ = from._impl_.automatically_check_for_updates_;
     }
   }
@@ -3043,6 +3098,7 @@ void BundlePackInfo::InternalSwap(BundlePackInfo* PROTOBUF_RESTRICT PROTOBUF_NON
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  _impl_.bundle_names_.InternalSwap(&other->_impl_.bundle_names_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.bundle_pack_name_, &other->_impl_.bundle_pack_name_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.source_url_, &other->_impl_.source_url_, arena);
   ::google::protobuf::internal::memswap<

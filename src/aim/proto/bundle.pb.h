@@ -247,11 +247,34 @@ class BundlePackInfo final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
+    kBundleNamesFieldNumber = 5,
     kBundlePackNameFieldNumber = 1,
     kSourceUrlFieldNumber = 3,
     kArchivedFieldNumber = 2,
     kAutomaticallyCheckForUpdatesFieldNumber = 4,
   };
+  // repeated string bundle_names = 5;
+  int bundle_names_size() const;
+  private:
+  int _internal_bundle_names_size() const;
+
+  public:
+  void clear_bundle_names() ;
+  const ::std::string& bundle_names(int index) const;
+  ::std::string* PROTOBUF_NONNULL mutable_bundle_names(int index);
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_bundle_names(int index, Arg_&& value, Args_... args);
+  ::std::string* PROTOBUF_NONNULL add_bundle_names();
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void add_bundle_names(Arg_&& value, Args_... args);
+  const ::google::protobuf::RepeatedPtrField<::std::string>& bundle_names() const;
+  ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL mutable_bundle_names();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::std::string>& _internal_bundle_names() const;
+  ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL _internal_mutable_bundle_names();
+
+  public:
   // string bundle_pack_name = 1;
   bool has_bundle_pack_name() const;
   void clear_bundle_pack_name() ;
@@ -310,8 +333,8 @@ class BundlePackInfo final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 4,
-                                   0, 53,
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   0, 65,
                                    2>
       _table_;
 
@@ -332,6 +355,7 @@ class BundlePackInfo final : public ::google::protobuf::Message
         const BundlePackInfo& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::RepeatedPtrField<::std::string> bundle_names_;
     ::google::protobuf::internal::ArenaStringPtr bundle_pack_name_;
     ::google::protobuf::internal::ArenaStringPtr source_url_;
     bool archived_;
@@ -3204,14 +3228,14 @@ inline void BundleInfo::set_allocated_bundle_pack_name(::std::string* PROTOBUF_N
 
 // string bundle_pack_name = 1;
 inline bool BundlePackInfo::has_bundle_pack_name() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   return value;
 }
 inline void BundlePackInfo::clear_bundle_pack_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.bundle_pack_name_.ClearToEmpty();
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000001U);
+                  0x00000002U);
 }
 inline const ::std::string& BundlePackInfo::bundle_pack_name() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -3221,13 +3245,13 @@ inline const ::std::string& BundlePackInfo::bundle_pack_name() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void BundlePackInfo::set_bundle_pack_name(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   _impl_.bundle_pack_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:aim.BundlePackInfo.bundle_pack_name)
 }
 inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::mutable_bundle_pack_name()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   ::std::string* _s = _internal_mutable_bundle_pack_name();
   // @@protoc_insertion_point(field_mutable:aim.BundlePackInfo.bundle_pack_name)
   return _s;
@@ -3247,10 +3271,10 @@ inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::_internal_mutable_bundle_
 inline ::std::string* PROTOBUF_NULLABLE BundlePackInfo::release_bundle_pack_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:aim.BundlePackInfo.bundle_pack_name)
-  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
     return nullptr;
   }
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   auto* released = _impl_.bundle_pack_name_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_.bundle_pack_name_.Set("", GetArena());
@@ -3260,9 +3284,9 @@ inline ::std::string* PROTOBUF_NULLABLE BundlePackInfo::release_bundle_pack_name
 inline void BundlePackInfo::set_allocated_bundle_pack_name(::std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
   _impl_.bundle_pack_name_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.bundle_pack_name_.IsDefault()) {
@@ -3273,14 +3297,14 @@ inline void BundlePackInfo::set_allocated_bundle_pack_name(::std::string* PROTOB
 
 // bool archived = 2;
 inline bool BundlePackInfo::has_archived() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   return value;
 }
 inline void BundlePackInfo::clear_archived() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.archived_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
+                  0x00000008U);
 }
 inline bool BundlePackInfo::archived() const {
   // @@protoc_insertion_point(field_get:aim.BundlePackInfo.archived)
@@ -3288,7 +3312,7 @@ inline bool BundlePackInfo::archived() const {
 }
 inline void BundlePackInfo::set_archived(bool value) {
   _internal_set_archived(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   // @@protoc_insertion_point(field_set:aim.BundlePackInfo.archived)
 }
 inline bool BundlePackInfo::_internal_archived() const {
@@ -3302,14 +3326,14 @@ inline void BundlePackInfo::_internal_set_archived(bool value) {
 
 // string source_url = 3;
 inline bool BundlePackInfo::has_source_url() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   return value;
 }
 inline void BundlePackInfo::clear_source_url() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_url_.ClearToEmpty();
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000002U);
+                  0x00000004U);
 }
 inline const ::std::string& BundlePackInfo::source_url() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -3319,13 +3343,13 @@ inline const ::std::string& BundlePackInfo::source_url() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void BundlePackInfo::set_source_url(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   _impl_.source_url_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:aim.BundlePackInfo.source_url)
 }
 inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::mutable_source_url()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   ::std::string* _s = _internal_mutable_source_url();
   // @@protoc_insertion_point(field_mutable:aim.BundlePackInfo.source_url)
   return _s;
@@ -3345,10 +3369,10 @@ inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::_internal_mutable_source_
 inline ::std::string* PROTOBUF_NULLABLE BundlePackInfo::release_source_url() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:aim.BundlePackInfo.source_url)
-  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
     return nullptr;
   }
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
   auto* released = _impl_.source_url_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_.source_url_.Set("", GetArena());
@@ -3358,9 +3382,9 @@ inline ::std::string* PROTOBUF_NULLABLE BundlePackInfo::release_source_url() {
 inline void BundlePackInfo::set_allocated_source_url(::std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
   }
   _impl_.source_url_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.source_url_.IsDefault()) {
@@ -3371,14 +3395,14 @@ inline void BundlePackInfo::set_allocated_source_url(::std::string* PROTOBUF_NUL
 
 // bool automatically_check_for_updates = 4;
 inline bool BundlePackInfo::has_automatically_check_for_updates() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
   return value;
 }
 inline void BundlePackInfo::clear_automatically_check_for_updates() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.automatically_check_for_updates_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000008U);
+                  0x00000010U);
 }
 inline bool BundlePackInfo::automatically_check_for_updates() const {
   // @@protoc_insertion_point(field_get:aim.BundlePackInfo.automatically_check_for_updates)
@@ -3386,7 +3410,7 @@ inline bool BundlePackInfo::automatically_check_for_updates() const {
 }
 inline void BundlePackInfo::set_automatically_check_for_updates(bool value) {
   _internal_set_automatically_check_for_updates(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   // @@protoc_insertion_point(field_set:aim.BundlePackInfo.automatically_check_for_updates)
 }
 inline bool BundlePackInfo::_internal_automatically_check_for_updates() const {
@@ -3396,6 +3420,78 @@ inline bool BundlePackInfo::_internal_automatically_check_for_updates() const {
 inline void BundlePackInfo::_internal_set_automatically_check_for_updates(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.automatically_check_for_updates_ = value;
+}
+
+// repeated string bundle_names = 5;
+inline int BundlePackInfo::_internal_bundle_names_size() const {
+  return _internal_bundle_names().size();
+}
+inline int BundlePackInfo::bundle_names_size() const {
+  return _internal_bundle_names_size();
+}
+inline void BundlePackInfo::clear_bundle_names() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.bundle_names_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::add_bundle_names()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::std::string* _s =
+      _internal_mutable_bundle_names()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add_mutable:aim.BundlePackInfo.bundle_names)
+  return _s;
+}
+inline const ::std::string& BundlePackInfo::bundle_names(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.BundlePackInfo.bundle_names)
+  return _internal_bundle_names().Get(index);
+}
+inline ::std::string* PROTOBUF_NONNULL BundlePackInfo::mutable_bundle_names(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:aim.BundlePackInfo.bundle_names)
+  return _internal_mutable_bundle_names()->Mutable(index);
+}
+template <typename Arg_, typename... Args_>
+inline void BundlePackInfo::set_bundle_names(int index, Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::AssignToString(*_internal_mutable_bundle_names()->Mutable(index), ::std::forward<Arg_>(value),
+                        args... );
+  // @@protoc_insertion_point(field_set:aim.BundlePackInfo.bundle_names)
+}
+template <typename Arg_, typename... Args_>
+inline void BundlePackInfo::add_bundle_names(Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::google::protobuf::internal::AddToRepeatedPtrField(
+      ::google::protobuf::MessageLite::internal_visibility(), GetArena(),
+      *_internal_mutable_bundle_names(), ::std::forward<Arg_>(value),
+      args... );
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add:aim.BundlePackInfo.bundle_names)
+}
+inline const ::google::protobuf::RepeatedPtrField<::std::string>& BundlePackInfo::bundle_names()
+    const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:aim.BundlePackInfo.bundle_names)
+  return _internal_bundle_names();
+}
+inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
+BundlePackInfo::mutable_bundle_names() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_mutable_list:aim.BundlePackInfo.bundle_names)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_bundle_names();
+}
+inline const ::google::protobuf::RepeatedPtrField<::std::string>&
+BundlePackInfo::_internal_bundle_names() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.bundle_names_;
+}
+inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
+BundlePackInfo::_internal_mutable_bundle_names() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.bundle_names_;
 }
 
 // -------------------------------------------------------------------

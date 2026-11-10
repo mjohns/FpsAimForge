@@ -372,6 +372,15 @@ class BundleUiComponentImpl : public BundleUiComponent {
     ImGui::SameLine();
     ImGui::HelpMarker("Bundle pack will not be loaded");
 
+    if (info.bundle_names_size() > 0) {
+      ImGui::Text("Bundles");
+      ImGui::Indent();
+      for (const std::string& bundle_name : info.bundle_names()) {
+        ImGui::Text(bundle_name);
+      }
+      ImGui::Unindent();
+    }
+
     ImGui::SpacedSeparator();
 
     if (ImGui::Button(std::format("{} Edit", icons::kEdit))) {
