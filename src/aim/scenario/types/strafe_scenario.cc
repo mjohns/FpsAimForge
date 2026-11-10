@@ -81,7 +81,8 @@ class MovementControllerImpl : public MovementController {
                                                      def_.strafe_def().left_right_profiles_info(),
                                                      pos.x,
                                                      now_seconds,
-                                                     delta_seconds);
+                                                     delta_seconds,
+                                                     /*is_left_right=*/true);
     }
 
     if (up_down_controller_) {

@@ -66,7 +66,8 @@ float StrafeController::GetUpdatedPosition(Target& t,
                                            const ProfileListInfo& profiles_info,
                                            float current_position,
                                            float now_seconds,
-                                           float delta_seconds) {
+                                           float delta_seconds,
+                                           bool is_left_right) {
   bool is_first = false;
   if (!initialized_) {
     initialized_ = true;
@@ -126,7 +127,15 @@ float StrafeController::GetUpdatedPosition(Target& t,
         rand, now_seconds, profiles, profiles_info, t.speed, current_position, is_first, &t.radius);
   }
 
-  float max_speed = t.speed * speed_multiplier_;
+  // Scale speed based on depth for cylinders. The projection onto the cylinder wall slows as the
+  // target gets closer to the center. i.e. when the target approaches the camera it slows down.
+  float radius_speed_multiplier = 1.0;
+  if (is_left_right && wall_.cylinder_radius > 0 && t.wall_depth > 4) {
+    float depth_radius = std::max<float>(wall_.cylinder_radius - t.wall_depth, 4);
+    radius_speed_multiplier = wall_.cylinder_radius / depth_radius;
+  }
+
+  float max_speed = t.speed * speed_multiplier_ * radius_speed_multiplier;
 
   if (acceleration > 0) {
     // Adjust current speed for acceleration.

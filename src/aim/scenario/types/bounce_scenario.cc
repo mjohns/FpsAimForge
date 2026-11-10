@@ -268,7 +268,8 @@ class MovementControllerImpl : public MovementController {
                                                      def_.bounce_def().left_right_profiles_info(),
                                                      pos.x,
                                                      now_seconds,
-                                                     delta_seconds);
+                                                     delta_seconds,
+                                                     /*is_left_right=*/true);
     }
 
     if (forward_back_controller_) {

@@ -36,6 +36,7 @@ struct Wall {
   float height = 0;
   float depth = 0;
   bool is_barrel = false;
+  float cylinder_radius = -1;
 
   float GetRegionLength(const RegionLength& r) const;
   glm::vec2 GetRegionVec2(const RegionVec2& v) const;

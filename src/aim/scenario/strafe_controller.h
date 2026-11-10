@@ -44,7 +44,8 @@ class StrafeController {
                            const ProfileListInfo& profiles_info,
                            float current_position,
                            float now_seconds,
-                           float delta_seconds);
+                           float delta_seconds,
+                           bool is_left_right = false);
 
  private:
   bool GetInitialGoingLeft(Direction dir, float current_position, Random& rand);

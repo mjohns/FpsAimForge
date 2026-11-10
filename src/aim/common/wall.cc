@@ -96,6 +96,7 @@ Wall Wall::ForRoom(const Room& room) {
     }
     wall.height = room.cylinder_room().height();
     wall.depth = room.cylinder_room().radius() - room.camera_position().y();
+    wall.cylinder_radius = room.cylinder_room().radius();
   } else if (room.has_barrel_room()) {
     wall.width = room.barrel_room().radius() * 2;
     wall.height = wall.width;
