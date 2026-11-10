@@ -648,17 +648,6 @@ class ApplicationImpl : public Application {
     }
     replay_manager_ = CreateReplayManager();
 
-    std::string ca_bundle_copied_key = "_caBundleCopied";
-    if (is_new_user) {
-      // Never copy bundle for new users.
-      local_store().PutBool(ca_bundle_copied_key, true);
-    } else {
-      if (!local_store().GetBool(ca_bundle_copied_key)) {
-        CopyBundleFileIfNotExists("cA.bundle.json", file_system_.get());
-        local_store().PutBool(ca_bundle_copied_key, true);
-      }
-    }
-
     play_time_manager_ = std::make_unique<PlayTimeManager>(db_.get());
     bundle_manager_ = CreateBundleManager(
         file_system_.get(), playlist_manager_.get(), scenario_manager_.get(), guide_manager_.get());
