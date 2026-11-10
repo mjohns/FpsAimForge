@@ -694,6 +694,9 @@ class SettingsScreen : public UiScreen {
         PROTO_FIELD(
             ScenarioSettingsStoreType, ScenarioSettingsConfig, &config, tracking_shots_per_second),
         /*default_global=*/true);
+    draw_item("Movement",
+              PROTO_FIELD(ScenarioSettingsStoreType, ScenarioSettingsConfig, &config, movement),
+              /*default_global=*/true);
     ImGui::Unindent();
   }
 

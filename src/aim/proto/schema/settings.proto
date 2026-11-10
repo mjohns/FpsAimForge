@@ -132,6 +132,7 @@ message ScenarioSettings {
   HealthBarSettings health_bar = 8;
   bool enable_metronome = 9 [features.field_presence = IMPLICIT];
   float tracking_shots_per_second = 10;
+  MovementSettings movement = 11;
 }
 
 enum ScenarioSettingsStoreType {
@@ -153,6 +154,7 @@ message ScenarioSettingsConfig {
   ScenarioSettingsStoreType health_bar = 7;
   ScenarioSettingsStoreType enable_metronome = 8;
   ScenarioSettingsStoreType tracking_shots_per_second = 9;
+  ScenarioSettingsStoreType movement = 10;
 }
 
 message KeyMapping {

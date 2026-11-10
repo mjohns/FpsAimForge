@@ -405,6 +405,9 @@ class SettingsManagerImpl : public SettingsManager {
     if (scenario_settings.has_health_bar() && should_set_default_global(config.health_bar())) {
       *settings_.mutable_health_bar() = scenario_settings.health_bar();
     }
+    if (scenario_settings.has_movement() && should_set_default_global(config.movement())) {
+      *settings_.mutable_movement() = scenario_settings.movement();
+    }
 
     if (missing_scenario_settings) {
       WriteScenarioSettings(scenario_name);
@@ -462,6 +465,11 @@ class SettingsManagerImpl : public SettingsManager {
         *scenario_settings.mutable_health_bar() = settings_.health_bar();
       } else {
         scenario_settings.clear_health_bar();
+      }
+      if (settings_.has_movement()) {
+        *scenario_settings.mutable_movement() = settings_.movement();
+      } else {
+        scenario_settings.clear_movement();
       }
       i64 scenario_id = db_->GetScenarioId(scenario_name);
       db_->UpdateScenarioSettings(scenario_id, scenario_settings);

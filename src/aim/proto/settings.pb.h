@@ -567,6 +567,7 @@ class ScenarioSettingsConfig final : public ::google::protobuf::Message
     kHealthBarFieldNumber = 7,
     kEnableMetronomeFieldNumber = 8,
     kTrackingShotsPerSecondFieldNumber = 9,
+    kMovementFieldNumber = 10,
   };
   // .aim.ScenarioSettingsStoreType cm_per_360 = 1;
   bool has_cm_per_360() const;
@@ -667,11 +668,22 @@ class ScenarioSettingsConfig final : public ::google::protobuf::Message
   void _internal_set_tracking_shots_per_second(::aim::ScenarioSettingsStoreType value);
 
   public:
+  // .aim.ScenarioSettingsStoreType movement = 10;
+  bool has_movement() const;
+  void clear_movement() ;
+  ::aim::ScenarioSettingsStoreType movement() const;
+  void set_movement(::aim::ScenarioSettingsStoreType value);
+
+  private:
+  ::aim::ScenarioSettingsStoreType _internal_movement() const;
+  void _internal_set_movement(::aim::ScenarioSettingsStoreType value);
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.ScenarioSettingsConfig)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<4, 9,
+  static const ::google::protobuf::internal::TcParseTable<4, 10,
                                    0, 0,
                                    2>
       _table_;
@@ -702,6 +714,7 @@ class ScenarioSettingsConfig final : public ::google::protobuf::Message
     int health_bar_;
     int enable_metronome_;
     int tracking_shots_per_second_;
+    int movement_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -2085,6 +2098,7 @@ class ScenarioSettings final : public ::google::protobuf::Message
     kThemeNameFieldNumber = 2,
     kCrosshairNameFieldNumber = 5,
     kHealthBarFieldNumber = 8,
+    kMovementFieldNumber = 11,
     kCmPer360FieldNumber = 1,
     kMetronomeBpmFieldNumber = 3,
     kCrosshairSizeFieldNumber = 4,
@@ -2137,6 +2151,21 @@ class ScenarioSettings final : public ::google::protobuf::Message
   private:
   const ::aim::HealthBarSettings& _internal_health_bar() const;
   ::aim::HealthBarSettings* PROTOBUF_NONNULL _internal_mutable_health_bar();
+
+  public:
+  // .aim.MovementSettings movement = 11;
+  bool has_movement() const;
+  void clear_movement() ;
+  const ::aim::MovementSettings& movement() const;
+  [[nodiscard]] ::aim::MovementSettings* PROTOBUF_NULLABLE release_movement();
+  ::aim::MovementSettings* PROTOBUF_NONNULL mutable_movement();
+  void set_allocated_movement(::aim::MovementSettings* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_movement(::aim::MovementSettings* PROTOBUF_NULLABLE value);
+  ::aim::MovementSettings* PROTOBUF_NULLABLE unsafe_arena_release_movement();
+
+  private:
+  const ::aim::MovementSettings& _internal_movement() const;
+  ::aim::MovementSettings* PROTOBUF_NONNULL _internal_mutable_movement();
 
   public:
   // float cm_per_360 = 1;
@@ -2207,8 +2236,8 @@ class ScenarioSettings final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<4, 9,
-                                   1, 61,
+  static const ::google::protobuf::internal::TcParseTable<4, 10,
+                                   2, 61,
                                    2>
       _table_;
 
@@ -2232,6 +2261,7 @@ class ScenarioSettings final : public ::google::protobuf::Message
     ::google::protobuf::internal::ArenaStringPtr theme_name_;
     ::google::protobuf::internal::ArenaStringPtr crosshair_name_;
     ::aim::HealthBarSettings* PROTOBUF_NULLABLE health_bar_;
+    ::aim::MovementSettings* PROTOBUF_NULLABLE movement_;
     float cm_per_360_;
     float metronome_bpm_;
     float crosshair_size_;
@@ -5794,14 +5824,14 @@ inline void SoundSettings::set_allocated_metronome(::aim::SoundItem* PROTOBUF_NU
 
 // float cm_per_360 = 1;
 inline bool ScenarioSettings::has_cm_per_360() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
   return value;
 }
 inline void ScenarioSettings::clear_cm_per_360() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.cm_per_360_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000008U);
+                  0x00000010U);
 }
 inline float ScenarioSettings::cm_per_360() const {
   // @@protoc_insertion_point(field_get:aim.ScenarioSettings.cm_per_360)
@@ -5809,7 +5839,7 @@ inline float ScenarioSettings::cm_per_360() const {
 }
 inline void ScenarioSettings::set_cm_per_360(float value) {
   _internal_set_cm_per_360(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   // @@protoc_insertion_point(field_set:aim.ScenarioSettings.cm_per_360)
 }
 inline float ScenarioSettings::_internal_cm_per_360() const {
@@ -5892,14 +5922,14 @@ inline void ScenarioSettings::set_allocated_theme_name(::std::string* PROTOBUF_N
 
 // float metronome_bpm = 3;
 inline bool ScenarioSettings::has_metronome_bpm() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000020U);
   return value;
 }
 inline void ScenarioSettings::clear_metronome_bpm() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.metronome_bpm_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000010U);
+                  0x00000020U);
 }
 inline float ScenarioSettings::metronome_bpm() const {
   // @@protoc_insertion_point(field_get:aim.ScenarioSettings.metronome_bpm)
@@ -5907,7 +5937,7 @@ inline float ScenarioSettings::metronome_bpm() const {
 }
 inline void ScenarioSettings::set_metronome_bpm(float value) {
   _internal_set_metronome_bpm(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
   // @@protoc_insertion_point(field_set:aim.ScenarioSettings.metronome_bpm)
 }
 inline float ScenarioSettings::_internal_metronome_bpm() const {
@@ -5921,14 +5951,14 @@ inline void ScenarioSettings::_internal_set_metronome_bpm(float value) {
 
 // float crosshair_size = 4;
 inline bool ScenarioSettings::has_crosshair_size() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000020U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000040U);
   return value;
 }
 inline void ScenarioSettings::clear_crosshair_size() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.crosshair_size_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000020U);
+                  0x00000040U);
 }
 inline float ScenarioSettings::crosshair_size() const {
   // @@protoc_insertion_point(field_get:aim.ScenarioSettings.crosshair_size)
@@ -5936,7 +5966,7 @@ inline float ScenarioSettings::crosshair_size() const {
 }
 inline void ScenarioSettings::set_crosshair_size(float value) {
   _internal_set_crosshair_size(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000040U);
   // @@protoc_insertion_point(field_set:aim.ScenarioSettings.crosshair_size)
 }
 inline float ScenarioSettings::_internal_crosshair_size() const {
@@ -6022,7 +6052,7 @@ inline void ScenarioSettings::clear_auto_hold_tracking() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.auto_hold_tracking_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000040U);
+                  0x00000080U);
 }
 inline bool ScenarioSettings::auto_hold_tracking() const {
   // @@protoc_insertion_point(field_get:aim.ScenarioSettings.auto_hold_tracking)
@@ -6030,7 +6060,7 @@ inline bool ScenarioSettings::auto_hold_tracking() const {
 }
 inline void ScenarioSettings::set_auto_hold_tracking(bool value) {
   _internal_set_auto_hold_tracking(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000040U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
   // @@protoc_insertion_point(field_set:aim.ScenarioSettings.auto_hold_tracking)
 }
 inline bool ScenarioSettings::_internal_auto_hold_tracking() const {
@@ -6146,7 +6176,7 @@ inline void ScenarioSettings::clear_enable_metronome() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.enable_metronome_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000080U);
+                  0x00000100U);
 }
 inline bool ScenarioSettings::enable_metronome() const {
   // @@protoc_insertion_point(field_get:aim.ScenarioSettings.enable_metronome)
@@ -6154,7 +6184,7 @@ inline bool ScenarioSettings::enable_metronome() const {
 }
 inline void ScenarioSettings::set_enable_metronome(bool value) {
   _internal_set_enable_metronome(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000100U);
   // @@protoc_insertion_point(field_set:aim.ScenarioSettings.enable_metronome)
 }
 inline bool ScenarioSettings::_internal_enable_metronome() const {
@@ -6168,14 +6198,14 @@ inline void ScenarioSettings::_internal_set_enable_metronome(bool value) {
 
 // float tracking_shots_per_second = 10;
 inline bool ScenarioSettings::has_tracking_shots_per_second() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000100U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000200U);
   return value;
 }
 inline void ScenarioSettings::clear_tracking_shots_per_second() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.tracking_shots_per_second_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000100U);
+                  0x00000200U);
 }
 inline float ScenarioSettings::tracking_shots_per_second() const {
   // @@protoc_insertion_point(field_get:aim.ScenarioSettings.tracking_shots_per_second)
@@ -6183,7 +6213,7 @@ inline float ScenarioSettings::tracking_shots_per_second() const {
 }
 inline void ScenarioSettings::set_tracking_shots_per_second(float value) {
   _internal_set_tracking_shots_per_second(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000100U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000200U);
   // @@protoc_insertion_point(field_set:aim.ScenarioSettings.tracking_shots_per_second)
 }
 inline float ScenarioSettings::_internal_tracking_shots_per_second() const {
@@ -6193,6 +6223,105 @@ inline float ScenarioSettings::_internal_tracking_shots_per_second() const {
 inline void ScenarioSettings::_internal_set_tracking_shots_per_second(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.tracking_shots_per_second_ = value;
+}
+
+// .aim.MovementSettings movement = 11;
+inline bool ScenarioSettings::has_movement() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
+  PROTOBUF_ASSUME(!value || _impl_.movement_ != nullptr);
+  return value;
+}
+inline void ScenarioSettings::clear_movement() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.movement_ != nullptr) _impl_.movement_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000008U);
+}
+inline const ::aim::MovementSettings& ScenarioSettings::_internal_movement() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::aim::MovementSettings* p = _impl_.movement_;
+  return p != nullptr ? *p : reinterpret_cast<const ::aim::MovementSettings&>(::aim::_MovementSettings_default_instance_);
+}
+inline const ::aim::MovementSettings& ScenarioSettings::movement() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.ScenarioSettings.movement)
+  return _internal_movement();
+}
+inline void ScenarioSettings::unsafe_arena_set_allocated_movement(
+    ::aim::MovementSettings* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.movement_);
+  }
+  _impl_.movement_ = reinterpret_cast<::aim::MovementSettings*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:aim.ScenarioSettings.movement)
+}
+inline ::aim::MovementSettings* PROTOBUF_NULLABLE ScenarioSettings::release_movement() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ::aim::MovementSettings* released = _impl_.movement_;
+  _impl_.movement_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::aim::MovementSettings* PROTOBUF_NULLABLE ScenarioSettings::unsafe_arena_release_movement() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.ScenarioSettings.movement)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ::aim::MovementSettings* temp = _impl_.movement_;
+  _impl_.movement_ = nullptr;
+  return temp;
+}
+inline ::aim::MovementSettings* PROTOBUF_NONNULL ScenarioSettings::_internal_mutable_movement() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.movement_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::aim::MovementSettings>(GetArena());
+    _impl_.movement_ = reinterpret_cast<::aim::MovementSettings*>(p);
+  }
+  return _impl_.movement_;
+}
+inline ::aim::MovementSettings* PROTOBUF_NONNULL ScenarioSettings::mutable_movement()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ::aim::MovementSettings* _msg = _internal_mutable_movement();
+  // @@protoc_insertion_point(field_mutable:aim.ScenarioSettings.movement)
+  return _msg;
+}
+inline void ScenarioSettings::set_allocated_movement(::aim::MovementSettings* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.movement_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = value->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  }
+
+  _impl_.movement_ = reinterpret_cast<::aim::MovementSettings*>(value);
+  // @@protoc_insertion_point(field_set_allocated:aim.ScenarioSettings.movement)
 }
 
 // -------------------------------------------------------------------
@@ -6458,6 +6587,35 @@ inline ::aim::ScenarioSettingsStoreType ScenarioSettingsConfig::_internal_tracki
 inline void ScenarioSettingsConfig::_internal_set_tracking_shots_per_second(::aim::ScenarioSettingsStoreType value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.tracking_shots_per_second_ = value;
+}
+
+// .aim.ScenarioSettingsStoreType movement = 10;
+inline bool ScenarioSettingsConfig::has_movement() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000200U);
+  return value;
+}
+inline void ScenarioSettingsConfig::clear_movement() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.movement_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000200U);
+}
+inline ::aim::ScenarioSettingsStoreType ScenarioSettingsConfig::movement() const {
+  // @@protoc_insertion_point(field_get:aim.ScenarioSettingsConfig.movement)
+  return _internal_movement();
+}
+inline void ScenarioSettingsConfig::set_movement(::aim::ScenarioSettingsStoreType value) {
+  _internal_set_movement(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000200U);
+  // @@protoc_insertion_point(field_set:aim.ScenarioSettingsConfig.movement)
+}
+inline ::aim::ScenarioSettingsStoreType ScenarioSettingsConfig::_internal_movement() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::aim::ScenarioSettingsStoreType>(_impl_.movement_);
+}
+inline void ScenarioSettingsConfig::_internal_set_movement(::aim::ScenarioSettingsStoreType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.movement_ = value;
 }
 
 // -------------------------------------------------------------------

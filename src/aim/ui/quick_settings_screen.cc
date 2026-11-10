@@ -5,11 +5,11 @@
 
 #include "aim/common/imgui_ext.h"
 #include "aim/common/mat_icons.h"
+#include "aim/common/proto_util.h"
 #include "aim/common/util.h"
 #include "aim/core/settings_manager.h"
 #include "aim/ui/settings_screen.h"
 #include "aim/ui/ui_screen.h"
-#include "backends/imgui_impl_sdl3.h"
 
 namespace aim {
 namespace {
@@ -221,6 +221,24 @@ class QuickSettingsScreen : public UiScreen {
       ImGui::InputBool("Save settings per scenario",
                        InvertBoolField(PROTO_BOOL_FIELD(
                            Settings, &updater_.settings, disable_per_scenario_settings)));
+
+      auto* movement = updater_.settings.mutable_movement();
+      ImGui::InputBool(ImGui::InputBoolParams("EnableMovement").set_label("Enable movement"),
+                       PROTO_BOOL_FIELD(MovementSettings, movement, enable_movement));
+      ImGui::SameLine();
+      ImGui::HelpMarker("Enables WASD like movement of camera. Movement does not change scoring.");
+
+      ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Movement speed multiplier")
+                            .set_step(0.01, .1)
+                            .set_width(char_size.x * 9)
+                            .set_is_optional()
+                            .set_min(0.01)
+                            .set_default(1),
+                        PROTO_FLOAT_FIELD(MovementSettings, movement, speed_multiplier));
+
+      if (IsDefaultInstance(*movement)) {
+        updater_.settings.clear_movement();
+      }
     }
 
     if (type_ == QuickSettingsType::METRONOME) {
