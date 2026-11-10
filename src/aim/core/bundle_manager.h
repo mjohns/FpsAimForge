@@ -15,6 +15,12 @@ inline const char* kUserBundleName = "USER";
 inline const char* kDefaultBundlePackName = "Default";
 inline const char* kDefaultBundlePackFilename = "Default.pack.bin";
 
+struct LoadedBundleDetails {
+  std::vector<std::string> bundle_packs;
+  bool loaded_from_file = false;
+  std::string loaded_from_bundle_pack;
+};
+
 class BundleManager {
  public:
   BundleManager() {}
@@ -44,6 +50,8 @@ class BundleManager {
   virtual void UpdateBundlePackInfo(const BundlePackInfo& info,
                                     const std::string& remove_old_pack_name = "") = 0;
   virtual void DeleteBundlePack(const std::string& pack_name) = 0;
+
+  virtual const LoadedBundleDetails& GetLoadedBundleDetails(const std::string& bundle_name) = 0;
 };
 
 std::unique_ptr<BundleManager> CreateBundleManager(FileSystem* fs,

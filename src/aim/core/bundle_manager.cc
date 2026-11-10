@@ -98,14 +98,18 @@ std::unordered_map<std::string, BundlePack> LoadBundlePackFiles(
 
 std::unordered_map<std::string, BundleFile> GetBundlesFromPacks(
     const std::unordered_map<std::string, BundlePack>& pack_map,
-    const std::unordered_map<std::string, BundleInfo>& bundle_info_map) {
+    const std::unordered_map<std::string, BundleInfo>& bundle_info_map,
+    std::unordered_map<std::string, LoadedBundleDetails>& loaded_bundle_details_map) {
   std::unordered_map<std::string, BundleFile> result;
   for (const auto& entry : pack_map) {
     for (const auto& bundle : entry.second.items()) {
       auto it = bundle_info_map.find(bundle.name());
+      auto& details = loaded_bundle_details_map[bundle.name()];
+      details.bundle_packs.push_back(entry.first);
       if (it == bundle_info_map.end()) {
         // No special options for bundle. Always include.
         result[bundle.name()] = bundle.file();
+        details.loaded_from_bundle_pack = entry.first;
         continue;
       }
       const BundleInfo& info = it->second;
@@ -118,51 +122,10 @@ std::unordered_map<std::string, BundleFile> GetBundlesFromPacks(
         continue;
       }
       result[bundle.name()] = bundle.file();
+      details.loaded_from_bundle_pack = entry.first;
     }
   }
   return result;
-}
-
-BundleInfoFile NormalizeBundleInfoFile(
-    const BundleInfoFile& original_file,
-    const std::unordered_map<std::string, std::filesystem::path>& bundle_path_map,
-    const std::unordered_map<std::string, std::filesystem::path>& bundle_pack_path_map) {
-  BundleInfoFile file = original_file;
-
-  std::unordered_set<std::string> existing_bundle_names;
-  for (auto& bundle : file.bundles()) {
-    existing_bundle_names.insert(bundle.bundle_name());
-  }
-
-  std::unordered_set<std::string> existing_bundle_pack_names;
-  for (auto& pack : file.bundle_packs()) {
-    existing_bundle_names.insert(pack.bundle_pack_name());
-  }
-
-  // Add all missing bundles as readonly.
-  for (const auto& entry : bundle_path_map) {
-    const std::string& bundle_name = entry.first;
-    if (!existing_bundle_names.contains(bundle_name)) {
-      auto* item = file.add_bundles();
-      item->set_bundle_name(bundle_name);
-      if (bundle_name != kUserBundleName) {
-        item->set_readonly(true);
-      }
-    }
-  }
-
-  for (const auto& entry : bundle_path_map) {
-    const std::string& bundle_name = entry.first;
-    if (!existing_bundle_names.contains(bundle_name)) {
-      auto* item = file.add_bundles();
-      item->set_bundle_name(bundle_name);
-      item->set_readonly(true);
-    }
-  }
-
-  absl::c_sort(*file.mutable_bundles(), &BundleInfoNameLessThan);
-  absl::c_sort(*file.mutable_bundle_packs(), &BundlePackInfoNameLessThan);
-  return file;
 }
 
 class BundleManagerImpl : public BundleManager {
@@ -182,6 +145,7 @@ class BundleManagerImpl : public BundleManager {
     // s.Start();
     bundle_info_map_.clear();
     bundle_pack_info_map_.clear();
+    loaded_bundle_details_map_.clear();
 
     std::vector<std::string> error_messages;
     Stopwatch stopwatch;
@@ -237,7 +201,7 @@ class BundleManagerImpl : public BundleManager {
     }
 
     std::unordered_map<std::string, BundleFile> bundle_map =
-        GetBundlesFromPacks(pack_map, bundle_info_map_);
+        GetBundlesFromPacks(pack_map, bundle_info_map_, loaded_bundle_details_map_);
 
     if (print_times) {
       std::cout << std::format("Get bundles from packs: {:.2f}s", stopwatch.GetElapsedSeconds())
@@ -254,6 +218,7 @@ class BundleManagerImpl : public BundleManager {
       BundleFile bundle_file;
       if (ReadJsonMessageFromFile(bundle_path, &bundle_file)) {
         bundle_map[bundle_name] = bundle_file;
+        loaded_bundle_details_map_[bundle_name].loaded_from_file = true;
       } else {
         error_messages.push_back(std::format("Unable to parse bundle \"{}\"", bundle_name));
       }
@@ -453,6 +418,10 @@ class BundleManagerImpl : public BundleManager {
     LoadBundlesFromDisk();
   }
 
+  const LoadedBundleDetails& GetLoadedBundleDetails(const std::string& bundle_name) override {
+    return loaded_bundle_details_map_[bundle_name];
+  }
+
   void DeleteBundle(const std::string& bundle_name) override {
     bundle_info_map_.erase(bundle_name);
     MoveFileToTrash(GetMutableBundleFilePath(bundle_name));
@@ -541,6 +510,7 @@ class BundleManagerImpl : public BundleManager {
 
   std::unordered_map<std::string, BundleInfo> bundle_info_map_;
   std::unordered_map<std::string, BundlePackInfo> bundle_pack_info_map_;
+  std::unordered_map<std::string, LoadedBundleDetails> loaded_bundle_details_map_;
 };
 
 }  // namespace

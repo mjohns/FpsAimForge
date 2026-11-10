@@ -248,7 +248,7 @@ class BundleUiComponentImpl : public BundleUiComponent {
     if (to_delete) {
       screen_.app().bundle_manager().DeleteBundle(*to_delete);
       selected_bundle_name_ = "";
-    };
+    }
 
     std::vector<std::string> updated_bundle_packs;
     bundle_pack_update_dialog_->Draw(&updated_bundle_packs);
@@ -445,6 +445,8 @@ class BundleUiComponentImpl : public BundleUiComponent {
       return;
     }
     BundleInfo info = *maybe_bundle_info;
+    LoadedBundleDetails details =
+        app_.bundle_manager().GetLoadedBundleDetails(selected_bundle_name_);
 
     ImGui::Text("Bundle name: %s", selected_bundle_name_.c_str());
 
@@ -484,10 +486,10 @@ class BundleUiComponentImpl : public BundleUiComponent {
     ImGui::Separator();
     ImGui::Spacing();
 
-    CachedBundleDetails details = GetBundleDetails(selected_bundle_name_);
-    ImGui::TextFmt("{} scenarios", details.num_scenarios);
-    if (details.num_playlists > 0) {
-      ImGui::TextFmt("{} playlists", details.num_playlists);
+    CachedBundleDetails cached_details = GetBundleDetails(selected_bundle_name_);
+    ImGui::TextFmt("{} scenarios", cached_details.num_scenarios);
+    if (cached_details.num_playlists > 0) {
+      ImGui::TextFmt("{} playlists", cached_details.num_playlists);
     }
 
     ImGui::Spacing();
@@ -501,9 +503,15 @@ class BundleUiComponentImpl : public BundleUiComponent {
 
     ImGui::SpacedSeparator();
 
-    if (ImGui::Button(std::format("{} Delete", icons::kDelete))) {
-      delete_confirmation_dialog_.NotifyOpen(std::format("Delete \"{}\"?", selected_bundle_name_),
-                                             selected_bundle_name_);
+    bool can_delete = details.loaded_from_file || details.loaded_from_bundle_pack.empty();
+    if (can_delete) {
+      if (ImGui::Button(
+              std::format("{} Delete \"{}.bundle.json\"", icons::kDelete, selected_bundle_name_))) {
+        delete_confirmation_dialog_.NotifyOpen(std::format("Delete \"{}\"?", selected_bundle_name_),
+                                               selected_bundle_name_);
+      }
+    } else {
+      ImGui::TextFmt("Loaded from bundle pack \"{}\"", details.loaded_from_bundle_pack);
     }
 
     if (need_update) {
@@ -519,20 +527,28 @@ class BundleUiComponentImpl : public BundleUiComponent {
     auto bundle_infos = app_.bundle_manager().GetBundleInfos();
     for (const BundleInfo& bundle : bundle_infos) {
       auto id_guard = loop_id.Get();
-      std::string display_text = " " + bundle.bundle_name();
-      std::string help_text;
-      if (bundle.archived()) {
-        display_text = std::format("{} {}", display_text, icons::kArchive);
-        help_text = "Archived";
-      } else if (bundle.readonly()) {
-        display_text = std::format("{} {}", display_text, icons::kEditOff);
-        help_text = "Readonly";
-      }
-      if (ImGui::Selectable(display_text.c_str(), bundle.bundle_name() == selected_bundle_name_)) {
+      if (ImGui::Selectable(bundle.bundle_name().c_str(),
+                            bundle.bundle_name() == selected_bundle_name_)) {
         selected_bundle_name_ = bundle.bundle_name();
       }
-      if (help_text.size() > 0) {
-        ImGui::HelpTooltip(help_text, 0.5);
+      if (bundle.archived()) {
+        ImGui::SameLine();
+        ImGui::Text(icons::kArchive);
+        ImGui::HelpTooltip("Archived", 0.5);
+      } else if (bundle.readonly()) {
+        ImGui::SameLine();
+        ImGui::Text(icons::kEditOff);
+        ImGui::HelpTooltip("Readonly", 0.5);
+      }
+
+      const LoadedBundleDetails& details =
+          app_.bundle_manager().GetLoadedBundleDetails(bundle.bundle_name());
+      bool can_delete = details.loaded_from_file || details.loaded_from_bundle_pack.empty();
+      if (can_delete) {
+        ImGui::SameLine();
+        ImGui::Text(icons::kTextSnippet);
+        ImGui::HelpTooltip(
+            std::format("Bundle loaded from \"{}.bundle.json\"", bundle.bundle_name()), 0.5);
       }
     }
   }
