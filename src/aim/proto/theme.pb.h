@@ -1164,6 +1164,9 @@ class Theme final : public ::google::protobuf::Message
     kGhostTargetColorFieldNumber = 9,
     kCenterTargetColorFieldNumber = 10,
     kHealthBarFieldNumber = 11,
+    kShadowColorFieldNumber = 12,
+    kShadowAlphaFieldNumber = 13,
+    kDisableShadowsFieldNumber = 14,
   };
   // string reference = 1;
   bool has_reference() const;
@@ -1316,12 +1319,48 @@ class Theme final : public ::google::protobuf::Message
   ::aim::HealthBarAppearance* PROTOBUF_NONNULL _internal_mutable_health_bar();
 
   public:
+  // .aim.StoredColor shadow_color = 12;
+  bool has_shadow_color() const;
+  void clear_shadow_color() ;
+  const ::aim::StoredColor& shadow_color() const;
+  [[nodiscard]] ::aim::StoredColor* PROTOBUF_NULLABLE release_shadow_color();
+  ::aim::StoredColor* PROTOBUF_NONNULL mutable_shadow_color();
+  void set_allocated_shadow_color(::aim::StoredColor* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_shadow_color(::aim::StoredColor* PROTOBUF_NULLABLE value);
+  ::aim::StoredColor* PROTOBUF_NULLABLE unsafe_arena_release_shadow_color();
+
+  private:
+  const ::aim::StoredColor& _internal_shadow_color() const;
+  ::aim::StoredColor* PROTOBUF_NONNULL _internal_mutable_shadow_color();
+
+  public:
+  // float shadow_alpha = 13;
+  bool has_shadow_alpha() const;
+  void clear_shadow_alpha() ;
+  float shadow_alpha() const;
+  void set_shadow_alpha(float value);
+
+  private:
+  float _internal_shadow_alpha() const;
+  void _internal_set_shadow_alpha(float value);
+
+  public:
+  // bool disable_shadows = 14 [features = {
+  void clear_disable_shadows() ;
+  bool disable_shadows() const;
+  void set_disable_shadows(bool value);
+
+  private:
+  bool _internal_disable_shadows() const;
+  void _internal_set_disable_shadows(bool value);
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.Theme)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<4, 10,
-                                   9, 35,
+  static const ::google::protobuf::internal::TcParseTable<4, 13,
+                                   10, 35,
                                    2>
       _table_;
 
@@ -1352,6 +1391,9 @@ class Theme final : public ::google::protobuf::Message
     ::aim::StoredColor* PROTOBUF_NULLABLE ghost_target_color_;
     ::aim::StoredColor* PROTOBUF_NULLABLE center_target_color_;
     ::aim::HealthBarAppearance* PROTOBUF_NULLABLE health_bar_;
+    ::aim::StoredColor* PROTOBUF_NULLABLE shadow_color_;
+    float shadow_alpha_;
+    bool disable_shadows_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3144,6 +3186,153 @@ inline void Theme::set_allocated_health_bar(::aim::HealthBarAppearance* PROTOBUF
 
   _impl_.health_bar_ = reinterpret_cast<::aim::HealthBarAppearance*>(value);
   // @@protoc_insertion_point(field_set_allocated:aim.Theme.health_bar)
+}
+
+// .aim.StoredColor shadow_color = 12;
+inline bool Theme::has_shadow_color() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000400U);
+  PROTOBUF_ASSUME(!value || _impl_.shadow_color_ != nullptr);
+  return value;
+}
+inline const ::aim::StoredColor& Theme::_internal_shadow_color() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::aim::StoredColor* p = _impl_.shadow_color_;
+  return p != nullptr ? *p : reinterpret_cast<const ::aim::StoredColor&>(::aim::_StoredColor_default_instance_);
+}
+inline const ::aim::StoredColor& Theme::shadow_color() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:aim.Theme.shadow_color)
+  return _internal_shadow_color();
+}
+inline void Theme::unsafe_arena_set_allocated_shadow_color(
+    ::aim::StoredColor* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.shadow_color_);
+  }
+  _impl_.shadow_color_ = reinterpret_cast<::aim::StoredColor*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000400U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000400U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:aim.Theme.shadow_color)
+}
+inline ::aim::StoredColor* PROTOBUF_NULLABLE Theme::release_shadow_color() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000400U);
+  ::aim::StoredColor* released = _impl_.shadow_color_;
+  _impl_.shadow_color_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::aim::StoredColor* PROTOBUF_NULLABLE Theme::unsafe_arena_release_shadow_color() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:aim.Theme.shadow_color)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000400U);
+  ::aim::StoredColor* temp = _impl_.shadow_color_;
+  _impl_.shadow_color_ = nullptr;
+  return temp;
+}
+inline ::aim::StoredColor* PROTOBUF_NONNULL Theme::_internal_mutable_shadow_color() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.shadow_color_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::aim::StoredColor>(GetArena());
+    _impl_.shadow_color_ = reinterpret_cast<::aim::StoredColor*>(p);
+  }
+  return _impl_.shadow_color_;
+}
+inline ::aim::StoredColor* PROTOBUF_NONNULL Theme::mutable_shadow_color()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000400U);
+  ::aim::StoredColor* _msg = _internal_mutable_shadow_color();
+  // @@protoc_insertion_point(field_mutable:aim.Theme.shadow_color)
+  return _msg;
+}
+inline void Theme::set_allocated_shadow_color(::aim::StoredColor* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.shadow_color_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000400U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000400U);
+  }
+
+  _impl_.shadow_color_ = reinterpret_cast<::aim::StoredColor*>(value);
+  // @@protoc_insertion_point(field_set_allocated:aim.Theme.shadow_color)
+}
+
+// float shadow_alpha = 13;
+inline bool Theme::has_shadow_alpha() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000800U);
+  return value;
+}
+inline void Theme::clear_shadow_alpha() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.shadow_alpha_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000800U);
+}
+inline float Theme::shadow_alpha() const {
+  // @@protoc_insertion_point(field_get:aim.Theme.shadow_alpha)
+  return _internal_shadow_alpha();
+}
+inline void Theme::set_shadow_alpha(float value) {
+  _internal_set_shadow_alpha(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000800U);
+  // @@protoc_insertion_point(field_set:aim.Theme.shadow_alpha)
+}
+inline float Theme::_internal_shadow_alpha() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.shadow_alpha_;
+}
+inline void Theme::_internal_set_shadow_alpha(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.shadow_alpha_ = value;
+}
+
+// bool disable_shadows = 14 [features = {
+inline void Theme::clear_disable_shadows() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.disable_shadows_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00001000U);
+}
+inline bool Theme::disable_shadows() const {
+  // @@protoc_insertion_point(field_get:aim.Theme.disable_shadows)
+  return _internal_disable_shadows();
+}
+inline void Theme::set_disable_shadows(bool value) {
+  _internal_set_disable_shadows(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00001000U);
+  // @@protoc_insertion_point(field_set:aim.Theme.disable_shadows)
+}
+inline bool Theme::_internal_disable_shadows() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.disable_shadows_;
+}
+inline void Theme::_internal_set_disable_shadows(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.disable_shadows_ = value;
 }
 
 #ifdef __GNUC__

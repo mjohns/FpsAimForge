@@ -464,14 +464,22 @@ class DrawDataBuilder {
       }
     }
 
-    // AddDrawTargetShadows(view_projection, glm::vec4(0, 0, 0, 0.4), targets, room, draw_data);
+    AddDrawTargetShadows(view_projection, targets, theme, room, draw_data);
   }
 
   void AddDrawTargetShadows(const glm::mat4& view_projection,
-                            const glm::vec4& color,
                             const std::vector<Target>& targets,
+                            const Theme& theme,
                             const Room& room,
                             DrawData* draw_data) {
+    if (theme.disable_shadows()) {
+      return;
+    }
+    bool draw_something = room.draw_floor_shadows() || room.draw_roof_shadows();
+    if (!draw_something) {
+      return;
+    }
+
     float height = 1.0;
     if (room.has_cylinder_room()) {
       height = room.cylinder_room().height();
@@ -482,24 +490,49 @@ class DrawDataBuilder {
       return;
     }
 
+    glm::vec4 color(0, 0, 0, 0.3);
+    if (theme.has_shadow_color() || theme.has_shadow_alpha()) {
+      float alpha = theme.has_shadow_alpha() ? theme.shadow_alpha() : 1.0f;
+      alpha = glm::clamp<float>(alpha, 0, 1.0f);
+
+      color = glm::vec4(ToVec3(theme.shadow_color()), alpha);
+    }
+
     float floor_height = (height * -0.5f) + 0.1f;
     for (const Target& target : targets) {
       if (!target.ShouldDraw()) {
         continue;
       }
-      draw_data->solid_circles.emplace_back();
-      SolidColorInstanceData& data = draw_data->solid_circles.back();
 
-      glm::vec3 position = target.position;
-      position.z = floor_height;
+      if (room.draw_floor_shadows()) {
+        draw_data->solid_circles.emplace_back();
+        SolidColorInstanceData& data = draw_data->solid_circles.back();
+        glm::vec3 position = target.position;
+        position.z = floor_height;
 
-      glm::mat4 model(1.0f);
-      model = glm::translate(model, position);
-      model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
-      model = glm::scale(model, glm::vec3(target.radius, 1.0, target.radius));
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, position);
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
+        model = glm::scale(model, glm::vec3(target.radius, 1.0, target.radius));
 
-      data.transform = view_projection * model;
-      data.color = color;
+        data.transform = view_projection * model;
+        data.color = color;
+      }
+
+      if (room.draw_roof_shadows()) {
+        draw_data->solid_circles.emplace_back();
+        SolidColorInstanceData& data = draw_data->solid_circles.back();
+        glm::vec3 position = target.position;
+        position.z = floor_height * -1.0f;
+
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, position);
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
+        model = glm::scale(model, glm::vec3(target.radius, 1.0, target.radius));
+
+        data.transform = view_projection * model;
+        data.color = color;
+      }
     }
   }
 

@@ -50,4 +50,8 @@ message Theme {
   StoredColor center_target_color = 10;
 
   HealthBarAppearance health_bar = 11;
+
+  StoredColor shadow_color = 12;
+  float shadow_alpha = 13;
+  bool disable_shadows = 14 [features.field_presence = IMPLICIT];
 }

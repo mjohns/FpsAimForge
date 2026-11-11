@@ -47,6 +47,9 @@ message Room {
   // Defaults to 103
   float horizontal_fov = 6;
 
+  bool draw_floor_shadows = 8 [features.field_presence = IMPLICIT];
+  bool draw_roof_shadows = 9 [features.field_presence = IMPLICIT];
+
   oneof type {
     SimpleRoom simple_room = 21;
     CylinderRoom cylinder_room = 22;

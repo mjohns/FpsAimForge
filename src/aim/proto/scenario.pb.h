@@ -7584,6 +7584,8 @@ class Room final : public ::google::protobuf::Message
     kStartPitchFieldNumber = 4,
     kStartYawFieldNumber = 5,
     kHorizontalFovFieldNumber = 6,
+    kDrawFloorShadowsFieldNumber = 8,
+    kDrawRoofShadowsFieldNumber = 9,
     kSimpleRoomFieldNumber = 21,
     kCylinderRoomFieldNumber = 22,
     kBarrelRoomFieldNumber = 23,
@@ -7681,6 +7683,26 @@ class Room final : public ::google::protobuf::Message
   void _internal_set_horizontal_fov(float value);
 
   public:
+  // bool draw_floor_shadows = 8 [features = {
+  void clear_draw_floor_shadows() ;
+  bool draw_floor_shadows() const;
+  void set_draw_floor_shadows(bool value);
+
+  private:
+  bool _internal_draw_floor_shadows() const;
+  void _internal_set_draw_floor_shadows(bool value);
+
+  public:
+  // bool draw_roof_shadows = 9 [features = {
+  void clear_draw_roof_shadows() ;
+  bool draw_roof_shadows() const;
+  void set_draw_roof_shadows(bool value);
+
+  private:
+  bool _internal_draw_roof_shadows() const;
+  void _internal_set_draw_roof_shadows(bool value);
+
+  public:
   // .aim.SimpleRoom simple_room = 21;
   bool has_simple_room() const;
   private:
@@ -7749,7 +7771,7 @@ class Room final : public ::google::protobuf::Message
   inline bool has_type() const;
   inline void clear_has_type();
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 10,
+  static const ::google::protobuf::internal::TcParseTable<4, 12,
                                    7, 0,
                                    2>
       _table_;
@@ -7778,6 +7800,8 @@ class Room final : public ::google::protobuf::Message
     float start_pitch_;
     float start_yaw_;
     float horizontal_fov_;
+    bool draw_floor_shadows_;
+    bool draw_roof_shadows_;
     union TypeUnion {
       constexpr TypeUnion() : _constinit_{} {}
       ::google::protobuf::internal::ConstantInitialized _constinit_;
@@ -12154,6 +12178,56 @@ inline float Room::_internal_horizontal_fov() const {
 inline void Room::_internal_set_horizontal_fov(float value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.horizontal_fov_ = value;
+}
+
+// bool draw_floor_shadows = 8 [features = {
+inline void Room::clear_draw_floor_shadows() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.draw_floor_shadows_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000080U);
+}
+inline bool Room::draw_floor_shadows() const {
+  // @@protoc_insertion_point(field_get:aim.Room.draw_floor_shadows)
+  return _internal_draw_floor_shadows();
+}
+inline void Room::set_draw_floor_shadows(bool value) {
+  _internal_set_draw_floor_shadows(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  // @@protoc_insertion_point(field_set:aim.Room.draw_floor_shadows)
+}
+inline bool Room::_internal_draw_floor_shadows() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.draw_floor_shadows_;
+}
+inline void Room::_internal_set_draw_floor_shadows(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.draw_floor_shadows_ = value;
+}
+
+// bool draw_roof_shadows = 9 [features = {
+inline void Room::clear_draw_roof_shadows() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.draw_roof_shadows_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000100U);
+}
+inline bool Room::draw_roof_shadows() const {
+  // @@protoc_insertion_point(field_get:aim.Room.draw_roof_shadows)
+  return _internal_draw_roof_shadows();
+}
+inline void Room::set_draw_roof_shadows(bool value) {
+  _internal_set_draw_roof_shadows(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000100U);
+  // @@protoc_insertion_point(field_set:aim.Room.draw_roof_shadows)
+}
+inline bool Room::_internal_draw_roof_shadows() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.draw_roof_shadows_;
+}
+inline void Room::_internal_set_draw_roof_shadows(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.draw_roof_shadows_ = value;
 }
 
 // .aim.SimpleRoom simple_room = 21;

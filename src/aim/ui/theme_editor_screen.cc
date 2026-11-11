@@ -30,6 +30,15 @@ Room GetDefaultRoom() {
   return r;
 }
 
+ImGui::InputFloatParams GetDefaultAlphaParams(const std::string& label) {
+  return ImGui::InputFloatParams::WithLabelAsId(label)
+      .set_is_optional()
+      .set_step(0.03, 0.3)
+      .set_min(0)
+      .set_max(1)
+      .set_width(ImGui::GetDefaultCharSizeX() * 9);
+}
+
 class ThemeEditor {
  public:
   ThemeEditor(const std::string& theme_name,
@@ -126,6 +135,16 @@ class ThemeEditor {
           "CenterTargetColor",
           PROTO_PTR_FIELD(StoredColor, Theme, &current_theme_, center_target_color));
 
+      ImGui::InputBool(ImGui::InputBoolParams::WithLabelAsId("Disable shadows"),
+                       PROTO_BOOL_FIELD(Theme, &current_theme_, disable_shadows));
+      ImGui::AlignTextToFramePadding();
+      ImGui::Text("Shadow color");
+      ImGui::SameLine();
+      DrawOptionalStoredColorEditor(
+          "ShadowTargetColor", PROTO_PTR_FIELD(StoredColor, Theme, &current_theme_, shadow_color));
+      ImGui::InputFloat(GetDefaultAlphaParams("Shadow alpha").set_default(0.3),
+                        PROTO_FLOAT_FIELD(Theme, &current_theme_, shadow_alpha));
+
       ImGui::Unindent();
 
       ImGui::SpacedSeparator();
@@ -159,12 +178,7 @@ class ThemeEditor {
       ImGui::SameLine();
       DrawStoredColorEditor("HealthColor", health_bar.mutable_health_color());
 
-      ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Health alpha")
-                            .set_is_optional()
-                            .set_step(0.05, 0.2)
-                            .set_min(0)
-                            .set_default(0.8)
-                            .set_width(char_x * 9),
+      ImGui::InputFloat(GetDefaultAlphaParams("Health alpha").set_default(0.8),
                         PROTO_FLOAT_FIELD(HealthBarAppearance, &health_bar, health_alpha));
 
       ImGui::AlignTextToFramePadding();
@@ -172,12 +186,7 @@ class ThemeEditor {
       ImGui::SameLine();
       DrawStoredColorEditor("HealthBackgroundColor", health_bar.mutable_background_color());
 
-      ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Background alpha")
-                            .set_is_optional()
-                            .set_step(0.05, 0.2)
-                            .set_min(0)
-                            .set_default(0.8)
-                            .set_width(char_x * 9),
+      ImGui::InputFloat(GetDefaultAlphaParams("Background alpha").set_default(0.8),
                         PROTO_FLOAT_FIELD(HealthBarAppearance, &health_bar, background_alpha));
       ImGui::Unindent();
 
@@ -344,6 +353,8 @@ class ThemeEditorScreen : public UiScreen {
     texture_names_ = app_.settings_manager().ListTextures();
     LoadThemeList();
 
+    default_room_.set_draw_floor_shadows(true);
+    default_room_.set_draw_roof_shadows(true);
     projection_ = GetPerspectiveTransformation(app_.screen_info());
     CameraParams cameraParams(default_room_);
     Camera camera(cameraParams);

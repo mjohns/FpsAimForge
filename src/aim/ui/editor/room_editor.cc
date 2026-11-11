@@ -238,6 +238,12 @@ void DrawRoomEditorInputs(Room& room, CameraUpdates* camera_updates) {
     camera_updates->delta_pitch = 0;
     camera_updates->delta_yaw = 0;
   }
+
+  ImGui::SpacedSeparator();
+  ImGui::InputBool(ImGui::InputBoolParams::WithLabelAsId("Floor shadows"),
+                   PROTO_BOOL_FIELD(Room, &room, draw_floor_shadows));
+  ImGui::InputBool(ImGui::InputBoolParams::WithLabelAsId("Roof shadows"),
+                   PROTO_BOOL_FIELD(Room, &room, draw_roof_shadows));
 }
 
 Room GetDefaultSimpleRoom() {
