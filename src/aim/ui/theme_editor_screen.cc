@@ -144,6 +144,10 @@ class ThemeEditor {
           "ShadowTargetColor", PROTO_PTR_FIELD(StoredColor, Theme, &current_theme_, shadow_color));
       ImGui::InputFloat(GetDefaultAlphaParams("Shadow alpha").set_default(0.3),
                         PROTO_FLOAT_FIELD(Theme, &current_theme_, shadow_alpha));
+      ImGui::InputBool(ImGui::InputBoolParams::WithLabelAsId("Force floor shadows"),
+                       PROTO_BOOL_FIELD(Theme, &current_theme_, force_floor_shadows));
+      ImGui::InputBool(ImGui::InputBoolParams::WithLabelAsId("Force roof shadows"),
+                       PROTO_BOOL_FIELD(Theme, &current_theme_, force_roof_shadows));
 
       ImGui::Unindent();
 

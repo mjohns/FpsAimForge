@@ -1167,6 +1167,8 @@ class Theme final : public ::google::protobuf::Message
     kShadowColorFieldNumber = 12,
     kShadowAlphaFieldNumber = 13,
     kDisableShadowsFieldNumber = 14,
+    kForceFloorShadowsFieldNumber = 15,
+    kForceRoofShadowsFieldNumber = 16,
   };
   // string reference = 1;
   bool has_reference() const;
@@ -1355,11 +1357,31 @@ class Theme final : public ::google::protobuf::Message
   void _internal_set_disable_shadows(bool value);
 
   public:
+  // bool force_floor_shadows = 15 [features = {
+  void clear_force_floor_shadows() ;
+  bool force_floor_shadows() const;
+  void set_force_floor_shadows(bool value);
+
+  private:
+  bool _internal_force_floor_shadows() const;
+  void _internal_set_force_floor_shadows(bool value);
+
+  public:
+  // bool force_roof_shadows = 16 [features = {
+  void clear_force_roof_shadows() ;
+  bool force_roof_shadows() const;
+  void set_force_roof_shadows(bool value);
+
+  private:
+  bool _internal_force_roof_shadows() const;
+  void _internal_set_force_roof_shadows(bool value);
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.Theme)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<4, 13,
+  static const ::google::protobuf::internal::TcParseTable<4, 15,
                                    10, 35,
                                    2>
       _table_;
@@ -1394,6 +1416,8 @@ class Theme final : public ::google::protobuf::Message
     ::aim::StoredColor* PROTOBUF_NULLABLE shadow_color_;
     float shadow_alpha_;
     bool disable_shadows_;
+    bool force_floor_shadows_;
+    bool force_roof_shadows_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3333,6 +3357,56 @@ inline bool Theme::_internal_disable_shadows() const {
 inline void Theme::_internal_set_disable_shadows(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.disable_shadows_ = value;
+}
+
+// bool force_floor_shadows = 15 [features = {
+inline void Theme::clear_force_floor_shadows() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.force_floor_shadows_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00002000U);
+}
+inline bool Theme::force_floor_shadows() const {
+  // @@protoc_insertion_point(field_get:aim.Theme.force_floor_shadows)
+  return _internal_force_floor_shadows();
+}
+inline void Theme::set_force_floor_shadows(bool value) {
+  _internal_set_force_floor_shadows(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00002000U);
+  // @@protoc_insertion_point(field_set:aim.Theme.force_floor_shadows)
+}
+inline bool Theme::_internal_force_floor_shadows() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.force_floor_shadows_;
+}
+inline void Theme::_internal_set_force_floor_shadows(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.force_floor_shadows_ = value;
+}
+
+// bool force_roof_shadows = 16 [features = {
+inline void Theme::clear_force_roof_shadows() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.force_roof_shadows_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00004000U);
+}
+inline bool Theme::force_roof_shadows() const {
+  // @@protoc_insertion_point(field_get:aim.Theme.force_roof_shadows)
+  return _internal_force_roof_shadows();
+}
+inline void Theme::set_force_roof_shadows(bool value) {
+  _internal_set_force_roof_shadows(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00004000U);
+  // @@protoc_insertion_point(field_set:aim.Theme.force_roof_shadows)
+}
+inline bool Theme::_internal_force_roof_shadows() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.force_roof_shadows_;
+}
+inline void Theme::_internal_set_force_roof_shadows(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.force_roof_shadows_ = value;
 }
 
 #ifdef __GNUC__

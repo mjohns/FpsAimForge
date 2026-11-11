@@ -54,4 +54,6 @@ message Theme {
   StoredColor shadow_color = 12;
   float shadow_alpha = 13;
   bool disable_shadows = 14 [features.field_presence = IMPLICIT];
+  bool force_floor_shadows = 15 [features.field_presence = IMPLICIT];
+  bool force_roof_shadows = 16 [features.field_presence = IMPLICIT];
 }

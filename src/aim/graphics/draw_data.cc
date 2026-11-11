@@ -475,7 +475,9 @@ class DrawDataBuilder {
     if (theme.disable_shadows()) {
       return;
     }
-    bool draw_something = room.draw_floor_shadows() || room.draw_roof_shadows();
+    bool draw_floor = room.draw_floor_shadows() || theme.force_floor_shadows();
+    bool draw_roof = room.draw_roof_shadows() || theme.force_roof_shadows();
+    bool draw_something = draw_floor || draw_roof;
     if (!draw_something) {
       return;
     }
@@ -504,7 +506,7 @@ class DrawDataBuilder {
         continue;
       }
 
-      if (room.draw_floor_shadows()) {
+      if (draw_floor) {
         draw_data->solid_circles.emplace_back();
         SolidColorInstanceData& data = draw_data->solid_circles.back();
         glm::vec3 position = target.position;
@@ -519,7 +521,7 @@ class DrawDataBuilder {
         data.color = color;
       }
 
-      if (room.draw_roof_shadows()) {
+      if (draw_roof) {
         draw_data->solid_circles.emplace_back();
         SolidColorInstanceData& data = draw_data->solid_circles.back();
         glm::vec3 position = target.position;
