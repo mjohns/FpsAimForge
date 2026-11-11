@@ -12,7 +12,6 @@
 #include "aim/core/scenario_manager.h"
 #include "aim/proto/bundle.pb.h"
 #include "aim/ui/bundle_pack_update_dialog.h"
-#include "aim/ui/object_browser.h"
 #include "imgui.h"
 
 namespace aim {
@@ -533,11 +532,11 @@ class BundleUiComponentImpl : public BundleUiComponent {
       }
       if (bundle.archived()) {
         ImGui::SameLine();
-        ImGui::Text(icons::kArchive);
+        ImGui::Text("%s", icons::kArchive);
         ImGui::HelpTooltip("Archived", 0.5);
       } else if (bundle.readonly()) {
         ImGui::SameLine();
-        ImGui::Text(icons::kEditOff);
+        ImGui::Text("%s", icons::kEditOff);
         ImGui::HelpTooltip("Readonly", 0.5);
       }
 
@@ -546,7 +545,7 @@ class BundleUiComponentImpl : public BundleUiComponent {
       bool can_delete = details.loaded_from_file || details.loaded_from_bundle_pack.empty();
       if (can_delete) {
         ImGui::SameLine();
-        ImGui::Text(icons::kTextSnippet);
+        ImGui::Text("%s", icons::kTextSnippet);
         ImGui::HelpTooltip(
             std::format("Bundle loaded from \"{}.bundle.json\"", bundle.bundle_name()), 0.5);
       }
