@@ -79,7 +79,8 @@ class DrawDataBuilder {
     draw_data->solid_circles.reserve(targets.size() * 2);
     draw_data->solid_cylinders.reserve(targets.size());
     AddDrawRoom(view_projection, theme, room, draw_data);
-    AddDrawTargets(view_projection, look_at, theme, health_bar, targets, draw_center, draw_data);
+    AddDrawTargets(
+        view_projection, look_at, theme, health_bar, room, targets, draw_center, draw_data);
 
     // Make sure all textured walls are grouped by Texture* so that the samplers can be bound
     // minimally and don't need to be switched back and forth.
@@ -366,6 +367,7 @@ class DrawDataBuilder {
                       const LookAtInfo& look_at,
                       const Theme& theme,
                       const HealthBarSettings& health_bar_settings,
+                      const Room& room,
                       const std::vector<Target>& targets,
                       bool try_to_draw_center,
                       DrawData* draw_data) {
@@ -460,6 +462,44 @@ class DrawDataBuilder {
                            draw_data);
         }
       }
+    }
+
+    // AddDrawTargetShadows(view_projection, glm::vec4(0, 0, 0, 0.4), targets, room, draw_data);
+  }
+
+  void AddDrawTargetShadows(const glm::mat4& view_projection,
+                            const glm::vec4& color,
+                            const std::vector<Target>& targets,
+                            const Room& room,
+                            DrawData* draw_data) {
+    float height = 1.0;
+    if (room.has_cylinder_room()) {
+      height = room.cylinder_room().height();
+    } else if (room.has_simple_room()) {
+      height = room.simple_room().height();
+    } else {
+      // Not supported
+      return;
+    }
+
+    float floor_height = (height * -0.5f) + 0.1f;
+    for (const Target& target : targets) {
+      if (!target.ShouldDraw()) {
+        continue;
+      }
+      draw_data->solid_circles.emplace_back();
+      SolidColorInstanceData& data = draw_data->solid_circles.back();
+
+      glm::vec3 position = target.position;
+      position.z = floor_height;
+
+      glm::mat4 model(1.0f);
+      model = glm::translate(model, position);
+      model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1, 0, 0));
+      model = glm::scale(model, glm::vec3(target.radius, 1.0, target.radius));
+
+      data.transform = view_projection * model;
+      data.color = color;
     }
   }
 
