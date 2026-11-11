@@ -9,6 +9,7 @@
 #include "aim/common/util.h"
 #include "aim/core/settings_manager.h"
 #include "aim/ui/settings_screen.h"
+#include "aim/ui/theme_editor_screen.h"
 #include "aim/ui/ui_screen.h"
 
 namespace aim {
@@ -112,6 +113,10 @@ class QuickSettingsScreen : public UiScreen {
     auto medium_font = app_.font_manager().UseMedium();
     if (ImGui::Button(std::format("{} Settings", icons::kSettings))) {
       PushNextScreen(CreateSettingsScreen(scenario_name_));
+      went_to_settings_ = true;
+    }
+    if (ImGui::Button(std::format("{} Themes", icons::kPalette))) {
+      PushNextScreen(CreateThemeEditorScreen());
       went_to_settings_ = true;
     }
 
