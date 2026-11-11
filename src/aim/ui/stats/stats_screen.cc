@@ -4,6 +4,7 @@
 #include <cassert>
 #include <optional>
 
+#include "absl/algorithm/container.h"
 #include "absl/cleanup/cleanup.h"
 #include "absl/time/time.h"
 #include "aim/common/collections.h"
@@ -739,6 +740,9 @@ class StatsScreen : public UiScreen {
             history_rows_->begin(),
             history_rows_->end(),
             [](const HistoryRow& lhs, const HistoryRow& rhs) { return lhs.score > rhs.score; });
+      } else {
+        // Newest runs first
+        absl::c_reverse(*history_rows_);
       }
     }
 
