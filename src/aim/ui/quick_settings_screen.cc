@@ -116,7 +116,9 @@ class QuickSettingsScreen : public UiScreen {
       went_to_settings_ = true;
     }
     if (ImGui::Button(std::format("{} Themes", icons::kPalette))) {
-      PushNextScreen(CreateThemeEditorScreen());
+      ThemeEditorOptions opts;
+      opts.selected_theme = updater_.settings.theme_name();
+      PushNextScreen(CreateThemeEditorScreen(opts));
       went_to_settings_ = true;
     }
 
