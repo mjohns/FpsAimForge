@@ -62,6 +62,80 @@ struct ScoresOverTime {
   float min_score = 12000000;
 };
 
+std::vector<std::string> GetAllVariationNames(const NameInfo& name_info, Application& app) {
+  std::vector<std::string> names;
+  for (const std::string& candidate : app.db().GetScenarioNamesWithPrefix(name_info.base_name)) {
+    if (GetNameInfo(candidate).base_name == name_info.base_name) {
+      names.push_back(candidate);
+    }
+  }
+  return names;
+}
+
+class ClearHistoryDialog {
+ public:
+  void NotifyOpen(const std::string& current_name) {
+    name_info_ = GetNameInfo(current_name);
+    variation_names_ = GetAllVariationNames(name_info_, app_);
+    popup_.Open();
+    all_variations_ = false;
+  }
+
+  bool Draw() {
+    ImGui::IdGuard cid("ClearHistory");
+    if (!popup_.Begin()) {
+      return false;
+    }
+    auto cleanup = absl::MakeCleanup([&]() { popup_.End(); });
+
+    ImGui::TextFmt("Delete history for \"{}\"?", name_info_.GetFullName());
+    ImGui::AlignTextToFramePadding();
+    ImGui::TextFmt("Delete history for all variations ({})", variation_names_.size());
+    ImGui::SameLine();
+    ImGui::Checkbox("##VariationsCheckbox", &all_variations_);
+
+    ImGui::SpacedSeparator();
+
+    if (ImGui::Button("Delete history")) {
+      if (all_variations_) {
+        for (const std::string& variation : variation_names_) {
+          app_.stats_manager().DeleteAllStats(variation);
+        }
+      } else {
+        app_.stats_manager().DeleteAllStats(name_info_.GetFullName());
+      }
+      popup_.Close();
+      return true;
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Cancel")) {
+      popup_.Close();
+      return false;
+    }
+
+    ImGui::SpacedSeparator();
+    if (all_variations_) {
+      ImGui::BeginChild("VariationScroll", ImVec2(-1, app_.screen_info().height / 3.0f));
+      for (const std::string& variation : variation_names_) {
+        ImGui::Text(variation);
+      }
+      ImGui::EndChild();
+    } else {
+      ImGui::Text(name_info_.GetFullName());
+    }
+
+    return false;
+  }
+
+ private:
+  Application& app_ = GetUiApp();
+  ImGui::Popup popup_{"ClearHistoryDialog"};
+  NameInfo name_info_;
+  std::vector<std::string> variation_names_;
+  bool all_variations_ = false;
+};
+
 void DrawScoresOverTimePlot(const std::string& scenario_name,
                             i64 run_id,
                             ScoresOverTime& scores_over_time,
@@ -338,9 +412,7 @@ class StatsScreen : public UiScreen {
   }
 
   void DrawHistoryPanel() {
-    auto scenario_history_to_delete = delete_history_confirmation_dialog_.Draw("Delete");
-    if (scenario_history_to_delete) {
-      app_.stats_manager().DeleteAllStats(*scenario_history_to_delete);
+    if (clear_history_dialog_.Draw()) {
       PopSelf();
     }
     DrawHistory();
@@ -703,9 +775,9 @@ class StatsScreen : public UiScreen {
   }
 
   void DrawHistoryListTable() {
+    ImGui::Spacing();
     if (ImGui::Button("Clear history")) {
-      delete_history_confirmation_dialog_.NotifyOpen(
-          std::format("Delete history for \"{}\"?", scenario_name_), scenario_name_);
+      clear_history_dialog_.NotifyOpen(scenario_name_);
     }
     ImGui::AlignTextToFramePadding();
     ImGui::Text("Sort by score");
@@ -850,8 +922,7 @@ class StatsScreen : public UiScreen {
   std::optional<QuickSettingsType> show_settings_;
   std::string show_settings_release_key_;
   std::optional<RunPerformanceStats> performance_stats_;
-  ImGui::ConfirmationDialog<std::string> delete_history_confirmation_dialog_{
-      "DeleteHistoryConfirmationDialog"};
+  ClearHistoryDialog clear_history_dialog_;
   std::shared_ptr<PlaylistRun> playlist_run_;
 
   bool reset_stats_ = false;
