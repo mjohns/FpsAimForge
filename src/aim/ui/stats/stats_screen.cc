@@ -64,7 +64,8 @@ struct ScoresOverTime {
 
 std::vector<std::string> GetAllVariationNames(const NameInfo& name_info, Application& app) {
   std::vector<std::string> names;
-  for (const std::string& candidate : app.db().GetScenarioNamesWithPrefix(name_info.base_name)) {
+  for (const std::string& candidate :
+       app.db().GetScenarioNamesWithPrefixAndStats(name_info.base_name)) {
     if (GetNameInfo(candidate).base_name == name_info.base_name) {
       names.push_back(candidate);
     }

@@ -113,6 +113,12 @@ SELECT ScenarioName FROM Scenarios
 WHERE ScenarioName LIKE ?;
 )AIMS";
 
+const char* kGetScenarioNamesWithPrefixAndStatsSql = R"AIMS(
+SELECT s.ScenarioName FROM Scenarios s
+WHERE s.ScenarioName LIKE ?
+  AND EXISTS(SELECT 1 FROM Stats st WHERE st.ScenarioId = s.ScenarioId);
+)AIMS";
+
 const char* kGetPlaylistNamesWithPrefixSql = R"AIMS(
 SELECT PlaylistName FROM Playlists
 WHERE PlaylistName LIKE ?;
@@ -556,6 +562,10 @@ class AimDbImpl : public AimDb {
 
   std::vector<std::string> GetScenarioNamesWithPrefix(const std::string& prefix) override {
     return GetNamesWithPrefix(prefix, kGetScenarioNamesWithPrefixSql);
+  }
+
+  std::vector<std::string> GetScenarioNamesWithPrefixAndStats(const std::string& prefix) override {
+    return GetNamesWithPrefix(prefix, kGetScenarioNamesWithPrefixAndStatsSql);
   }
 
   std::vector<std::string> GetGuideNamesWithPrefix(const std::string& prefix) override {

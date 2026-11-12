@@ -129,6 +129,34 @@ TEST_F(AimDbTest, GetScenarioNamesWithPrefix) {
                   "Scenario Foo", "Scenario Foo L1", "Scenario Foo L2", "Scenario Foo L2 25cm"));
 }
 
+TEST_F(AimDbTest, GetScenarioNamesWithPrefixAndStats) {
+  db_->GetScenarioId("Scenario Foo");
+  i64 id1 = db_->GetScenarioId("Scenario Foo L1");
+  i64 id2 = db_->GetScenarioId("Scenario Foo L2");
+  db_->GetScenarioId("Scenario Foo L2 25cm");
+  db_->GetScenarioId("Scenario Bar L2 25cm");
+  db_->GetScenarioId("Scenario Bar");
+  db_->GetScenarioId("Scenario Baz");
+
+  StatsDbRow stats;
+  stats.mm_per_360 = 350;
+  stats.score = 9.9;
+  stats.info.set_num_hits(10);
+
+  StatsDbRow stats1 = stats;
+  ASSERT_TRUE(db_->AddStats(id1, &stats1));
+
+  StatsDbRow stats2 = stats;
+  ASSERT_TRUE(db_->AddStats(id2, &stats2));
+  StatsDbRow stats3 = stats;
+  ASSERT_TRUE(db_->AddStats(id2, &stats3));
+
+  EXPECT_THAT(db_->GetScenarioNamesWithPrefixAndStats("Scenario Baz"), IsEmpty());
+
+  EXPECT_THAT(db_->GetScenarioNamesWithPrefixAndStats("Scenario Foo"),
+              UnorderedElementsAre("Scenario Foo L1", "Scenario Foo L2"));
+}
+
 TEST_F(AimDbTest, GetPlaylistNameMap) {
   i64 id1 = db_->GetPlaylistId("p1");
   ASSERT_THAT(id1, Gt(0));
