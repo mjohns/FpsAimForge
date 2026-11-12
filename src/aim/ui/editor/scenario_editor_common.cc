@@ -492,7 +492,7 @@ void DrawOverridesEditor(const char* id, ScenarioOverrides* overrides, bool is_l
 ImGui::InputFloatParams GetDefaultMultiplierInputParams(const std::string& label) {
   return ImGui::InputFloatParams::WithLabelAsId(label)
       .set_step(0.01, 0.25)
-      .set_min(0.01)
+      .set_min(0)
       .set_default(1);
 }
 

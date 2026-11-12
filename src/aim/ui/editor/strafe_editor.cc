@@ -17,7 +17,7 @@ void DrawStrafeProfile(float char_x,
   ImGui::SameLine();
   if (type == TimeOrDistance::TIME) {
     ImGui::InputJitteredFloat(
-        ImGui::InputFloatParams("Time").set_step(0.1, 0.5).set_min(0.1).set_default(1).set_width(
+        ImGui::InputFloatParams("Time").set_step(0.1, 0.5).set_min(0.001).set_default(1).set_width(
             char_x * 10),
         PROTO_JITTERED_FIELD(StrafeProfile, p, time));
     p->clear_distance();

@@ -221,7 +221,7 @@ void DrawProfileList(const std::string& id,
       ImGui::InputInt(ImGui::InputIntParams("NextProfile")
                           .set_label("Next profile")
                           .set_step(1, 2)
-                          .set_min(1)
+                          .set_min(0)
                           .set_default(1)
                           .set_is_optional()
                           .set_width(char_x * 10),
