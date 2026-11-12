@@ -358,7 +358,8 @@ message ProfileInfo {
 
   // If specified, the chance |next_profile| will be selected.
   float next_profile_percent = 5;
-  // If specified with next_profile_percent, If |next_profile| is not chosen the fallback will be used.
+  // If specified with next_profile_percent, If |next_profile| is not chosen the fallback will be
+  // used.
   int32 fallback_next_profile = 6;
 }
 
