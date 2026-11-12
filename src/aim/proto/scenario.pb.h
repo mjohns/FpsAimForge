@@ -1884,6 +1884,8 @@ class ProfileInfo final : public ::google::protobuf::Message
     kWeightFieldNumber = 2,
     kNextProfileFieldNumber = 3,
     kMinSelectionGapFieldNumber = 4,
+    kNextProfilePercentFieldNumber = 5,
+    kFallbackNextProfileFieldNumber = 6,
   };
   // string description = 1 [features = {
   void clear_description() ;
@@ -1933,11 +1935,33 @@ class ProfileInfo final : public ::google::protobuf::Message
   void _internal_set_min_selection_gap(::int32_t value);
 
   public:
+  // float next_profile_percent = 5;
+  bool has_next_profile_percent() const;
+  void clear_next_profile_percent() ;
+  float next_profile_percent() const;
+  void set_next_profile_percent(float value);
+
+  private:
+  float _internal_next_profile_percent() const;
+  void _internal_set_next_profile_percent(float value);
+
+  public:
+  // int32 fallback_next_profile = 6;
+  bool has_fallback_next_profile() const;
+  void clear_fallback_next_profile() ;
+  ::int32_t fallback_next_profile() const;
+  void set_fallback_next_profile(::int32_t value);
+
+  private:
+  ::int32_t _internal_fallback_next_profile() const;
+  void _internal_set_fallback_next_profile(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.ProfileInfo)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 4,
+  static const ::google::protobuf::internal::TcParseTable<3, 6,
                                    0, 35,
                                    2>
       _table_;
@@ -1963,6 +1987,8 @@ class ProfileInfo final : public ::google::protobuf::Message
     float weight_;
     ::int32_t next_profile_;
     ::int32_t min_selection_gap_;
+    float next_profile_percent_;
+    ::int32_t fallback_next_profile_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -20097,6 +20123,64 @@ inline ::int32_t ProfileInfo::_internal_min_selection_gap() const {
 inline void ProfileInfo::_internal_set_min_selection_gap(::int32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.min_selection_gap_ = value;
+}
+
+// float next_profile_percent = 5;
+inline bool ProfileInfo::has_next_profile_percent() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
+  return value;
+}
+inline void ProfileInfo::clear_next_profile_percent() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.next_profile_percent_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000010U);
+}
+inline float ProfileInfo::next_profile_percent() const {
+  // @@protoc_insertion_point(field_get:aim.ProfileInfo.next_profile_percent)
+  return _internal_next_profile_percent();
+}
+inline void ProfileInfo::set_next_profile_percent(float value) {
+  _internal_set_next_profile_percent(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  // @@protoc_insertion_point(field_set:aim.ProfileInfo.next_profile_percent)
+}
+inline float ProfileInfo::_internal_next_profile_percent() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.next_profile_percent_;
+}
+inline void ProfileInfo::_internal_set_next_profile_percent(float value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.next_profile_percent_ = value;
+}
+
+// int32 fallback_next_profile = 6;
+inline bool ProfileInfo::has_fallback_next_profile() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000020U);
+  return value;
+}
+inline void ProfileInfo::clear_fallback_next_profile() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.fallback_next_profile_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000020U);
+}
+inline ::int32_t ProfileInfo::fallback_next_profile() const {
+  // @@protoc_insertion_point(field_get:aim.ProfileInfo.fallback_next_profile)
+  return _internal_fallback_next_profile();
+}
+inline void ProfileInfo::set_fallback_next_profile(::int32_t value) {
+  _internal_set_fallback_next_profile(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  // @@protoc_insertion_point(field_set:aim.ProfileInfo.fallback_next_profile)
+}
+inline ::int32_t ProfileInfo::_internal_fallback_next_profile() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.fallback_next_profile_;
+}
+inline void ProfileInfo::_internal_set_fallback_next_profile(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.fallback_next_profile_ = value;
 }
 
 // -------------------------------------------------------------------

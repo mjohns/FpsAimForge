@@ -229,6 +229,41 @@ void DrawProfileList(const std::string& id,
       ImGui::SameLine();
       ImGui::HelpMarker("If this profile is selected, always select the specified profile next.");
 
+      if (p->mutable_info()->has_next_profile()) {
+        ImGui::Indent();
+        ImGui::InputFloat(
+            ImGui::InputFloatParams::WithLabelAsId("Next profile chance")
+                .set_is_optional()
+                .set_step(1, 10)
+                .set_min(1)
+                .set_default(50)
+                .set_width(char_x * 10),
+            PROTO_PERCENT_FIELD(ProfileInfo, p->mutable_info(), next_profile_percent));
+        ImGui::SameLine();
+        ImGui::HelpMarker(
+            "Change that \"next profile\" will be selected. If not selected will fallback to "
+            "weighted selection.");
+
+        if (p->mutable_info()->has_next_profile_percent()) {
+          ImGui::InputInt(ImGui::InputIntParams::WithLabelAsId("Fallback profile")
+                              .set_step(1, 2)
+                              .set_min(1)
+                              .set_default(1)
+                              .set_is_optional()
+                              .set_width(char_x * 10),
+                          PROTO_INT_FIELD(ProfileInfo, p->mutable_info(), fallback_next_profile));
+          ImGui::SameLine();
+          ImGui::HelpMarker("If \"next profile\" is not chosen, use this profile.");
+        } else {
+          p->mutable_info()->clear_fallback_next_profile();
+        }
+
+        ImGui::Unindent();
+      } else {
+        p->mutable_info()->clear_next_profile_percent();
+        p->mutable_info()->clear_fallback_next_profile();
+      }
+
       ImGui::InputInt(ImGui::InputIntParams("MinSelectionGap")
                           .set_label("Selection gap")
                           .set_step(1, 2)

@@ -44,15 +44,31 @@ std::optional<T> SelectProfile(const ProfileListInfo& profiles_info,
     return profiles[ClampIndex(profiles, i)];
   }
 
+  auto get_next_index = [&](const T& profile) -> std::optional<int> {
+    if (!profile.info().has_next_profile()) {
+      return {};
+    }
+    int next_profile = profile.info().next_profile();
+    if (profile.info().has_next_profile_percent()) {
+      bool use_next = rand.FlipCoin(profile.info().next_profile_percent());
+      if (use_next) {
+        return next_profile;
+      }
+      if (!profile.info().has_fallback_next_profile()) {
+        return {};
+      }
+      return profile.info().fallback_next_profile();
+    }
+
+    return next_profile;
+  };
   if (context->next_index.has_value()) {
     int i = ClampIndex(profiles, *context->next_index);
     context->next_index = {};
 
     const T& profile = profiles[i];
+    context->next_index = get_next_index(profile);
 
-    if (profile.info().has_next_profile()) {
-      context->next_index = profile.info().next_profile();
-    }
     if (profile.info().has_min_selection_gap()) {
       context->rate_limited_indices[i] = profile.info().min_selection_gap();
     }
@@ -78,9 +94,7 @@ std::optional<T> SelectProfile(const ProfileListInfo& profiles_info,
       const T& profile = profiles[i];
       used_weight += profile.info().weight();
       if (used_weight >= roll) {
-        if (profile.info().has_next_profile()) {
-          context->next_index = profile.info().next_profile();
-        }
+        context->next_index = get_next_index(profile);
         if (profile.info().has_min_selection_gap()) {
           context->rate_limited_indices[i] = profile.info().min_selection_gap();
         }
