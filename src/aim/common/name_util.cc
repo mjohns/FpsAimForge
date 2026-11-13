@@ -183,6 +183,10 @@ bool NameInfo::SetDynamicSuffixValue(std::string_view word) {
     is_poke = true;
     return true;
   }
+  if (word == "Move") {
+    is_move = true;
+    return true;
+  }
   std::optional<float> parsed_level = GetLevelFromWord(word);
   if (parsed_level) {
     level = parsed_level;
@@ -250,6 +254,9 @@ std::string NameInfo::GetFullName() const {
 
   if (is_poke) {
     result.append(" Poke");
+  }
+  if (is_move) {
+    result.append(" Move");
   }
   if (level && *level != 0) {
     result.append(std::format(" L{}", MaybeIntToString(*level, 2)));
@@ -337,6 +344,9 @@ void NameInfo::MergeDynamicSuffixes(const NameInfo& other) {
 
   if (other.is_poke) {
     is_poke = true;
+  }
+  if (other.is_move) {
+    is_move = true;
   }
 }
 

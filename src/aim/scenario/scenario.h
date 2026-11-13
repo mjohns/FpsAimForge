@@ -151,6 +151,8 @@ class Scenario : public Screen {
 
   void MaybeHandleMovement();
 
+  bool movement_enabled();
+
   i64 num_state_updates_ = 0;
   float state_updates_per_second_ = 0;
   int fps_ = 0;
@@ -183,6 +185,7 @@ class Scenario : public Screen {
   i64 waiting_start_time_micros_ = -1;
   float target_score_ = 0;
   std::string shot_type_string_;
+  bool force_enable_movement_ = false;
 };
 
 }  // namespace aim

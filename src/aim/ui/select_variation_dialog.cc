@@ -144,6 +144,9 @@ bool SelectVariationDialog::Draw(std::string* updated_name) {
     ImGui::SpacedSeparator();
 
     ImGui::InputBool("Poke", CreateBoolField(&name_info_.is_poke));
+    ImGui::InputBool("Move", CreateBoolField(&name_info_.is_move));
+    ImGui::SameLine();
+    ImGui::HelpMarker("Force enable WASD movement.");
 
     ImGui::InputFloat(ImGui::InputFloatParams::WithLabelAsId("Duration")
                           .set_is_optional()

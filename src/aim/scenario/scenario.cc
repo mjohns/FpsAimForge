@@ -125,6 +125,9 @@ Scenario::Scenario(const CreateScenarioParams& params)
   theme_ = app_.settings_manager().GetCurrentTheme();
   settings_ = app_.settings_manager().GetCurrentSettingsForScenario(scenario_name_);
 
+  NameInfo name_info = GetNameInfo(scenario_name_);
+  force_enable_movement_ = name_info.is_move;
+
   target_score_ = GetTargetScore(scenario_name_, def_, app_.playlist_manager().GetCurrentRun());
 
   bool requires_per_frame_target_data = RequiresPerFrameTargetData(def_);
@@ -139,7 +142,7 @@ Scenario::Scenario(const CreateScenarioParams& params)
                                                static_cast<i32>(def_.duration_seconds()),
                                                def_.target_def().num_targets(),
                                                requires_per_frame_target_data,
-                                               settings_.movement().enable_movement());
+                                               movement_enabled());
   }
 
   for (auto& entry : kShotTypes) {
@@ -151,6 +154,10 @@ Scenario::Scenario(const CreateScenarioParams& params)
   if (def_.shot_type().has_reload()) {
     shot_type_string_ += " (Reload)";
   }
+}
+
+bool Scenario::movement_enabled() {
+  return settings_.movement().enable_movement() || force_enable_movement_;
 }
 
 void Scenario::RefreshState() {
@@ -172,6 +179,7 @@ void Scenario::RefreshState() {
   if (name_info.cm_per_360) {
     effective_cm_per_360_ = *name_info.cm_per_360;
   }
+  force_enable_movement_ = name_info.is_move;
 
   if (effective_cm_per_360_ <= 0) {
     effective_cm_per_360_ = 0.1;
@@ -442,7 +450,7 @@ void Scenario::OnWaitingForClickTick() {
   ImGui::Text("theme: %s", settings_.theme_name().c_str());
   ImGui::Text("cm/360: %.0f", effective_cm_per_360_);
   ImGui::TextFmt("duration: {}s", MaybeIntToString(def_.duration_seconds(), 1));
-  if (settings_.movement().enable_movement()) {
+  if (movement_enabled()) {
     ImGui::Text("movement enabled");
   }
 
@@ -566,7 +574,7 @@ void Scenario::OnStartCountdownClickTick() {
 }
 
 void Scenario::MaybeHandleMovement() {
-  if (!settings_.movement().enable_movement()) {
+  if (!movement_enabled()) {
     return;
   }
   float delta = timer_.GetDeltaSeconds();
@@ -665,7 +673,7 @@ void Scenario::OnRunningTick() {
     if (replay_) {
       i64 replay_frame_number = timer_.GetReplayFrameNumber();
       replay_->SetPitchYaw(replay_frame_number, camera_.GetPitch(), camera_.GetYaw());
-      if (settings_.movement().enable_movement()) {
+      if (movement_enabled()) {
         replay_->SetCameraPosition(replay_frame_number, camera_.GetPosition());
       }
       replay_->SnapshotTargets(replay_frame_number, target_manager_.GetTargets());
