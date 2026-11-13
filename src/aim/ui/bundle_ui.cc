@@ -481,9 +481,7 @@ class BundleUiComponentImpl : public BundleUiComponent {
       ImGui::HelpMarker("Bundle will not be loaded");
     }
 
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
+    ImGui::SpacedSeparator();
 
     CachedBundleDetails cached_details = GetBundleDetails(selected_bundle_name_);
     ImGui::TextFmt("{} scenarios", cached_details.num_scenarios);
@@ -491,9 +489,47 @@ class BundleUiComponentImpl : public BundleUiComponent {
       ImGui::TextFmt("{} playlists", cached_details.num_playlists);
     }
 
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
+    bool can_delete = details.loaded_from_file || details.loaded_from_bundle_pack.empty();
+    if (details.bundle_packs.size() > 0) {
+      ImGui::SpacedSeparator();
+      if (can_delete) {
+        ImGui::TextFmt("Loaded from bundle file \"{}.bundle.json\"", selected_bundle_name_);
+      } else {
+        ImGui::TextFmt("Loaded from bundle pack \"{}\"", details.loaded_from_bundle_pack);
+      }
+
+      ImGui::SpacedSeparator();
+      ImGui::AlignTextToFramePadding();
+      ImGui::TextFmt("Explicit bundle pack: {}", info.bundle_pack_name());
+      if (!info.bundle_pack_name().empty()) {
+        ImGui::SameLine();
+        if (ImGui::ClearButton("ClearExplicitBundlePack")) {
+          info.clear_bundle_pack_name();
+          need_update = true;
+        }
+      }
+      ImGui::SameLine();
+      ImGui::HelpMarker(
+          "Specify the bundle pack the bundle should be loaded from when it exists in multiple "
+          "packs. The bundle will only be loaded from this specific pack or an explicit "
+          "bundle.json file");
+
+      if (details.bundle_packs.size() > 0) {
+        ImGui::Text("Select explicit bundle pack");
+        ImGui::Indent();
+        ImGui::LoopId loop_id;
+        for (const std::string& pack : details.bundle_packs) {
+          auto lid = loop_id.Get();
+          if (ImGui::Button(pack)) {
+            info.set_bundle_pack_name(pack);
+            need_update = true;
+          }
+        }
+        ImGui::Unindent();
+      }
+    }
+
+    ImGui::SpacedSeparator();
 
     if (ImGui::Button(std::format("{} Copy", icons::kContentCopy))) {
       add_dialog_.NotifyOpen(selected_bundle_name_);
@@ -502,7 +538,6 @@ class BundleUiComponentImpl : public BundleUiComponent {
 
     ImGui::SpacedSeparator();
 
-    bool can_delete = details.loaded_from_file || details.loaded_from_bundle_pack.empty();
     if (can_delete) {
       if (ImGui::Button(
               std::format("{} Delete \"{}.bundle.json\"", icons::kDelete, selected_bundle_name_))) {
