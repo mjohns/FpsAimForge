@@ -65,6 +65,8 @@ Settings GetDefaultSettings() {
   binds->mutable_adjust_health_bar_size()->set_mapping1("H");
   binds->mutable_quick_settings()->set_mapping1("S");
   binds->mutable_edit_scenario()->set_mapping1("U");
+  binds->mutable_left()->set_mapping1("A");
+  binds->mutable_right()->set_mapping1("D");
 
   SoundSettings* sounds = settings.mutable_sounds();
   *sounds = GetDefaultSoundSettings();
