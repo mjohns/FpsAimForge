@@ -164,6 +164,15 @@ void DrawProfileList(const std::string& id,
     total_weight += p->info().weight();
   }
 
+  bool all_missing_weight = true;
+  for (int i = 0; i < profile_list->size(); ++i) {
+    auto* p = &profile_list->at(i);
+    if (p->info().has_weight()) {
+      all_missing_weight = false;
+      break;
+    }
+  }
+
   for (int i = 0; i < profile_list->size(); ++i) {
     ImGui::IdGuard lid(type_name, i);
     auto* p = &profile_list->at(i);
@@ -202,7 +211,7 @@ void DrawProfileList(const std::string& id,
       ImGui::Text("Selection weight");
       ImGui::SameLine();
       int weight = p->info().weight();
-      if (!p->info().has_weight()) {
+      if (!p->info().has_weight() && all_missing_weight) {
         weight = 1;
       }
       ImGui::SetNextItemWidth(char_x * 10);
@@ -309,7 +318,10 @@ void DrawProfileList(const std::string& id,
   }
 
   if (ImGui::Button(std::format("Add {}", lower_type_name).c_str())) {
-    profile_list->Add();
+    auto* item = profile_list->Add();
+    if (use_weights) {
+      item->mutable_info()->set_weight(1);
+    }
   }
 
   if (IsDefaultInstance(*profile_list_info)) {
