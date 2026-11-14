@@ -52,10 +52,10 @@ class WallTargetPlacerImpl : public WallTargetPlacer {
         return candidate_pos;
       }
 
-      if (i == 100 || i == 150 || i == 175 || i == 190) {
-        min_distance *= 0.5;
-        min_x_distance *= 0.5;
-        min_y_distance *= 0.5;
+      if (i > 49 && i % 5 == 0) {
+        min_distance *= 0.96;
+        min_x_distance *= 0.96;
+        min_y_distance *= 0.96;
       }
     }
 
@@ -104,7 +104,8 @@ class WallTargetPlacerImpl : public WallTargetPlacer {
       }
     }
     const std::optional<Target>& last_target = target_manager_->GetLastRemovedTarget();
-    if (last_target && is_too_close(*last_target)) {
+    if (!strategy_.min_distance_ignore_last_removed_target() && last_target &&
+        is_too_close(*last_target)) {
       return false;
     }
     return true;

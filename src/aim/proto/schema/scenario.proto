@@ -129,6 +129,10 @@ message TargetPlacementStrategy {
 
   RegionLength min_x_distance = 6;
   RegionLength min_y_distance = 7;
+
+  // For min distance calculations ignore the last removed target (the one the new target being
+  // placed is replacing) when deciding if any target is too close to the candidate position.
+  bool min_distance_ignore_last_removed_target = 8 [features.field_presence = IMPLICIT];
 }
 
 message ScenarioOverrides {

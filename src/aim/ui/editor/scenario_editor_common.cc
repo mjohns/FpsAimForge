@@ -397,6 +397,15 @@ void DrawTargetPlacementStrategyEditor(const std::string& id,
       1);
   ImGui::SameLine();
   ImGui::HelpMarker("Minimum vertical distance between targets along the y axis.");
+
+  ImGui::InputBool(
+      "Ignore last removed target",
+      PROTO_BOOL_FIELD(TargetPlacementStrategy, s, min_distance_ignore_last_removed_target));
+  ImGui::SameLine();
+  ImGui::HelpMarker(
+      "Ignore the last removed target when determining if the new target is too close based on min "
+      "distance. The new target may appear exactly in the same spot as the target it is "
+      "replacing.");
 }
 
 void DrawBoundsEditor(const std::string& id, Bounds* bounds, BoundsDimensions dimensions) {

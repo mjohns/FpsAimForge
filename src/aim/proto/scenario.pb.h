@@ -8232,6 +8232,7 @@ class TargetPlacementStrategy final : public ::google::protobuf::Message
     kMinDistanceFieldNumber = 3,
     kMinXDistanceFieldNumber = 6,
     kMinYDistanceFieldNumber = 7,
+    kMinDistanceIgnoreLastRemovedTargetFieldNumber = 8,
   };
   // repeated .aim.TargetRegion regions = 1;
   int regions_size() const;
@@ -8310,11 +8311,21 @@ class TargetPlacementStrategy final : public ::google::protobuf::Message
   ::aim::RegionLength* PROTOBUF_NONNULL _internal_mutable_min_y_distance();
 
   public:
+  // bool min_distance_ignore_last_removed_target = 8 [features = {
+  void clear_min_distance_ignore_last_removed_target() ;
+  bool min_distance_ignore_last_removed_target() const;
+  void set_min_distance_ignore_last_removed_target(bool value);
+
+  private:
+  bool _internal_min_distance_ignore_last_removed_target() const;
+  void _internal_set_min_distance_ignore_last_removed_target(bool value);
+
+  public:
   // @@protoc_insertion_point(class_scope:aim.TargetPlacementStrategy)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 5,
+  static const ::google::protobuf::internal::TcParseTable<3, 6,
                                    5, 0,
                                    2>
       _table_;
@@ -8341,6 +8352,7 @@ class TargetPlacementStrategy final : public ::google::protobuf::Message
     ::aim::RegionLength* PROTOBUF_NULLABLE min_distance_;
     ::aim::RegionLength* PROTOBUF_NULLABLE min_x_distance_;
     ::aim::RegionLength* PROTOBUF_NULLABLE min_y_distance_;
+    bool min_distance_ignore_last_removed_target_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -15150,6 +15162,31 @@ inline void TargetPlacementStrategy::set_allocated_min_y_distance(::aim::RegionL
 
   _impl_.min_y_distance_ = reinterpret_cast<::aim::RegionLength*>(value);
   // @@protoc_insertion_point(field_set_allocated:aim.TargetPlacementStrategy.min_y_distance)
+}
+
+// bool min_distance_ignore_last_removed_target = 8 [features = {
+inline void TargetPlacementStrategy::clear_min_distance_ignore_last_removed_target() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.min_distance_ignore_last_removed_target_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000020U);
+}
+inline bool TargetPlacementStrategy::min_distance_ignore_last_removed_target() const {
+  // @@protoc_insertion_point(field_get:aim.TargetPlacementStrategy.min_distance_ignore_last_removed_target)
+  return _internal_min_distance_ignore_last_removed_target();
+}
+inline void TargetPlacementStrategy::set_min_distance_ignore_last_removed_target(bool value) {
+  _internal_set_min_distance_ignore_last_removed_target(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  // @@protoc_insertion_point(field_set:aim.TargetPlacementStrategy.min_distance_ignore_last_removed_target)
+}
+inline bool TargetPlacementStrategy::_internal_min_distance_ignore_last_removed_target() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.min_distance_ignore_last_removed_target_;
+}
+inline void TargetPlacementStrategy::_internal_set_min_distance_ignore_last_removed_target(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.min_distance_ignore_last_removed_target_ = value;
 }
 
 // -------------------------------------------------------------------
