@@ -27,17 +27,17 @@ void BaseScenario::Initialize() {
   for (int i = 0; i < num_targets_to_add_immediately; ++i) {
     float stagger_seconds = def_.target_def().stagger_initial_targets_seconds();
     if (stagger_seconds > 0) {
-      RunAfterSeconds(i * stagger_seconds, [this]() { AddNewTarget(0, true); });
+      RunAfterSeconds(i * stagger_seconds, [this]() { AddNewTarget(0, /*no_delay=*/true); });
     } else {
-      AddNewTarget(0, true);
+      AddNewTarget(0, /*no_delay=*/true);
     }
   }
 
   for (float delay : t.delayed_target_times()) {
     if (delay > 0) {
-      RunAfterSeconds(delay, [this]() { AddNewTarget(0, true); });
+      RunAfterSeconds(delay, [this]() { AddNewTarget(0, /*no_delay=*/true); });
     } else {
-      AddNewTarget(0, true);
+      AddNewTarget(0, /*no_delay=*/true);
     }
   }
 }
@@ -559,7 +559,7 @@ Target BaseScenario::GetNewTarget() {
   return t;
 }
 
-void BaseScenario::AddNewTarget(u16 old_target_id, bool is_init) {
+void BaseScenario::AddNewTarget(u16 old_target_id, bool no_delay) {
   if (old_target_id > 0) {
     AddRemoveTargetEvent(old_target_id);
     bool removed = target_manager_.RemoveTarget(old_target_id);
@@ -569,38 +569,26 @@ void BaseScenario::AddNewTarget(u16 old_target_id, bool is_init) {
     }
   }
 
+  if (!no_delay && def_.target_def().new_target_delay_seconds() > 0) {
+    if (def_.target_def().newest_target_is_ghost()) {
+      target_manager_.MarkAllAsNonGhost();
+    }
+    RunAfterSeconds(def_.target_def().new_target_delay_seconds(),
+                    [=, this]() { AddNewTarget(0, /*no_delay=*/true); });
+    return;
+  }
+
   Target target = GetNewTarget();
   if (def_.target_def().newest_target_is_ghost()) {
     target_manager_.MarkAllAsNonGhost();
     target.is_ghost = true;
   }
-
-  if (!is_init && def_.target_def().new_target_delay_seconds() > 0) {
-    RunAfterSeconds(def_.target_def().new_target_delay_seconds(), [=, this]() {
-      Target new_target = target;
-      if (new_target.growth_info) {
-        new_target.growth_info->start_time_seconds =
-            timer_.GetElapsedSeconds() + new_target.growth_info->initial_delay_seconds;
-      }
-      if (def_.target_def().remove_target_after_seconds() > 0) {
-        new_target.remove_after_time_seconds =
-            timer_.GetElapsedSeconds() + def_.target_def().remove_target_after_seconds();
-      }
-      // Make sure to remark at the time the target is getting added too.
-      if (def_.target_def().newest_target_is_ghost()) {
-        target_manager_.MarkAllAsNonGhost();
-      }
-      new_target = target_manager_.AddTarget(new_target);
-      AddNewTargetEvent(new_target);
-    });
-  } else {
-    if (def_.target_def().remove_target_after_seconds() > 0) {
-      target.remove_after_time_seconds =
-          timer_.GetElapsedSeconds() + def_.target_def().remove_target_after_seconds();
-    }
-    target = target_manager_.AddTarget(target);
-    AddNewTargetEvent(target);
+  if (def_.target_def().remove_target_after_seconds() > 0) {
+    target.remove_after_time_seconds =
+        timer_.GetElapsedSeconds() + def_.target_def().remove_target_after_seconds();
   }
+  target = target_manager_.AddTarget(target);
+  AddNewTargetEvent(target);
 }
 
 std::optional<StatsDbRow> BaseScenario::GetStatsRow() {

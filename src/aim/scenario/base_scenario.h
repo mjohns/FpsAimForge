@@ -48,7 +48,7 @@ class BaseScenario : public Scenario {
   void HandlePokeInstantHits(UpdateStateData* data);
   void HandleTrackingHits(UpdateStateData* data);
   void HandleProximityTrackingHits(UpdateStateData* data);
-  void AddNewTarget(u16 old_target_id, bool is_init = false);
+  void AddNewTarget(u16 old_target_id, bool no_delay = false);
   void TrackingHoldDone();
   Target GetNewTarget();
   bool ShouldCountPartialKills();
