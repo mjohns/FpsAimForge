@@ -72,6 +72,7 @@ class PlayTimeScreen : public UiScreen {
 
     ImGui::Text("By cm/360");
     ImGui::Indent();
+    ImGui::BeginChild("Cm360Content");
     const std::unordered_map<int, PlayTimes>& by_cm_per_360 = play_times.play_times_by_cm_per_360;
     std::vector<std::pair<int, std::string>> by_cm_per_360s;
     for (const auto& entry : by_cm_per_360) {
@@ -80,6 +81,7 @@ class PlayTimeScreen : public UiScreen {
           std::format("{}cm", entry.first));
     }
     sort_and_print_values(by_cm_per_360s);
+    ImGui::EndChild();
     ImGui::Unindent();
   }
 
