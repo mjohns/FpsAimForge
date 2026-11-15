@@ -42,6 +42,9 @@ class WallTargetPlacerImpl : public WallTargetPlacer {
         // Scale the candidate to the correct distance.
         candidate_pos = glm::vec3(GetFixedDistanceAdjustedPoint(candidate_pos, selected_region),
                                   candidate_pos.z);
+        if (!wall_.IsPointInBounds(candidate_pos, 5)) {
+          continue;
+        }
       }
       // TODO: consider also checking wall_.IsPointInBounds
       if (!has_min_distance) {
@@ -171,7 +174,17 @@ class WallTargetPlacerImpl : public WallTargetPlacer {
 
   glm::vec2 GetFixedDistanceAdjustedPoint(const glm::vec2& point, const TargetRegion& region) {
     Target* most_recent_target = target_manager_->GetMutableMostRecentlyAddedTarget();
-    if (most_recent_target == nullptr) {
+    std::optional<glm::vec2> last_pos;
+    if (most_recent_target != nullptr) {
+      last_pos = most_recent_target->wall_position;
+    } else {
+      const std::optional<Target>& last_removed = target_manager_->GetLastRemovedTarget();
+      if (last_removed) {
+        last_pos = last_removed->wall_position;
+      }
+    }
+
+    if (!last_pos) {
       return point;
     }
     float distance = app_->rand().GetJittered(
@@ -179,9 +192,9 @@ class WallTargetPlacerImpl : public WallTargetPlacer {
         wall_.GetRegionLength(region.fixed_distance_from_last_target_jitter()));
     // This can't just drop the y component and take x,z from world position because for cylinder
     // walls we wrap the flat wall around the circle.
-    glm::vec2 dir = glm::normalize(point - *most_recent_target->wall_position);
+    glm::vec2 dir = glm::normalize(point - *last_pos);
 
-    return *most_recent_target->wall_position + (dir * distance);
+    return *last_pos + (dir * distance);
   }
 
   Wall wall_;
