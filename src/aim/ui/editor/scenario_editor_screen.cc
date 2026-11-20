@@ -1,12 +1,9 @@
 #include "scenario_editor_screen.h"
 
-#include <absl/cleanup/cleanup.h>
-#include <aim/ui/search_selector.h>
-#include <aim/ui/select_object_dialog.h>
-
 #include <format>
 #include <optional>
 
+#include "absl/cleanup/cleanup.h"
 #include "absl/strings/ascii.h"
 #include "absl/strings/strip.h"
 #include "aim/common/field.h"
@@ -31,7 +28,11 @@
 #include "aim/ui/editor/room_editor.h"
 #include "aim/ui/editor/scenario_editor_common.h"
 #include "aim/ui/editor/scenario_type_editor.h"
+#include "aim/ui/editor/strafe_editor.h"
 #include "aim/ui/editor/target_editor.h"
+#include "aim/ui/object_browser.h"
+#include "aim/ui/search_selector.h"
+#include "aim/ui/select_object_dialog.h"
 #include "imgui.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
 
@@ -39,6 +40,136 @@ namespace aim {
 namespace {
 
 constexpr const char* kDefaultNewScenarioName = "New Scenario";
+
+class ImportScenarioDialog {
+ public:
+  void NotifyOpen(const ScenarioDef& def) {
+    current_def_ = def;
+    popup_.Open();
+  }
+
+  std::optional<ScenarioDef> Draw() {
+    ImGui::IdGuard cid("ImportScenarioDef");
+    if (!popup_.Begin()) {
+      return {};
+    }
+    auto cleanup = absl::MakeCleanup([this]() { popup_.End(); });
+
+    auto screen = app_.screen_info();
+    ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_BordersInnerV;
+    if (!ImGui::BeginTable(
+            "ImportDialogs", 2, flags, ImVec2(screen.width * 0.9, screen.height * 0.9))) {
+      return {};
+    }
+    auto table_cleanup = absl::MakeCleanup([this]() { ImGui::EndTable(); });
+
+    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, screen.width * 0.45);
+    ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
+
+    ImGui::TableNextColumn();
+    ObjectBrowser::Result browser_result;
+    browser_->Draw(&browser_result);
+    if (browser_result.selected_object_name) {
+      selected_scenario_name_ = *browser_result.selected_object_name;
+    }
+
+    ImGui::TableNextColumn();
+
+    if (selected_scenario_name_.empty()) {
+      ImGui::Text("No scenario to import");
+    } else {
+      ImGui::TextFmt("Import from scenario \"{}\"", selected_scenario_name_);
+    }
+    auto import_def = app_.scenario_manager().GetEvaluatedScenarioDef(selected_scenario_name_);
+
+    ImGui::SpacedSeparator();
+
+    if (import_def) {
+      ScenarioDef result = current_def_;
+      if (ImGui::Button("Import all")) {
+        popup_.Close();
+        return *import_def;
+      }
+      if (ImGui::Button("Import room")) {
+        *result.mutable_room() = import_def->room();
+        popup_.Close();
+        return result;
+      }
+      std::optional<PtrField<TargetPlacementStrategy>> current_target_strat =
+          GetTargetPlacementStrategyField(&result);
+      std::optional<PtrField<TargetPlacementStrategy>> import_target_strat =
+          GetTargetPlacementStrategyField(&(*import_def));
+      if (current_target_strat && import_target_strat && import_target_strat->has()) {
+        if (ImGui::Button("Import target locations")) {
+          *current_target_strat->get_mutable() = import_target_strat->get();
+          popup_.Close();
+          return result;
+        }
+      }
+
+      if (ImGui::Button("Import scenario type def")) {
+        switch (import_def->type_case()) {
+          case ScenarioDef::kStaticDef:
+            *result.mutable_static_def() = import_def->static_def();
+            break;
+          case ScenarioDef::kCenteringDef:
+            *result.mutable_centering_def() = import_def->centering_def();
+            break;
+          case ScenarioDef::kBarrelDef:
+            *result.mutable_centering_def() = import_def->centering_def();
+            break;
+          case ScenarioDef::kLinearDef:
+            *result.mutable_centering_def() = import_def->centering_def();
+            break;
+          case ScenarioDef::kAngleStrafeDef:
+            *result.mutable_angle_strafe_def() = import_def->angle_strafe_def();
+            break;
+          case ScenarioDef::kWallArcDef:
+            *result.mutable_wall_arc_def() = import_def->wall_arc_def();
+            break;
+          case ScenarioDef::kWallWanderDef:
+            *result.mutable_wall_wander_def() = import_def->wall_wander_def();
+            break;
+          case ScenarioDef::kCircleDef:
+            *result.mutable_circle_def() = import_def->circle_def();
+            break;
+          case ScenarioDef::kSineDef:
+            *result.mutable_sine_def() = import_def->sine_def();
+            break;
+          case ScenarioDef::kWaypointDef:
+            *result.mutable_waypoint_def() = import_def->waypoint_def();
+            break;
+          case ScenarioDef::kStrafeDef:
+            *result.mutable_strafe_def() = import_def->strafe_def();
+            break;
+          case ScenarioDef::kBounceDef:
+            *result.mutable_bounce_def() = import_def->bounce_def();
+            break;
+          default:
+            break;
+        }
+        popup_.Close();
+        return result;
+      }
+      ImGui::SameLine();
+      ImGui::HelpMarker("Import just the scenario type definition like strafe, static, or bounce.");
+    }
+
+    if (ImGui::Button("Cancel")) {
+      popup_.Close();
+    }
+
+    return {};
+  }
+
+ private:
+  Application& app_ = GetUiApp();
+  ScenarioDef current_def_;
+  ImGui::Popup popup_{"ImportScenarioDialog"};
+  std::string selected_scenario_name_;
+  std::unique_ptr<ObjectBrowser> browser_ =
+      CreateObjectBrowser(ObjectType::SCENARIO, /*is_selector=*/true);
+};
 
 class ScenarioEditorScreen : public UiScreen {
  public:
@@ -190,6 +321,10 @@ class ScenarioEditorScreen : public UiScreen {
         ImGui::HelpMarker("Switch to making a new copy of the current scenario as a reference.");
       }
 
+      if (ImGui::Selectable("Import Scenario")) {
+        import_scenario_dialog_.NotifyOpen(def_);
+      }
+
       if (ImGui::Selectable("Import Json")) {
         import_from_json_dialog_.NotifyOpen("");
       }
@@ -269,6 +404,11 @@ class ScenarioEditorScreen : public UiScreen {
 
   void DrawScreenInternal() {
     DrawImportJson();
+
+    auto imported_scenario = import_scenario_dialog_.Draw();
+    if (imported_scenario) {
+      def_ = *imported_scenario;
+    }
 
     if (!def_.has_reference_def() && def_.room().type_case() == Room::TYPE_NOT_SET) {
       *def_.mutable_room() = GetDefaultSimpleRoom();
@@ -849,6 +989,7 @@ class ScenarioEditorScreen : public UiScreen {
   std::unique_ptr<SelectObjectDialog> import_room_dialog_ =
       CreateSelectObjectDialog("ImportRoomDialog", ObjectType::SCENARIO);
   std::optional<ScenarioDef> referenced_scenario_;
+  ImportScenarioDialog import_scenario_dialog_;
 };
 
 }  // namespace

@@ -5,7 +5,6 @@
 
 #include "aim/common/imgui_ext.h"
 #include "aim/ui/object_browser.h"
-#include "aim/ui/search_selector.h"
 #include "aim/ui/ui_app.h"
 #include "imgui.h"
 
