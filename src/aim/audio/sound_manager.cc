@@ -53,6 +53,9 @@ SoundManager::SoundManager(MIX_Mixer* mixer, const std::vector<std::filesystem::
     : sound_dirs_(sound_dirs), mixer_(mixer) {}
 
 void SoundManager::LoadSounds(const Settings& settings) {
+  if (mixer_ == nullptr) {
+    return;
+  }
   const SoundSettings& s = settings.sounds();
   if (s.has_master_volume_level()) {
     float level = glm::clamp<float>(s.master_volume_level(), 0, kMaxGain);
@@ -83,6 +86,9 @@ bool SoundManager::LoadAndPlaySound(const SoundItem& item) {
 }
 
 void SoundManager::MaybeLoadSound(const std::string& sound_name) {
+  if (mixer_ == nullptr) {
+    return;
+  }
   if (sound_name.empty()) {
     return;
   }

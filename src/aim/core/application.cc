@@ -359,6 +359,10 @@ class ApplicationImpl : public Application {
     return *logo_texture_;
   }
 
+  bool is_audio_available() override {
+    return sdl_mixer_ != nullptr;
+  }
+
   float GetAppRunTimeSeconds() const override {
     i64 duration_micros = GetNowEpochMicros() - application_start_time_micros_;
     if (duration_micros > 0) {
@@ -516,9 +520,6 @@ class ApplicationImpl : public Application {
 
     trace.Add("MIX_CreateMixerDevice");
     sdl_mixer_ = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
-    if (!sdl_mixer_) {
-      return std::format("Could not open audio device: {}", SDL_GetError());
-    }
 
     state_->initialization_times.audio.end = stopwatch.GetElapsedMicros();
 

@@ -89,6 +89,7 @@ class Application {
   virtual spdlog::logger* logger() = 0;
   virtual ApplicationState& state() = 0;
   virtual Texture& logo_texture() = 0;
+  virtual bool is_audio_available() = 0;
 
   virtual std::string GetDebugInfoString() = 0;
 };

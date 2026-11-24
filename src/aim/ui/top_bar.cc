@@ -137,8 +137,26 @@ class TopBarImpl : public TopBar {
       normal_font.Pop();
       ImGui::EndPopup();
     }
+    float cursor_offset = 4;
     if (update_available) {
-      ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 6);
+      cursor_offset += 2;
+    }
+    if (!app_.is_audio_available()) {
+      cursor_offset += 2;
+    }
+    ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * cursor_offset);
+
+    if (!app_.is_audio_available()) {
+      ImGui::SelectableButton(icons::kVolumeOff);
+      {
+        auto normal_font = app_.font_manager().UseDefault();
+        ImGui::HelpTooltip(
+            "No audio device available. Plug in an audio device and restart app to fix.");
+      }
+      ImGui::SameLine();
+    }
+
+    if (update_available) {
       if (ImGui::SelectableButton(icons::kDownload)) {
         result->do_update_clicked = true;
       }
@@ -147,8 +165,6 @@ class TopBarImpl : public TopBar {
         ImGui::HelpTooltip("Bundle pack updates available.");
       }
       ImGui::SameLine();
-    } else {
-      ImGui::SetCursorAtRight(ImGui::GetDefaultCharSizeX() * 4);
     }
 
     if (ImGui::SelectableButton(icons::kSettings)) {
